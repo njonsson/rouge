@@ -5,5 +5,5 @@ modules.
 
 = Credits
 
-Trapeze's author is <b>Nils Jonsson</b> (nils@alumni.rice.edu). Released under
-the MIT License.
+Rouge's author is <b>Nils Jonsson</b> (nils@alumni.rice.edu). Released under the
+MIT License.
