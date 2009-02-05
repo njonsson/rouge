@@ -14,7 +14,7 @@ Array.prototype.each = function() {
 
 Array.prototype.eachWithIndex = function() {
   var block = arguments[arguments.length - 1];
-  for (var i = 0; i < this.length; i++) {
+  for (var i = 0; i < this.length; i += 1) {
     block(this[i], i);
   }
   return this;
