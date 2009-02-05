@@ -7,6 +7,21 @@ Screw.Unit(function() {
         _array = [];
       });
       
+      describe('when sent #collect', function() {
+        it('should not yield', function() {
+          var yieldedValues = [];
+          _array.collect(function(s) {
+            yieldedValues[yieldedValues.length] = s;
+          });
+          expect(yieldedValues).to(equal, []);
+        });
+        
+        it('should return itself', function() {
+          var returnValue = _array.collect(function(s) { });
+          expect(returnValue).to(equal, _array);
+        });
+      });
+      
       describe('when sent #each', function() {
         it('should not yield', function() {
           var yieldedValues = [];
@@ -36,21 +51,6 @@ Screw.Unit(function() {
           expect(returnValue).to(equal, _array);
         });
       });
-      
-      describe('when sent #collect', function() {
-        it('should not yield', function() {
-          var yieldedValues = [];
-          _array.collect(function(s) {
-            yieldedValues[yieldedValues.length] = s;
-          });
-          expect(yieldedValues).to(equal, []);
-        });
-        
-        it('should return itself', function() {
-          var returnValue = _array.collect(function(s) { });
-          expect(returnValue).to(equal, _array);
-        });
-      });
     });
     
     describe('with one element', function() {
@@ -58,6 +58,43 @@ Screw.Unit(function() {
       
       before(function() {
         _array = ['foo'];
+      });
+      
+      describe('when sent #collect', function() {
+        it('with no arguments should throw TypeError', function() {
+          var error = null;
+          try {
+            _array.collect();
+          } catch (e) {
+            error = e;
+          }
+          expect(error instanceof TypeError).to(be_true);
+        });
+        
+        it('with a non-function argument should throw TypeError', function() {
+          var error = null;
+          try {
+            _array.collect('bizzle');
+          } catch (e) {
+            error = e;
+          }
+          expect(error instanceof TypeError).to(be_true);
+        });
+        
+        it('should yield element once', function() {
+          var yieldedValues = [];
+          _array.collect(function(s) {
+            yieldedValues[yieldedValues.length] = s;
+          });
+          expect(yieldedValues).to(equal, ['foo']);
+        });
+        
+        it('should return array of yielded value', function() {
+          var returnValue = _array.collect(function(s) {
+            return 'item: ' + s;
+          });
+          expect(returnValue).to(equal, ['item: foo']);
+        });
       });
       
       describe('when sent #each', function() {
@@ -129,6 +166,14 @@ Screw.Unit(function() {
           expect(returnValue).to(equal, _array);
         });
       });
+    });
+    
+    describe('with two elements', function() {
+      var _array = null;
+      
+      before(function() {
+        _array = ['foo', 'bar'];
+      });
       
       describe('when sent #collect', function() {
         it('with no arguments should throw TypeError', function() {
@@ -151,28 +196,20 @@ Screw.Unit(function() {
           expect(error instanceof TypeError).to(be_true);
         });
         
-        it('should yield element once', function() {
+        it('should yield elements once each', function() {
           var yieldedValues = [];
           _array.collect(function(s) {
             yieldedValues[yieldedValues.length] = s;
           });
-          expect(yieldedValues).to(equal, ['foo']);
+          expect(yieldedValues).to(equal, ['foo', 'bar']);
         });
         
-        it('should return array of yielded value', function() {
+        it('should return an array of yielded values', function() {
           var returnValue = _array.collect(function(s) {
             return 'item: ' + s;
           });
-          expect(returnValue).to(equal, ['item: foo']);
+          expect(returnValue).to(equal, ['item: foo', 'item: bar']);
         });
-      });
-    });
-    
-    describe('with two elements', function() {
-      var _array = null;
-      
-      before(function() {
-        _array = ['foo', 'bar'];
       });
       
       describe('when sent #each', function() {
@@ -242,43 +279,6 @@ Screw.Unit(function() {
         it('should return itself', function() {
           var returnValue = _array.eachWithIndex(function(s, i) { });
           expect(returnValue).to(equal, _array);
-        });
-      });
-      
-      describe('when sent #collect', function() {
-        it('with no arguments should throw TypeError', function() {
-          var error = null;
-          try {
-            _array.collect();
-          } catch (e) {
-            error = e;
-          }
-          expect(error instanceof TypeError).to(be_true);
-        });
-        
-        it('with a non-function argument should throw TypeError', function() {
-          var error = null;
-          try {
-            _array.collect('bizzle');
-          } catch (e) {
-            error = e;
-          }
-          expect(error instanceof TypeError).to(be_true);
-        });
-        
-        it('should yield elements once each', function() {
-          var yieldedValues = [];
-          _array.collect(function(s) {
-            yieldedValues[yieldedValues.length] = s;
-          });
-          expect(yieldedValues).to(equal, ['foo', 'bar']);
-        });
-        
-        it('should return an array of yielded values', function() {
-          var returnValue = _array.collect(function(s) {
-            return 'item: ' + s;
-          });
-          expect(returnValue).to(equal, ['item: foo', 'item: bar']);
         });
       });
     });
