@@ -1,9 +1,9 @@
-= Rouge
+h1. Rouge
 
 *Rouge* is a JavaScript implementation of parts of the Ruby base classes and
 modules.
 
-= Credits
+h1. Credits
 
 Rouge's author is <b>Nils Jonsson</b> (nils@alumni.rice.edu). Released under the
 MIT License.
