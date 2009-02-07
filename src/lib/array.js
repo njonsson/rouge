@@ -7,8 +7,8 @@
  */
 
 /**
- * Invokes block once for each element in the array, passing that element as an
- * argument.
+ * Creates a different array of the same size. Invokes <i>block</i> once for
+ * each element in the array, passing that element as an argument.
  * 
  * <pre>
  * var array = ['foo', 'bar', 'baz'];
@@ -20,7 +20,7 @@
  * </pre>
  * 
  * @param {Function} block The function to execute. Should have one parameter
- * @returns An array containing the values returned by block
+ * @returns An array containing the values returned by <i>block</i>
  */
 Array.prototype.collect = function(block) {
   var result = [];
@@ -31,8 +31,8 @@ Array.prototype.collect = function(block) {
 };
 
 /**
- * Invokes block once for each element in the array, passing that element as an
- * argument.
+ * Invokes <i>block</i> once for each element in the array, passing that element
+ * as an argument.
  * 
  * <pre>
  * var array = ['foo', 'bar', 'baz'];
@@ -57,8 +57,8 @@ Array.prototype.each = function(block) {
 };
 
 /**
- * Invokes block once for each element in the array, passing that element and
- * its index as arguments.
+ * Invokes <i>block</i> once for each element in the array, passing that element
+ * and its index as arguments.
  * 
  * <pre>
  * var array = ['foo', 'bar', 'baz'];
