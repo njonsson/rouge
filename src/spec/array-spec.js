@@ -22,6 +22,42 @@ Screw.Unit(function() {
         });
       });
       
+      describe('when sent #detect', function() {
+        describe('with a block', function() {
+          it('should not yield', function() {
+            var yieldedValues = [];
+            _array.detect(function(s) { return false; });
+            expect(yieldedValues).to(equal, []);
+          });
+        
+          it('should return null', function() {
+            var returnValue = _array.detect(function(s) { return false; });
+            expect(returnValue).to(equal, null);
+          });
+        });
+        
+        describe('with a block and an "ifNone" argument', function() {
+          var _ifNone = null;
+          
+          before(function() {
+            _ifNone = function() { 'nothing here'; };
+          });
+          
+          it('should not yield', function() {
+            var yieldedValues = [];
+            _array.detect(_ifNone, function(s) {
+              yieldedValues[yieldedValues.length] = s;
+            });
+            expect(yieldedValues).to(equal, []);
+          });
+          
+          it('should return the expected value', function() {
+            var returnValue = _array.detect(_ifNone, function(s) { return false; });
+            expect(returnValue).to(equal, _ifNone());
+          });
+        });
+      });
+      
       describe('when sent #each', function() {
         it('should not yield', function() {
           var yieldedValues = [];
@@ -61,27 +97,7 @@ Screw.Unit(function() {
       });
       
       describe('when sent #collect', function() {
-        it('with no arguments should throw TypeError', function() {
-          var error = null;
-          try {
-            _array.collect();
-          } catch (e) {
-            error = e;
-          }
-          expect(error instanceof TypeError).to(be_true);
-        });
-        
-        it('with a non-function argument should throw TypeError', function() {
-          var error = null;
-          try {
-            _array.collect('bizzle');
-          } catch (e) {
-            error = e;
-          }
-          expect(error instanceof TypeError).to(be_true);
-        });
-        
-        it('should yield element once', function() {
+        it('should yield the element once', function() {
           var yieldedValues = [];
           _array.collect(function(s) {
             yieldedValues[yieldedValues.length] = s;
@@ -89,7 +105,7 @@ Screw.Unit(function() {
           expect(yieldedValues).to(equal, ['foo']);
         });
         
-        it('should return array of yielded value', function() {
+        it('should return an array containing the yielded value', function() {
           var returnValue = _array.collect(function(s) {
             return 'item: ' + s;
           });
@@ -97,28 +113,64 @@ Screw.Unit(function() {
         });
       });
       
+      describe('when sent #detect with a block', function() {
+        it('should yield the element once', function() {
+          var yieldedValues = [];
+          _array.detect(function(s) {
+            yieldedValues[yieldedValues.length] = s;
+          });
+          expect(yieldedValues).to(equal, ['foo']);
+        });
+        
+        it('should return the element when detecting', function() {
+          var returnValue = _array.detect(function(s) {
+            return s == 'foo';
+          });
+          expect(returnValue).to(equal, 'foo');
+        });
+        
+        it('should return null when not detecting', function() {
+          var returnValue = _array.detect(function(s) {
+            return s == 'bizzle';
+          });
+          expect(returnValue).to(be_null);
+        });
+        
+        describe('and an "ifNone" argument', function() {
+          var _ifNone = null;
+          
+          before(function() {
+            _ifNone = function(s) {
+              return 'nothing here';
+            };
+          });
+          
+          it('should yield the element once', function() {
+            var yieldedValues = [];
+            _array.detect(_ifNone, function(s) {
+              yieldedValues[yieldedValues.length] = s;
+            });
+            expect(yieldedValues).to(equal, ['foo']);
+          });
+          
+          it('should return the element when detecting', function() {
+            var returnValue = _array.detect(_ifNone, function(s) {
+              return s == 'foo';
+            });
+            expect(returnValue).to(equal, 'foo');
+          });
+          
+          it('should return the expected value when not detecting', function() {
+            var returnValue = _array.detect(_ifNone, function(s) {
+              return s == 'bizzle';
+            });
+            expect(returnValue).to(equal, 'nothing here');
+          });
+        });
+      });
+      
       describe('when sent #each', function() {
-        it('with no arguments should throw TypeError', function() {
-          var error = null;
-          try {
-            _array.each();
-          } catch (e) {
-            error = e;
-          }
-          expect(error instanceof TypeError).to(be_true);
-        });
-        
-        it('with a non-function argument should throw TypeError', function() {
-          var error = null;
-          try {
-            _array.each('bizzle');
-          } catch (e) {
-            error = e;
-          }
-          expect(error instanceof TypeError).to(be_true);
-        });
-        
-        it('should yield element once', function() {
+        it('should yield the element once', function() {
           var yieldedValues = [];
           _array.each(function(s) {
             yieldedValues[yieldedValues.length] = s;
@@ -133,27 +185,7 @@ Screw.Unit(function() {
       });
       
       describe('when sent #eachWithIndex', function() {
-        it('with no arguments should throw TypeError', function() {
-          var error = null;
-          try {
-            _array.eachWithIndex();
-          } catch (e) {
-            error = e;
-          }
-          expect(error instanceof TypeError).to(be_true);
-        });
-        
-        it('with a non-function argument should throw TypeError', function() {
-          var error = null;
-          try {
-            _array.eachWithIndex('bizzle');
-          } catch (e) {
-            error = e;
-          }
-          expect(error instanceof TypeError).to(be_true);
-        });
-        
-        it('should yield element and 0 once', function() {
+        it('should yield the element and 0 once', function() {
           var yieldedValues = [];
           _array.eachWithIndex(function(s, i) {
             yieldedValues[yieldedValues.length] = [s, i];
@@ -176,27 +208,7 @@ Screw.Unit(function() {
       });
       
       describe('when sent #collect', function() {
-        it('with no arguments should throw TypeError', function() {
-          var error = null;
-          try {
-            _array.collect();
-          } catch (e) {
-            error = e;
-          }
-          expect(error instanceof TypeError).to(be_true);
-        });
-        
-        it('with a non-function argument should throw TypeError', function() {
-          var error = null;
-          try {
-            _array.collect('bizzle');
-          } catch (e) {
-            error = e;
-          }
-          expect(error instanceof TypeError).to(be_true);
-        });
-        
-        it('should yield elements once each', function() {
+        it('should yield the elements once each', function() {
           var yieldedValues = [];
           _array.collect(function(s) {
             yieldedValues[yieldedValues.length] = s;
@@ -204,7 +216,7 @@ Screw.Unit(function() {
           expect(yieldedValues).to(equal, ['foo', 'bar']);
         });
         
-        it('should return an array of yielded values', function() {
+        it('should return an array of the yielded values', function() {
           var returnValue = _array.collect(function(s) {
             return 'item: ' + s;
           });
@@ -212,28 +224,64 @@ Screw.Unit(function() {
         });
       });
       
+      describe('when sent #detect with a block', function() {
+        it('should yield the elements once each', function() {
+          var yieldedValues = [];
+          _array.detect(function(s) {
+            yieldedValues[yieldedValues.length] = s;
+          });
+          expect(yieldedValues).to(equal, ['foo', 'bar']);
+        });
+        
+        it('should return the detected element when detecting', function() {
+          var returnValue = _array.detect(function(s) {
+            return s == 'foo';
+          });
+          expect(returnValue).to(equal, 'foo');
+        });
+        
+        it('should return null when not detecting', function() {
+          var returnValue = _array.detect(function(s) {
+            return s == 'bizzle';
+          });
+          expect(returnValue).to(be_null);
+        });
+        
+        describe('and an "ifNone" argument', function() {
+          var _ifNone = null;
+          
+          before(function() {
+            _ifNone = function(s) {
+              return 'nothing here';
+            };
+          });
+          
+          it('should yield the elements once each', function() {
+            var yieldedValues = [];
+            _array.detect(_ifNone, function(s) {
+              yieldedValues[yieldedValues.length] = s;
+            });
+            expect(yieldedValues).to(equal, ['foo', 'bar']);
+          });
+          
+          it('should return the detected element when detecting', function() {
+            var returnValue = _array.detect(_ifNone, function(s) {
+              return s == 'foo';
+            });
+            expect(returnValue).to(equal, 'foo');
+          });
+          
+          it('should return the expected value when not detecting', function() {
+            var returnValue = _array.detect(_ifNone, function(s) {
+              return s == 'bizzle';
+            });
+            expect(returnValue).to(equal, 'nothing here');
+          });
+        });
+      });
+      
       describe('when sent #each', function() {
-        it('with no arguments should throw TypeError', function() {
-          var error = null;
-          try {
-            _array.each();
-          } catch (e) {
-            error = e;
-          }
-          expect(error instanceof TypeError).to(be_true);
-        });
-        
-        it('with a non-function argument should throw TypeError', function() {
-          var error = null;
-          try {
-            _array.each('bizzle');
-          } catch (e) {
-            error = e;
-          }
-          expect(error instanceof TypeError).to(be_true);
-        });
-        
-        it('should yield elements once each', function() {
+        it('should yield the elements once each', function() {
           var yieldedValues = [];
           _array.each(function(s) {
             yieldedValues[yieldedValues.length] = s;
@@ -248,27 +296,7 @@ Screw.Unit(function() {
       });
       
       describe('when sent #eachWithIndex', function() {
-        it('with no arguments should throw TypeError', function() {
-          var error = null;
-          try {
-            _array.eachWithIndex();
-          } catch (e) {
-            error = e;
-          }
-          expect(error instanceof TypeError).to(be_true);
-        });
-        
-        it('with a non-function argument should throw TypeError', function() {
-          var error = null;
-          try {
-            _array.eachWithIndex('bizzle');
-          } catch (e) {
-            error = e;
-          }
-          expect(error instanceof TypeError).to(be_true);
-        });
-        
-        it('should yield elements and their indexes once each', function() {
+        it('should yield the elements and their indexes once each', function() {
           var yieldedValues = [];
           _array.eachWithIndex(function(s, i) {
             yieldedValues[yieldedValues.length] = [s, i];

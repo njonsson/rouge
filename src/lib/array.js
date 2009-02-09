@@ -31,6 +31,58 @@ Array.prototype.collect = function(block) {
 };
 
 /**
+ * Finds an element in the array. Invokes <i>block</i> once for each element in
+ * the array, passing that element as an argument.
+ * 
+ * <pre>
+ * var array = ['foo', 'bar', 'baz'];
+ * var result = array.collect(function(item) {
+ *   return item == 'bar';
+ * });
+ * result // => 'bar'
+ * array  // => ['foo', 'bar', 'baz']
+ * </pre>
+ * 
+ * With the optional <i>ifNone</i> argument:
+ * 
+ * <pre>
+ * var array = ['foo', 'bar', 'baz'];
+ * var result = array.collect(function() { return 'nothing here'; }, function(item) {
+ *   return item == 'bizzle';
+ * });
+ * result // => 'nothing here'
+ * array  // => ['foo', 'bar', 'baz']
+ * </pre>
+ * 
+ * @param {Function} ifNone (optional) A function that returns the value to be
+ *                          returned by <i>#detect</i> if there are no matches
+ * @param {Function} block The function to execute. Should have one parameter
+ *                         and return either <tt>true</tt> or <tt>false</tt>
+ * @returns The first element for which <i>block</i> returns <tt>true</tt>. If
+ *          <i>block</i> never returns <tt>true</tt> and <i>ifNone</i> is
+ *          specified, then the return value of a call to <i>ifNone</i> is used.
+ *          If <i>block</i> never returns <tt>true</tt> and <i>ifNone</i> is not
+ *          specified, then <tt>null</tt> is used
+ */
+Array.prototype.detect = function(ifNone, block) {
+  var array = this;
+  function detectOrNone(noneValue, block) {
+    var result = noneValue;
+    array.each(function(item) {
+      if (block(item) == true) {
+        result = item;
+        return;
+      }
+    });
+    return result;
+  }
+  
+  var noneValue = (arguments.length > 1) ? ifNone() : null;
+  if (arguments.length == 1) block = ifNone;
+  return detectOrNone(noneValue, block);
+};
+
+/**
  * Invokes <i>block</i> once for each element in the array, passing that element
  * as an argument.
  * 
@@ -84,3 +136,5 @@ Array.prototype.eachWithIndex = function(block) {
   }
   return this;
 };
+
+Array.prototype.map = Array.prototype.collect;
