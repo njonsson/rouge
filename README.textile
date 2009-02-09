@@ -1,6 +1,11 @@
-h1. Rouge
+bq. His code not functional or elegant.
+bq. What do Code Monkey think?
+bq. -- Jonathan Coulton, "Code Monkey"
 
-*Rouge* is a JavaScript implementation of parts of the Ruby base classes and
+Do Ruby's stylish core and standard libraries make your JavaScript green with
+envy? Tart up that dowdy JavaScript -- put on some *Rouge*.
+
+Rouge is a JavaScript implementation of some of the Ruby base classes and
 modules.
 
 h1. Credits
