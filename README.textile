@@ -1,4 +1,4 @@
-bq. His code not functional or elegant.<br />What do Code Monkey think?"<br />--
+bq. His code not functional or elegant.<br />What do Code Monkey think?<br />--
 Jonathan Coulton,
 "Code Monkey":http://www.jonathancoulton.com/songdetails/Code%20Monkey
 
