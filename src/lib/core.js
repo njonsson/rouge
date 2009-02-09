@@ -1,7 +1,6 @@
 /**
  * @fileoverview
- * Defines functions that extend the Array prototype such that it behaves like
- * Ruby's Array class.
+ * Defines a JavaScript-idiomatic implementation of the Ruby core library.
  * 
  * @author Nils Jonsson <nils@alumni.rice.edu>
  */
