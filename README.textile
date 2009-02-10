@@ -2,7 +2,7 @@ h1. Welcome to Rouge
 
 bq. His code not functional or elegant.<br />What do Code Monkey think?<br />--
 Jonathan Coulton,
-""Code Monkey"":http://www.jonathancoulton.com/songdetails/Code%20Monkey
+"“Code Monkey”":http://www.jonathancoulton.com/songdetails/Code%20Monkey
 
 Do Ruby's stylish core and standard libraries make your JavaScript green with
 envy? Tart up that dowdy JavaScript -- put on some *Rouge*.
