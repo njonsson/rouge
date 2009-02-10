@@ -7,7 +7,7 @@ Screw.Unit(function() {
         _array = [];
       });
       
-      describe('when sent #collect', function() {
+      describe('when sent #collect with a block', function() {
         it('should not yield', function() {
           var yieldedValues = [];
           _array.collect(function(s) {
@@ -22,21 +22,19 @@ Screw.Unit(function() {
         });
       });
       
-      describe('when sent #detect', function() {
-        describe('with a block', function() {
-          it('should not yield', function() {
-            var yieldedValues = [];
-            _array.detect(function(s) { return false; });
-            expect(yieldedValues).to(equal, []);
-          });
-        
-          it('should return null', function() {
-            var returnValue = _array.detect(function(s) { return false; });
-            expect(returnValue).to(equal, null);
-          });
+      describe('when sent #detect with a block', function() {
+        it('should not yield', function() {
+          var yieldedValues = [];
+          _array.detect(function(s) { return false; });
+          expect(yieldedValues).to(equal, []);
         });
         
-        describe('with a block and an "ifNone" argument', function() {
+        it('should return null', function() {
+          var returnValue = _array.detect(function(s) { return false; });
+          expect(returnValue).to(equal, null);
+        });
+        
+        describe('and an "ifNone" argument', function() {
           var _ifNone = null;
           
           before(function() {
@@ -58,7 +56,7 @@ Screw.Unit(function() {
         });
       });
       
-      describe('when sent #each', function() {
+      describe('when sent #each with a block', function() {
         it('should not yield', function() {
           var yieldedValues = [];
           _array.each(function(s) {
@@ -73,7 +71,7 @@ Screw.Unit(function() {
         });
       });
       
-      describe('when sent #eachWithIndex', function() {
+      describe('when sent #eachWithIndex with a block', function() {
         it('should not yield', function() {
           var yieldedValues = {};
           _array.eachWithIndex(function(s, i) {
@@ -96,7 +94,7 @@ Screw.Unit(function() {
         _array = ['foo'];
       });
       
-      describe('when sent #collect', function() {
+      describe('when sent #collect with a block', function() {
         it('should yield the element once', function() {
           var yieldedValues = [];
           _array.collect(function(s) {
@@ -169,7 +167,7 @@ Screw.Unit(function() {
         });
       });
       
-      describe('when sent #each', function() {
+      describe('when sent #each with a block', function() {
         it('should yield the element once', function() {
           var yieldedValues = [];
           _array.each(function(s) {
@@ -184,7 +182,7 @@ Screw.Unit(function() {
         });
       });
       
-      describe('when sent #eachWithIndex', function() {
+      describe('when sent #eachWithIndex with a block', function() {
         it('should yield the element and 0 once', function() {
           var yieldedValues = [];
           _array.eachWithIndex(function(s, i) {
@@ -207,7 +205,7 @@ Screw.Unit(function() {
         _array = ['foo', 'bar'];
       });
       
-      describe('when sent #collect', function() {
+      describe('when sent #collect with a block', function() {
         it('should yield the elements once each', function() {
           var yieldedValues = [];
           _array.collect(function(s) {
@@ -280,7 +278,7 @@ Screw.Unit(function() {
         });
       });
       
-      describe('when sent #each', function() {
+      describe('when sent #each with a block', function() {
         it('should yield the elements once each', function() {
           var yieldedValues = [];
           _array.each(function(s) {
@@ -295,7 +293,7 @@ Screw.Unit(function() {
         });
       });
       
-      describe('when sent #eachWithIndex', function() {
+      describe('when sent #eachWithIndex with a block', function() {
         it('should yield the elements and their indexes once each', function() {
           var yieldedValues = [];
           _array.eachWithIndex(function(s, i) {
