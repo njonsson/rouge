@@ -5,10 +5,6 @@ Jonathan Coulton,
 Do Ruby's stylish core and standard libraries make your JavaScript green with
 envy? Tart up that dowdy JavaScript -- put on some *Rouge*.
 
-!../../blob/master/geisha.png(cartoon geisha)!
-
-(Image courtesy of "Charlotte Marillet":http://www.flickr.com/photos/charlottemarillet/2504043660)
-
 Rouge is a JavaScript implementation of some of the Ruby base classes and
 modules.
 
