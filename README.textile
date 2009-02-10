@@ -1,3 +1,5 @@
+h1. Welcome to Rouge
+
 bq. His code not functional or elegant.<br />What do Code Monkey think?<br />--
 Jonathan Coulton,
 "Code Monkey":http://www.jonathancoulton.com/songdetails/Code%20Monkey
@@ -8,7 +10,26 @@ envy? Tart up that dowdy JavaScript -- put on some *Rouge*.
 Rouge is a JavaScript implementation of some of the Ruby base classes and
 modules.
 
+h1. Usage
+
+Rouge makes your JavaScript look and feel more like Ruby while preserving sound
+JavaScript style.
+
+Stop writing:
+
+<pre><code>var array = ['a', 'b', 'c', 'd', 'e'];
+for (var s in array) {
+  alert(s);
+}</code></pre>
+
+when instead you can write:
+
+<pre><code>var array = ['a', 'b', 'c', 'd', 'e'];
+array.each(function(s) {
+  alert(s);
+});</code></pre>
+
 h1. Credits
 
-Rouge's author is <b>Nils Jonsson</b> (nils@alumni.rice.edu). Released under the
-MIT License.
+Rouge's author is "Nils Jonsson":mailto:nils@alumni.rice.edu?subject=Rouge.
+Released under the "MIT License":MIT-LICENSE.
