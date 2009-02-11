@@ -20,6 +20,8 @@
  * 
  * @param {Function} block The function to execute. Should have one parameter
  * @returns {Array} An array containing the values returned by <i>block</i>
+ * 
+ * @see #map #map
  */
 Array.prototype.collect = function(block) {
   var result = [];
@@ -62,6 +64,8 @@ Array.prototype.collect = function(block) {
  *          specified, then the return value of a call to <i>ifNone</i> is used.
  *          If <i>block</i> never returns <tt>true</tt> and <i>ifNone</i> is not
  *          specified, then <tt>null</tt> is used
+ * 
+ * @see #find #find
  */
 Array.prototype.detect = function(ifNone, block) {
   function detectOrNone(noneValue, block) {
@@ -101,6 +105,8 @@ Array.prototype.detect = function(ifNone, block) {
  * 
  * @param {Function} block The function to execute. Should have one parameter
  * @returns {Array} The array
+ * 
+ * @see #eachWithIndex #eachWithIndex
  */
 Array.prototype.each = function(block) {
   return this.eachWithIndex(function(item, index) {
@@ -129,6 +135,8 @@ Array.prototype.each = function(block) {
  * 
  * @param {Function} block The function to execute. Should have two parameters
  * @returns {Array} The array
+ * 
+ * @see #each #each
  */
 Array.prototype.eachWithIndex = function(block) {
   for (var i = 0; i < this.length; i += 1) {
