@@ -19,7 +19,7 @@
  * </pre>
  * 
  * @param {Function} block The function to execute. Should have one parameter
- * @returns An array containing the values returned by <i>block</i>
+ * @returns {Array} An array containing the values returned by <i>block</i>
  */
 Array.prototype.collect = function(block) {
   var result = [];
@@ -100,7 +100,7 @@ Array.prototype.detect = function(ifNone, block) {
  * </ul>
  * 
  * @param {Function} block The function to execute. Should have one parameter
- * @returns The array
+ * @returns {Array} The array
  */
 Array.prototype.each = function(block) {
   return this.eachWithIndex(function(item, index) {
@@ -128,7 +128,7 @@ Array.prototype.each = function(block) {
  * </ul>
  * 
  * @param {Function} block The function to execute. Should have two parameters
- * @returns The array
+ * @returns {Array} The array
  */
 Array.prototype.eachWithIndex = function(block) {
   for (var i = 0; i < this.length; i += 1) {
@@ -214,7 +214,7 @@ Array.prototype.inject = function(initial, block) {
  * An alias for <b>#collect</b>.
  * 
  * @param {Function} block The function to execute. Should have one parameter
- * @returns An array containing the values returned by <i>block</i>
+ * @returns {Array} An array containing the values returned by <i>block</i>
  * 
  * @see #collect #collect
  */
