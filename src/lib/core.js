@@ -64,10 +64,9 @@ Array.prototype.collect = function(block) {
  *          specified, then <tt>null</tt> is used
  */
 Array.prototype.detect = function(ifNone, block) {
-  var array = this;
   function detectOrNone(noneValue, block) {
     var result = noneValue;
-    array.each(function(item) {
+    this.each(function(item) {
       if (block(item) == true) {
         result = item;
         return;
@@ -78,7 +77,7 @@ Array.prototype.detect = function(ifNone, block) {
   
   var noneValue = (arguments.length > 1) ? ifNone() : null;
   if (arguments.length == 1) block = ifNone;
-  return detectOrNone(noneValue, block);
+  return detectOrNone.apply(this, [noneValue, block]);
 };
 
 /**
