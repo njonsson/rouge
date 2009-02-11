@@ -11,7 +11,7 @@ Screw.Unit(function() {
         it('should not yield', function() {
           var yieldedValues = [];
           _array.collect(function(s) {
-            yieldedValues[yieldedValues.length] = s;
+            yieldedValues[yieldedValues.length] = arguments;
           });
           expect(yieldedValues).to(equal, []);
         });
@@ -25,7 +25,9 @@ Screw.Unit(function() {
       describe('when sent #detect with a block', function() {
         it('should not yield', function() {
           var yieldedValues = [];
-          _array.detect(function(s) { return false; });
+          _array.detect(function(s) {
+            yieldedValues[yieldedValues.length] = arguments;
+          });
           expect(yieldedValues).to(equal, []);
         });
         
@@ -44,7 +46,7 @@ Screw.Unit(function() {
           it('should not yield', function() {
             var yieldedValues = [];
             _array.detect(_ifNone, function(s) {
-              yieldedValues[yieldedValues.length] = s;
+              yieldedValues[yieldedValues.length] = arguments;
             });
             expect(yieldedValues).to(equal, []);
           });
@@ -60,7 +62,7 @@ Screw.Unit(function() {
         it('should not yield', function() {
           var yieldedValues = [];
           _array.each(function(s) {
-            yieldedValues[yieldedValues.length] = s;
+            yieldedValues[yieldedValues.length] = arguments;
           });
           expect(yieldedValues).to(equal, []);
         });
@@ -73,11 +75,11 @@ Screw.Unit(function() {
       
       describe('when sent #eachWithIndex with a block', function() {
         it('should not yield', function() {
-          var yieldedValues = {};
+          var yieldedValues = [];
           _array.eachWithIndex(function(s, i) {
-            yieldedValues[i] = s;
+            yieldedValues[yieldedValues.length] = arguments;
           });
-          expect(yieldedValues).to(equal, {});
+          expect(yieldedValues).to(equal, []);
         });
         
         it('should return itself', function() {
@@ -89,7 +91,9 @@ Screw.Unit(function() {
       describe('when sent #find with a block', function() {
         it('should not yield', function() {
           var yieldedValues = [];
-          _array.find(function(s) { return false; });
+          _array.find(function(s) {
+            yieldedValues[yieldedValues.length] = arguments;
+          });
           expect(yieldedValues).to(equal, []);
         });
         
@@ -108,7 +112,7 @@ Screw.Unit(function() {
           it('should not yield', function() {
             var yieldedValues = [];
             _array.find(_ifNone, function(s) {
-              yieldedValues[yieldedValues.length] = s;
+              yieldedValues[yieldedValues.length] = arguments;
             });
             expect(yieldedValues).to(equal, []);
           });
@@ -124,7 +128,7 @@ Screw.Unit(function() {
         it('should not yield', function() {
           var yieldedValues = [];
           _array.map(function(s) {
-            yieldedValues[yieldedValues.length] = s;
+            yieldedValues[yieldedValues.length] = arguments;
           });
           expect(yieldedValues).to(equal, []);
         });
@@ -147,9 +151,9 @@ Screw.Unit(function() {
         it('should yield the element once', function() {
           var yieldedValues = [];
           _array.collect(function(s) {
-            yieldedValues[yieldedValues.length] = s;
+            yieldedValues[yieldedValues.length] = arguments;
           });
-          expect(yieldedValues).to(equal, ['foo']);
+          expect(yieldedValues).to(equal, [['foo']]);
         });
         
         it('should return an array containing the yielded value', function() {
@@ -164,9 +168,9 @@ Screw.Unit(function() {
         it('should yield the element once', function() {
           var yieldedValues = [];
           _array.detect(function(s) {
-            yieldedValues[yieldedValues.length] = s;
+            yieldedValues[yieldedValues.length] = arguments;
           });
-          expect(yieldedValues).to(equal, ['foo']);
+          expect(yieldedValues).to(equal, [['foo']]);
         });
         
         it('should return the element when detecting', function() {
@@ -195,9 +199,9 @@ Screw.Unit(function() {
           it('should yield the element once', function() {
             var yieldedValues = [];
             _array.detect(_ifNone, function(s) {
-              yieldedValues[yieldedValues.length] = s;
+              yieldedValues[yieldedValues.length] = arguments;
             });
-            expect(yieldedValues).to(equal, ['foo']);
+            expect(yieldedValues).to(equal, [['foo']]);
           });
           
           it('should return the element when detecting', function() {
@@ -220,9 +224,9 @@ Screw.Unit(function() {
         it('should yield the element once', function() {
           var yieldedValues = [];
           _array.each(function(s) {
-            yieldedValues[yieldedValues.length] = s;
+            yieldedValues[yieldedValues.length] = arguments;
           });
-          expect(yieldedValues).to(equal, ['foo']);
+          expect(yieldedValues).to(equal, [['foo']]);
         });
         
         it('should return itself', function() {
@@ -235,7 +239,7 @@ Screw.Unit(function() {
         it('should yield the element and 0 once', function() {
           var yieldedValues = [];
           _array.eachWithIndex(function(s, i) {
-            yieldedValues[yieldedValues.length] = [s, i];
+            yieldedValues[yieldedValues.length] = arguments;
           });
           expect(yieldedValues).to(equal, [['foo', 0]]);
         });
@@ -250,9 +254,9 @@ Screw.Unit(function() {
         it('should yield the element once', function() {
           var yieldedValues = [];
           _array.find(function(s) {
-            yieldedValues[yieldedValues.length] = s;
+            yieldedValues[yieldedValues.length] = arguments;
           });
-          expect(yieldedValues).to(equal, ['foo']);
+          expect(yieldedValues).to(equal, [['foo']]);
         });
         
         it('should return the element when finding', function() {
@@ -281,9 +285,9 @@ Screw.Unit(function() {
           it('should yield the element once', function() {
             var yieldedValues = [];
             _array.find(_ifNone, function(s) {
-              yieldedValues[yieldedValues.length] = s;
+              yieldedValues[yieldedValues.length] = arguments;
             });
-            expect(yieldedValues).to(equal, ['foo']);
+            expect(yieldedValues).to(equal, [['foo']]);
           });
           
           it('should return the element when finding', function() {
@@ -306,9 +310,9 @@ Screw.Unit(function() {
         it('should yield the element once', function() {
           var yieldedValues = [];
           _array.map(function(s) {
-            yieldedValues[yieldedValues.length] = s;
+            yieldedValues[yieldedValues.length] = arguments;
           });
-          expect(yieldedValues).to(equal, ['foo']);
+          expect(yieldedValues).to(equal, [['foo']]);
         });
         
         it('should return an array containing the yielded value', function() {
@@ -331,9 +335,9 @@ Screw.Unit(function() {
         it('should yield the elements once each', function() {
           var yieldedValues = [];
           _array.collect(function(s) {
-            yieldedValues[yieldedValues.length] = s;
+            yieldedValues[yieldedValues.length] = arguments;
           });
-          expect(yieldedValues).to(equal, ['foo', 'bar']);
+          expect(yieldedValues).to(equal, [['foo'], ['bar']]);
         });
         
         it('should return an array of the yielded values', function() {
@@ -348,9 +352,9 @@ Screw.Unit(function() {
         it('should yield the elements once each', function() {
           var yieldedValues = [];
           _array.detect(function(s) {
-            yieldedValues[yieldedValues.length] = s;
+            yieldedValues[yieldedValues.length] = arguments;
           });
-          expect(yieldedValues).to(equal, ['foo', 'bar']);
+          expect(yieldedValues).to(equal, [['foo'], ['bar']]);
         });
         
         it('should return the detected element when detecting', function() {
@@ -379,9 +383,9 @@ Screw.Unit(function() {
           it('should yield the elements once each', function() {
             var yieldedValues = [];
             _array.detect(_ifNone, function(s) {
-              yieldedValues[yieldedValues.length] = s;
+              yieldedValues[yieldedValues.length] = arguments;
             });
-            expect(yieldedValues).to(equal, ['foo', 'bar']);
+            expect(yieldedValues).to(equal, [['foo'], ['bar']]);
           });
           
           it('should return the detected element when detecting', function() {
@@ -404,9 +408,9 @@ Screw.Unit(function() {
         it('should yield the elements once each', function() {
           var yieldedValues = [];
           _array.each(function(s) {
-            yieldedValues[yieldedValues.length] = s;
+            yieldedValues[yieldedValues.length] = arguments;
           });
-          expect(yieldedValues).to(equal, ['foo', 'bar']);
+          expect(yieldedValues).to(equal, [['foo'], ['bar']]);
         });
         
         it('should return itself', function() {
@@ -419,7 +423,7 @@ Screw.Unit(function() {
         it('should yield the elements and their indexes once each', function() {
           var yieldedValues = [];
           _array.eachWithIndex(function(s, i) {
-            yieldedValues[yieldedValues.length] = [s, i];
+            yieldedValues[yieldedValues.length] = arguments;
           });
           expect(yieldedValues).to(equal, [['foo', 0], ['bar', 1]]);
         });
@@ -434,9 +438,9 @@ Screw.Unit(function() {
         it('should yield the elements once each', function() {
           var yieldedValues = [];
           _array.find(function(s) {
-            yieldedValues[yieldedValues.length] = s;
+            yieldedValues[yieldedValues.length] = arguments;
           });
-          expect(yieldedValues).to(equal, ['foo', 'bar']);
+          expect(yieldedValues).to(equal, [['foo'], ['bar']]);
         });
         
         it('should return the found element when finding', function() {
@@ -465,9 +469,9 @@ Screw.Unit(function() {
           it('should yield the elements once each', function() {
             var yieldedValues = [];
             _array.find(_ifNone, function(s) {
-              yieldedValues[yieldedValues.length] = s;
+              yieldedValues[yieldedValues.length] = arguments;
             });
-            expect(yieldedValues).to(equal, ['foo', 'bar']);
+            expect(yieldedValues).to(equal, [['foo'], ['bar']]);
           });
           
           it('should return the found element when finding', function() {
@@ -490,9 +494,9 @@ Screw.Unit(function() {
         it('should yield the elements once each', function() {
           var yieldedValues = [];
           _array.map(function(s) {
-            yieldedValues[yieldedValues.length] = s;
+            yieldedValues[yieldedValues.length] = arguments;
           });
-          expect(yieldedValues).to(equal, ['foo', 'bar']);
+          expect(yieldedValues).to(equal, [['foo'], ['bar']]);
         });
         
         it('should return an array of the yielded values', function() {

@@ -104,7 +104,9 @@ Array.prototype.detect = function(ifNone, block) {
  * @returns The array
  */
 Array.prototype.each = function(block) {
-  return this.eachWithIndex(block);
+  return this.eachWithIndex(function(item, index) {
+    return block(item);
+  });
 };
 
 /**
