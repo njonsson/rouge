@@ -33,14 +33,14 @@ Screw.Unit(function() {
         
         it('should return null', function() {
           var returnValue = _array.detect(function(s) { return false; });
-          expect(returnValue).to(equal, null);
+          expect(returnValue).to(be_null);
         });
         
         describe('and an "ifNone" argument', function() {
           var _ifNone = null;
           
           before(function() {
-            _ifNone = function() { 'nothing here'; };
+            _ifNone = function() { return 'nothing here'; };
           });
           
           it('should not yield', function() {
@@ -52,8 +52,10 @@ Screw.Unit(function() {
           });
           
           it('should return the expected value', function() {
-            var returnValue = _array.detect(_ifNone, function(s) { return false; });
-            expect(returnValue).to(equal, _ifNone());
+            var returnValue = _array.detect(_ifNone, function(s) {
+              return false;
+            });
+            expect(returnValue).to(equal, 'nothing here');
           });
         });
       });
@@ -99,14 +101,14 @@ Screw.Unit(function() {
         
         it('should return null', function() {
           var returnValue = _array.find(function(s) { return false; });
-          expect(returnValue).to(equal, null);
+          expect(returnValue).to(be_null);
         });
         
         describe('and an "ifNone" argument', function() {
           var _ifNone = null;
           
           before(function() {
-            _ifNone = function() { 'nothing here'; };
+            _ifNone = function() { return 'nothing here'; };
           });
           
           it('should not yield', function() {
@@ -118,8 +120,10 @@ Screw.Unit(function() {
           });
           
           it('should return the expected value', function() {
-            var returnValue = _array.find(_ifNone, function(s) { return false; });
-            expect(returnValue).to(equal, _ifNone());
+            var returnValue = _array.find(_ifNone, function(s) {
+              return false;
+            });
+            expect(returnValue).to(equal, 'nothing here');
           });
         });
       });
