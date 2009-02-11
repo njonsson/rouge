@@ -136,4 +136,33 @@ Array.prototype.eachWithIndex = function(block) {
   return this;
 };
 
-Array.prototype.map = Array.prototype.collect;
+/**
+ * An alias for <b>#detect</b>.
+ * 
+ * @param {Function} ifNone (optional) A function that returns the value to be
+ *                          returned by <i>#find</i> if there are no matches
+ * @param {Function} block The function to execute. Should have one parameter
+ *                         and return either <tt>true</tt> or <tt>false</tt>
+ * @returns The first element for which <i>block</i> returns <tt>true</tt>. If
+ *          <i>block</i> never returns <tt>true</tt> and <i>ifNone</i> is
+ *          specified, then the return value of a call to <i>ifNone</i> is used.
+ *          If <i>block</i> never returns <tt>true</tt> and <i>ifNone</i> is not
+ *          specified, then <tt>null</tt> is used
+ * 
+ * @see #detect #detect
+ */
+Array.prototype.find = function(ifNone, block) {
+  return this.detect.apply(this, arguments);
+};
+
+/**
+ * An alias for <b>#collect</b>.
+ * 
+ * @param {Function} block The function to execute. Should have one parameter
+ * @returns An array containing the values returned by <i>block</i>
+ * 
+ * @see #collect #collect
+ */
+Array.prototype.map = function(block) {
+  return this.collect.apply(this, arguments);
+};

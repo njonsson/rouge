@@ -97,27 +97,6 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 
 <!-- =========== FIELD SUMMARY =========== -->
 
-   <A NAME="field_summary"><!-- --></A>
-      <TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-         <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-            <TD COLSPAN=2><FONT SIZE="+2">
-               <B>Field Summary</B></FONT></TD>
-         </TR>
-
-   <!-- This is one instance field summary -->
-   
-   <TR BGCOLOR="white" CLASS="TableRowColor">
-   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
-   <CODE>&nbsp;Object</CODE></FONT></TD>
-   <TD><CODE><B><A HREF="#map">map</A></B></CODE>
-   <BR>
-   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
-   </TR>
-   
-
-   </TABLE>
-   &nbsp;
-   
 
    
 
@@ -143,7 +122,7 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
 	 <FONT SIZE="-1">
-	    <CODE>&nbsp;Object</CODE>
+	    <CODE>&nbsp;<a href="Array.html">Array</a></CODE>
 	 </FONT>
       </TD>
       <TD>
@@ -177,7 +156,7 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
 	 <FONT SIZE="-1">
-	    <CODE>&nbsp;Object</CODE>
+	    <CODE>&nbsp;<a href="Array.html">Array</a></CODE>
 	 </FONT>
       </TD>
       <TD>
@@ -195,7 +174,7 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
 	 <FONT SIZE="-1">
-	    <CODE>&nbsp;Object</CODE>
+	    <CODE>&nbsp;<a href="Array.html">Array</a></CODE>
 	 </FONT>
       </TD>
       <TD>
@@ -210,6 +189,40 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
       </TD>
    </TR>
 
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&nbsp;Object</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#find">find</A></B>(&lt;Function&gt; ifNone, &lt;Function&gt; block)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 An alias for <b>#detect</b>.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&nbsp;<a href="Array.html">Array</a></CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#map">map</A></B>(&lt;Function&gt; block)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 An alias for <b>#collect</b>.
+      </TD>
+   </TR>
+
 
 </TABLE>
 
@@ -220,24 +233,6 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 
 
 <!-- ============ FIELD DETAIL START =========== -->
-
-   <A NAME="field_detail"><!-- --></A>
-   <TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
-      <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
-         <TD COLSPAN=1><FONT SIZE="+2"><B>Field Detail</B></FONT></TD>
-      </TR>
-   </TABLE>
-
-   
-   <A NAME="map"><!-- --></A>
-   <H3>map</H3>
-   <PRE>Object&nbsp;<B>map</B></PRE>
-   <UL>
-   
-   
-   </UL>
-   <HR>
-   
 
 
 <!-- ============ FIELD DETAIL END =========== -->
@@ -272,7 +267,7 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 
    <A NAME="collect"><!-- --></A>
    <H3>collect</H3>
-   <PRE>Object <B>collect</B>(&lt;Function&gt; block)</PRE>
+   <PRE><a href="Array.html">Array</a> <B>collect</B>(&lt;Function&gt; block)</PRE>
    
       <UL>Creates a different array of the same size. Invokes <i>block</i> once for
  each element in the array, passing that element as an argument.
@@ -303,7 +298,7 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
    <UL>
    <B>Returns:</B>
         <UL>
-        An array containing the values returned by <i>block</i> 
+         An array containing the values returned by <i>block</i> 
         </UL>
    </UL>
    
@@ -372,7 +367,7 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 
    <A NAME="each"><!-- --></A>
    <H3>each</H3>
-   <PRE>Object <B>each</B>(&lt;Function&gt; block)</PRE>
+   <PRE><a href="Array.html">Array</a> <B>each</B>(&lt;Function&gt; block)</PRE>
    
       <UL>Invokes <i>block</i> once for each element in the array, passing that element
  as an argument.
@@ -409,7 +404,7 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
    <UL>
    <B>Returns:</B>
         <UL>
-        The array 
+         The array 
         </UL>
    </UL>
    
@@ -421,7 +416,7 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 
    <A NAME="eachWithIndex"><!-- --></A>
    <H3>eachWithIndex</H3>
-   <PRE>Object <B>eachWithIndex</B>(&lt;Function&gt; block)</PRE>
+   <PRE><a href="Array.html">Array</a> <B>eachWithIndex</B>(&lt;Function&gt; block)</PRE>
    
       <UL>Invokes <i>block</i> once for each element in the array, passing that element
  and its index as arguments.
@@ -458,12 +453,89 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
    <UL>
    <B>Returns:</B>
         <UL>
-        The array 
+         The array 
         </UL>
    </UL>
    
 
    <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="find"><!-- --></A>
+   <H3>find</H3>
+   <PRE>Object <B>find</B>(&lt;Function&gt; ifNone, &lt;Function&gt; block)</PRE>
+   
+      <UL>An alias for <b>#detect</b>.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>ifNone</CODE> -  (optional) A function that returns the value to be                           returned by <i>#find</i> if there are no matches  
+      </UL> 
+   
+     <UL><CODE>block</CODE> -  The function to execute. Should have one parameter                          and return either <tt>true</tt> or <tt>false</tt>  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        The first element for which <i>block</i> returns <tt>true</tt>. If           <i>block</i> never returns <tt>true</tt> and <i>ifNone</i> is           specified, then the return value of a call to <i>ifNone</i> is used.           If <i>block</i> never returns <tt>true</tt> and <i>ifNone</i> is not           specified, then <tt>null</tt> is used     
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>See:</B><UL>- <a href="#detect">#detect</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="map"><!-- --></A>
+   <H3>map</H3>
+   <PRE><a href="Array.html">Array</a> <B>map</B>(&lt;Function&gt; block)</PRE>
+   
+      <UL>An alias for <b>#collect</b>.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>block</CODE> -  The function to execute. Should have one parameter  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+         An array containing the values returned by <i>block</i>     
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>See:</B><UL>- <a href="#collect">#collect</a></UL>
+   </UL>
    
    <!-- ADDITIONAL ATTRIBUTES  END -->
 <HR>
@@ -534,6 +606,6 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 <FONT SIZE="-1">
 
 </FONT>
-<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Mon Feb  9 00:05:50 2009</div>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Tue Feb 10 18:41:12 2009</div>
 </BODY>
 </HTML>

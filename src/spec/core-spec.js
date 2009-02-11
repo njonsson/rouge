@@ -85,6 +85,55 @@ Screw.Unit(function() {
           expect(returnValue).to(equal, _array);
         });
       });
+      
+      describe('when sent #find with a block', function() {
+        it('should not yield', function() {
+          var yieldedValues = [];
+          _array.find(function(s) { return false; });
+          expect(yieldedValues).to(equal, []);
+        });
+        
+        it('should return null', function() {
+          var returnValue = _array.find(function(s) { return false; });
+          expect(returnValue).to(equal, null);
+        });
+        
+        describe('and an "ifNone" argument', function() {
+          var _ifNone = null;
+          
+          before(function() {
+            _ifNone = function() { 'nothing here'; };
+          });
+          
+          it('should not yield', function() {
+            var yieldedValues = [];
+            _array.find(_ifNone, function(s) {
+              yieldedValues[yieldedValues.length] = s;
+            });
+            expect(yieldedValues).to(equal, []);
+          });
+          
+          it('should return the expected value', function() {
+            var returnValue = _array.find(_ifNone, function(s) { return false; });
+            expect(returnValue).to(equal, _ifNone());
+          });
+        });
+      });
+      
+      describe('when sent #map with a block', function() {
+        it('should not yield', function() {
+          var yieldedValues = [];
+          _array.map(function(s) {
+            yieldedValues[yieldedValues.length] = s;
+          });
+          expect(yieldedValues).to(equal, []);
+        });
+        
+        it('should return itself', function() {
+          var returnValue = _array.map(function(s) { });
+          expect(returnValue).to(equal, _array);
+        });
+      });
     });
     
     describe('with one element', function() {
@@ -196,6 +245,79 @@ Screw.Unit(function() {
           expect(returnValue).to(equal, _array);
         });
       });
+      
+      describe('when sent #find with a block', function() {
+        it('should yield the element once', function() {
+          var yieldedValues = [];
+          _array.find(function(s) {
+            yieldedValues[yieldedValues.length] = s;
+          });
+          expect(yieldedValues).to(equal, ['foo']);
+        });
+        
+        it('should return the element when finding', function() {
+          var returnValue = _array.find(function(s) {
+            return s == 'foo';
+          });
+          expect(returnValue).to(equal, 'foo');
+        });
+        
+        it('should return null when not finding', function() {
+          var returnValue = _array.find(function(s) {
+            return s == 'bizzle';
+          });
+          expect(returnValue).to(be_null);
+        });
+        
+        describe('and an "ifNone" argument', function() {
+          var _ifNone = null;
+          
+          before(function() {
+            _ifNone = function(s) {
+              return 'nothing here';
+            };
+          });
+          
+          it('should yield the element once', function() {
+            var yieldedValues = [];
+            _array.find(_ifNone, function(s) {
+              yieldedValues[yieldedValues.length] = s;
+            });
+            expect(yieldedValues).to(equal, ['foo']);
+          });
+          
+          it('should return the element when finding', function() {
+            var returnValue = _array.find(_ifNone, function(s) {
+              return s == 'foo';
+            });
+            expect(returnValue).to(equal, 'foo');
+          });
+          
+          it('should return the expected value when not finding', function() {
+            var returnValue = _array.find(_ifNone, function(s) {
+              return s == 'bizzle';
+            });
+            expect(returnValue).to(equal, 'nothing here');
+          });
+        });
+      });
+      
+      describe('when sent #map with a block', function() {
+        it('should yield the element once', function() {
+          var yieldedValues = [];
+          _array.map(function(s) {
+            yieldedValues[yieldedValues.length] = s;
+          });
+          expect(yieldedValues).to(equal, ['foo']);
+        });
+        
+        it('should return an array containing the yielded value', function() {
+          var returnValue = _array.map(function(s) {
+            return 'item: ' + s;
+          });
+          expect(returnValue).to(equal, ['item: foo']);
+        });
+      });
     });
     
     describe('with two elements', function() {
@@ -305,6 +427,79 @@ Screw.Unit(function() {
         it('should return itself', function() {
           var returnValue = _array.eachWithIndex(function(s, i) { });
           expect(returnValue).to(equal, _array);
+        });
+      });
+      
+      describe('when sent #find with a block', function() {
+        it('should yield the elements once each', function() {
+          var yieldedValues = [];
+          _array.find(function(s) {
+            yieldedValues[yieldedValues.length] = s;
+          });
+          expect(yieldedValues).to(equal, ['foo', 'bar']);
+        });
+        
+        it('should return the found element when finding', function() {
+          var returnValue = _array.find(function(s) {
+            return s == 'foo';
+          });
+          expect(returnValue).to(equal, 'foo');
+        });
+        
+        it('should return null when not finding', function() {
+          var returnValue = _array.find(function(s) {
+            return s == 'bizzle';
+          });
+          expect(returnValue).to(be_null);
+        });
+        
+        describe('and an "ifNone" argument', function() {
+          var _ifNone = null;
+          
+          before(function() {
+            _ifNone = function(s) {
+              return 'nothing here';
+            };
+          });
+          
+          it('should yield the elements once each', function() {
+            var yieldedValues = [];
+            _array.find(_ifNone, function(s) {
+              yieldedValues[yieldedValues.length] = s;
+            });
+            expect(yieldedValues).to(equal, ['foo', 'bar']);
+          });
+          
+          it('should return the found element when finding', function() {
+            var returnValue = _array.find(_ifNone, function(s) {
+              return s == 'foo';
+            });
+            expect(returnValue).to(equal, 'foo');
+          });
+          
+          it('should return the expected value when not finding', function() {
+            var returnValue = _array.find(_ifNone, function(s) {
+              return s == 'bizzle';
+            });
+            expect(returnValue).to(equal, 'nothing here');
+          });
+        });
+      });
+      
+      describe('when sent #map with a block', function() {
+        it('should yield the elements once each', function() {
+          var yieldedValues = [];
+          _array.map(function(s) {
+            yieldedValues[yieldedValues.length] = s;
+          });
+          expect(yieldedValues).to(equal, ['foo', 'bar']);
+        });
+        
+        it('should return an array of the yielded values', function() {
+          var returnValue = _array.map(function(s) {
+            return 'item: ' + s;
+          });
+          expect(returnValue).to(equal, ['item: foo', 'item: bar']);
         });
       });
     });
