@@ -128,6 +128,46 @@ Screw.Unit(function() {
         });
       });
       
+      describe('when sent #inject with a block', function() {
+        it('should not yield', function() {
+          var yieldedValues = [];
+          _array.inject(function(memo, s) {
+            yieldedValues[yieldedValues.length] = arguments;
+            return memo;
+          });
+          expect(yieldedValues).to(equal, []);
+        });
+        
+        it('should return null', function() {
+          var returnValue = _array.inject(function(memo, s) { return memo; });
+          expect(returnValue).to(be_null);
+        });
+        
+        describe('and an "initial" argument', function() {
+          var _initial = null;
+          
+          before(function() {
+            _initial = 'nothing here';
+          });
+          
+          it('should not yield', function() {
+            var yieldedValues = [];
+            _array.inject(_initial, function(memo, s) {
+              yieldedValues[yieldedValues.length] = s;
+              return memo;
+            });
+            expect(yieldedValues).to(equal, []);
+          });
+          
+          it('should return the expected value', function() {
+            var returnValue = _array.inject(_initial, function(memo, s) {
+              return memo;
+            });
+            expect(returnValue).to(equal, 'nothing here');
+          });
+        });
+      });
+      
       describe('when sent #map with a block', function() {
         it('should not yield', function() {
           var yieldedValues = [];
@@ -304,6 +344,46 @@ Screw.Unit(function() {
           it('should return the expected value when not finding', function() {
             var returnValue = _array.find(_ifNone, function(s) {
               return s == 'bizzle';
+            });
+            expect(returnValue).to(equal, 'nothing here');
+          });
+        });
+      });
+      
+      describe('when sent #inject with a block', function() {
+        it('should not yield', function() {
+          var yieldedValues = [];
+          _array.inject(function(memo, s) {
+            yieldedValues[yieldedValues.length] = arguments;
+            return memo;
+          });
+          expect(yieldedValues).to(equal, []);
+        });
+        
+        it('should return the element', function() {
+          var returnValue = _array.inject(function(memo, s) { return memo; });
+          expect(returnValue).to(equal, 'foo');
+        });
+        
+        describe('and an "initial" argument', function() {
+          var _initial = null;
+          
+          before(function() {
+            _initial = 'nothing here';
+          });
+          
+          it('should yield the expected memo and the element once', function() {
+            var yieldedValues = [];
+            _array.inject(_initial, function(memo, s) {
+              yieldedValues[yieldedValues.length] = arguments;
+              return memo;
+            });
+            expect(yieldedValues).to(equal, [['nothing here', 'foo']]);
+          });
+          
+          it('should return the expected value', function() {
+            var returnValue = _array.inject(_initial, function(memo, s) {
+              return memo;
             });
             expect(returnValue).to(equal, 'nothing here');
           });
@@ -488,6 +568,48 @@ Screw.Unit(function() {
           it('should return the expected value when not finding', function() {
             var returnValue = _array.find(_ifNone, function(s) {
               return s == 'bizzle';
+            });
+            expect(returnValue).to(equal, 'nothing here');
+          });
+        });
+      });
+      
+      describe('when sent #inject with a block', function() {
+        it('should yield once the first and the second elements', function() {
+          var yieldedValues = [];
+          _array.inject(function(memo, s) {
+            yieldedValues[yieldedValues.length] = arguments;
+            return memo;
+          });
+          expect(yieldedValues).to(equal, [['foo', 'bar']]);
+        });
+        
+        it('should return the first element', function() {
+          var returnValue = _array.inject(function(memo, s) { return memo; });
+          expect(returnValue).to(equal, 'foo');
+        });
+        
+        describe('and an "initial" argument', function() {
+          var _initial = null;
+          
+          before(function() {
+            _initial = 'nothing here';
+          });
+          
+          it('should yield the expected memo and the elements once each', function() {
+            var yieldedValues = [];
+            _array.inject(_initial, function(memo, s) {
+              yieldedValues[yieldedValues.length] = arguments;
+              return memo;
+            });
+            expect(yieldedValues).to(equal,
+                                     [['nothing here', 'foo'],
+                                      ['nothing here', 'bar']]);
+          });
+          
+          it('should return the expected value', function() {
+            var returnValue = _array.inject(_initial, function(memo, s) {
+              return memo;
             });
             expect(returnValue).to(equal, 'nothing here');
           });

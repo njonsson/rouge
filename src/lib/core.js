@@ -157,6 +157,60 @@ Array.prototype.find = function(ifNone, block) {
 };
 
 /**
+ * Combines the elements of the array by applying <i>block</i> to an accumulator
+ * value (<i>memo</i>) and each element in turn. Invokes <i>block</i> once for
+ * each element in the array, passing <i>memo</i> and that element as arguments.
+ * At each invocation of <i>block</i>, <i>memo</i> is set to the value returned
+ * by <i>block</i> previously.
+ * 
+ * The first form lets you supply an initial value for <i>memo</i>.
+ * 
+ * <pre>
+ * var array = [1, 2, 3, 4];
+ * var result = array.inject(10, function(memo, item) {
+ *   return memo * item;
+ * });
+ * result // => 240
+ * array  // => [1, 2, 3, 4]
+ * </pre>
+ * 
+ * The second form uses the first element as the <i>initial</i> value (and skips
+ * that element while iterating).
+ * 
+ * <pre>
+ * var array = [1, 2, 3, 4];
+ * var result = array.inject(function(memo, item) {
+ *   return memo * item;
+ * });
+ * result // => 24
+ * array  // => [1, 2, 3, 4]
+ * </pre>
+ * 
+ * @param {Object} initial (optional) The initial value of the <i>memo</i>
+ *                         argument passed to <i>block</i>
+ * @param {Function} block The function to execute. Should have two parameters
+ *                         (<i>memo</i> and the element) and return the new
+ *                         value of <i>memo</i>
+ * @returns The value returned from the last invocation of <i>block</i>
+ */
+Array.prototype.inject = function(initial, block) {
+  var memo = this[0];
+  if (arguments.length == 1) {
+    block = initial;
+    for (var i = 1; i < this.length; i++) {
+      memo = block(memo, this[i]);
+    }
+    return memo;
+  }
+  
+  memo = initial;
+  this.each(function(item) {
+    memo = block(memo, item);
+  });
+  return memo;
+};
+
+/**
  * An alias for <b>#collect</b>.
  * 
  * @param {Function} block The function to execute. Should have one parameter
