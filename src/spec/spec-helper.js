@@ -1,5 +1,5 @@
 Screw.Unit(function() {
   before(function() {
-    $('dom_test').empty();
+    $('#dom_test').empty();
   });
 });
