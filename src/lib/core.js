@@ -32,6 +32,32 @@ Array.prototype.collect = function(block) {
 };
 
 /**
+ * Creates a different array of the same size. Invokes <i>block</i> once for
+ * each element in the array, passing that element as an argument.
+ * 
+ * <pre>
+ * var array = ['foo', 'bar', 'baz'];
+ * var result = array.collect(function(item) {
+ *   return item + '!';
+ * });
+ * result // => ['foo!', 'bar!', 'baz!']
+ * array  // => ['foo', 'bar', 'baz']
+ * </pre>
+ * 
+ * @param {Function} block The function to execute. Should have one parameter
+ * @returns {Array} An array containing the values returned by <i>block</i>
+ * 
+ * @see #map #map
+ */
+Array.prototype.collectThis = function(block) {
+  var self = this;
+  this.eachWithIndex(function(item, index) {
+    self[index] = block(item);
+  });
+  return this;
+};
+
+/**
  * Finds an element in the array. Invokes <i>block</i> once for each element in
  * the array, passing that element as an argument.
  * 

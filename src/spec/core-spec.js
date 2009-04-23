@@ -20,6 +20,31 @@ Screw.Unit(function() {
           var returnValue = _array.collect(function(s) { });
           expect(returnValue).to(equal, _array);
         });
+        
+        it('should not mutate itself', function() {
+          _array.collect(function(s) { });
+          expect(_array).to(equal, []);
+        });
+      });
+      
+      describe('when sent #collectThis with a block', function() {
+        it('should not yield', function() {
+          var yieldedValues = [];
+          _array.collectThis(function(s) {
+            yieldedValues[yieldedValues.length] = arguments;
+          });
+          expect(yieldedValues).to(equal, []);
+        });
+        
+        it('should return itself', function() {
+          var returnValue = _array.collectThis(function(s) { });
+          expect(returnValue).to(equal, _array);
+        });
+        
+        it('should not mutate itself', function() {
+          _array.collectThis(function(s) { });
+          expect(_array).to(equal, []);
+        });
       });
       
       describe('when sent #detect with a block', function() {
@@ -34,6 +59,13 @@ Screw.Unit(function() {
         it('should return null', function() {
           var returnValue = _array.detect(function(s) { return false; });
           expect(returnValue).to(be_null);
+        });
+        
+        it('should not mutate itself', function() {
+          _array.detect(function(s) {
+              return false;
+            });
+          expect(_array).to(equal, []);
         });
         
         describe('and an "ifNone" argument', function() {
@@ -57,6 +89,13 @@ Screw.Unit(function() {
             });
             expect(returnValue).to(equal, 'nothing here');
           });
+          
+          it('should not mutate itself', function() {
+            _array.detect(_ifNone, function(s) {
+              return false;
+            });
+            expect(_array).to(equal, []);
+          });
         });
       });
       
@@ -73,6 +112,11 @@ Screw.Unit(function() {
           var returnValue = _array.each(function(s) { });
           expect(returnValue).to(equal, _array);
         });
+        
+        it('should not mutate itself', function() {
+          _array.each(function(s) { });
+          expect(_array).to(equal, []);
+        });
       });
       
       describe('when sent #eachWithIndex with a block', function() {
@@ -88,6 +132,11 @@ Screw.Unit(function() {
           var returnValue = _array.eachWithIndex(function(s, i) { });
           expect(returnValue).to(equal, _array);
         });
+        
+        it('should not mutate itself', function() {
+          _array.eachWithIndex(function(s) { });
+          expect(_array).to(equal, []);
+        });
       });
       
       describe('when sent #find with a block', function() {
@@ -102,6 +151,11 @@ Screw.Unit(function() {
         it('should return null', function() {
           var returnValue = _array.find(function(s) { return false; });
           expect(returnValue).to(be_null);
+        });
+        
+        it('should not mutate itself', function() {
+          _array.find(function(s) { return false; });
+          expect(_array).to(equal, []);
         });
         
         describe('and an "ifNone" argument', function() {
@@ -125,6 +179,11 @@ Screw.Unit(function() {
             });
             expect(returnValue).to(equal, 'nothing here');
           });
+        
+          it('should not mutate itself', function() {
+            _array.find(_ifNone, function(s) { return false; });
+            expect(_array).to(equal, []);
+          });
         });
       });
       
@@ -141,6 +200,11 @@ Screw.Unit(function() {
         it('should return null', function() {
           var returnValue = _array.inject(function(memo, s) { return memo; });
           expect(returnValue).to(be_null);
+        });
+        
+        it('should not mutate itself', function() {
+          _array.inject(function(memo, s) { return memo; });
+          expect(_array).to(equal, []);
         });
         
         describe('and an "initial" argument', function() {
@@ -165,6 +229,11 @@ Screw.Unit(function() {
             });
             expect(returnValue).to(equal, 'nothing here');
           });
+          
+          it('should not mutate itself', function() {
+            _array.inject(_initial, function(memo, s) { return memo; });
+            expect(_array).to(equal, []);
+          });
         });
       });
       
@@ -180,6 +249,11 @@ Screw.Unit(function() {
         it('should return itself', function() {
           var returnValue = _array.map(function(s) { });
           expect(returnValue).to(equal, _array);
+        });
+        
+        it('should not mutate itself', function() {
+          _array.map(function(s) { });
+          expect(_array).to(equal, []);
         });
       });
     });
@@ -205,6 +279,28 @@ Screw.Unit(function() {
             return 'item: ' + s;
           });
           expect(returnValue).to(equal, ['item: foo']);
+        });
+      });
+      
+      describe('when sent #collectThis with a block', function() {
+        it('should yield the element once', function() {
+          var yieldedValues = [];
+          _array.collectThis(function(s) {
+            yieldedValues[yieldedValues.length] = arguments;
+          });
+          expect(yieldedValues).to(equal, [['foo']]);
+        });
+        
+        it('should return itself', function() {
+          var returnValue = _array.collectThis(function(s) { });
+          expect(returnValue).to(equal, _array);
+        });
+        
+        it('should mutate itself as expected', function() {
+          _array.collectThis(function(s) {
+            return 'item: ' + s;
+          });
+          expect(_array).to(equal, ['item: foo']);
         });
       });
       
