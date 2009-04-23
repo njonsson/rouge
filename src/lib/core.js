@@ -97,7 +97,7 @@ Array.prototype.detect = function(ifNone, block) {
   function detectOrNone(noneValue, block) {
     var result = noneValue;
     this.each(function(item) {
-      if (block(item) == true) {
+      if (block(item) === true) {
         result = item;
         return;
       }
@@ -106,7 +106,9 @@ Array.prototype.detect = function(ifNone, block) {
   }
   
   var noneValue = (arguments.length > 1) ? ifNone() : null;
-  if (arguments.length == 1) block = ifNone;
+  if (arguments.length === 1) {
+    block = ifNone;
+  }
   return detectOrNone.apply(this, [noneValue, block]);
 };
 
@@ -229,7 +231,7 @@ Array.prototype.find = function(ifNone, block) {
  */
 Array.prototype.inject = function(initial, block) {
   var memo = this[0];
-  if (arguments.length == 1) {
+  if (arguments.length === 1) {
     block = initial;
     for (var i = 1; i < this.length; i++) {
       memo = block(memo, this[i]);
