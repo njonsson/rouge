@@ -257,3 +257,15 @@ Array.prototype.inject = function(initial, block) {
 Array.prototype.map = function(block) {
   return this.collect.apply(this, arguments);
 };
+
+/**
+ * An alias for <b>#collectThis</b>.
+ * 
+ * @param {Function} block The function to execute. Should have one parameter
+ * @returns {Array} The array
+ * 
+ * @see #collectThis #collectThis
+ */
+Array.prototype.mapThis = function(block) {
+  return this.collectThis.apply(this, arguments);
+};

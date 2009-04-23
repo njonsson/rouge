@@ -288,6 +288,30 @@ Screw.Unit(function() {
           expect(_array).to(equal, []);
         });
       });
+      
+      describe('when sent #mapThis with a block', function() {
+        function doMapThis() {
+          return _array.mapThis.apply(_array, arguments);
+        }
+        
+        it('should not yield', function() {
+          var yieldedValues = [];
+          doMapThis(function(s) {
+            yieldedValues[yieldedValues.length] = arguments;
+          });
+          expect(yieldedValues).to(equal, []);
+        });
+        
+        it('should return itself', function() {
+          var returnValue = doMapThis(function(s) { });
+          expect(returnValue).to(equal, _array);
+        });
+        
+        it('should not mutate itself', function() {
+          doMapThis(function(s) { });
+          expect(_array).to(equal, []);
+        });
+      });
     });
     
     describe('with one element', function() {
@@ -564,6 +588,32 @@ Screw.Unit(function() {
             return 'item: ' + s;
           });
           expect(returnValue).to(equal, ['item: foo']);
+        });
+      });
+      
+      describe('when sent #mapThis with a block', function() {
+        function doMapThis() {
+          return _array.mapThis.apply(_array, arguments);
+        }
+        
+        it('should yield the element once', function() {
+          var yieldedValues = [];
+          doMapThis(function(s) {
+            yieldedValues[yieldedValues.length] = arguments;
+          });
+          expect(yieldedValues).to(equal, [['foo']]);
+        });
+        
+        it('should return itself', function() {
+          var returnValue = doMapThis(function(s) { });
+          expect(returnValue).to(equal, _array);
+        });
+        
+        it('should mutate itself as expected', function() {
+          doMapThis(function(s) {
+            return 'item: ' + s;
+          });
+          expect(_array).to(equal, ['item: foo']);
         });
       });
     });
@@ -844,6 +894,32 @@ Screw.Unit(function() {
             return 'item: ' + s;
           });
           expect(returnValue).to(equal, ['item: foo', 'item: bar']);
+        });
+      });
+      
+      describe('when sent #mapThis with a block', function() {
+        function doMapThis() {
+          return _array.mapThis.apply(_array, arguments);
+        }
+        
+        it('should yield the element once each', function() {
+          var yieldedValues = [];
+          doMapThis(function(s) {
+            yieldedValues[yieldedValues.length] = arguments;
+          });
+          expect(yieldedValues).to(equal, [['foo'], ['bar']]);
+        });
+        
+        it('should return itself', function() {
+          var returnValue = doMapThis(function(s) { });
+          expect(returnValue).to(equal, _array);
+        });
+        
+        it('should mutate itself as expected', function() {
+          doMapThis(function(s) {
+            return 'item: ' + s;
+          });
+          expect(_array).to(equal, ['item: foo', 'item: bar']);
         });
       });
     });
