@@ -69,43 +69,36 @@ Screw.Unit(function() {
         });
         
         it('should return null', function() {
-          var returnValue = doDetect(function(s) { return false; });
+          var returnValue = doDetect(function(s) { });
           expect(returnValue).to(be_null);
         });
         
         it('should not mutate itself', function() {
-          doDetect(function(s) {
-            return false;
-          });
+          doDetect(function(s) { });
           expect(_array).to(equal, []);
         });
         
         describe('and an "ifNone" argument', function() {
-          var _ifNone = null;
-          
-          before(function() {
-            _ifNone = function() { return 'nothing here'; };
-          });
+          function doDetectPassingIfNone(block) {
+            var ifNone = function() { return 'nothing here'; };
+            return doDetect(ifNone, block);
+          }
           
           it('should not yield', function() {
             var yieldedValues = [];
-            doDetect(_ifNone, function(s) {
+            doDetectPassingIfNone(function(s) {
               yieldedValues[yieldedValues.length] = arguments;
             });
             expect(yieldedValues).to(equal, []);
           });
           
           it('should return the expected value', function() {
-            var returnValue = doDetect(_ifNone, function(s) {
-              return false;
-            });
+            var returnValue = doDetectPassingIfNone(function(s) { });
             expect(returnValue).to(equal, 'nothing here');
           });
           
           it('should not mutate itself', function() {
-            doDetect(_ifNone, function(s) {
-              return false;
-            });
+            doDetectPassingIfNone(function(s) { });
             expect(_array).to(equal, []);
           });
         });
@@ -154,7 +147,7 @@ Screw.Unit(function() {
         });
         
         it('should not mutate itself', function() {
-          doEachWithIndex(function(s) { });
+          doEachWithIndex(function(s, i) { });
           expect(_array).to(equal, []);
         });
       });
@@ -173,39 +166,36 @@ Screw.Unit(function() {
         });
         
         it('should return null', function() {
-          var returnValue = doFind(function(s) { return false; });
+          var returnValue = doFind(function(s) { });
           expect(returnValue).to(be_null);
         });
         
         it('should not mutate itself', function() {
-          doFind(function(s) { return false; });
+          doFind(function(s) { });
           expect(_array).to(equal, []);
         });
         
         describe('and an "ifNone" argument', function() {
-          var _ifNone = null;
-          
-          before(function() {
-            _ifNone = function() { return 'nothing here'; };
-          });
+          function doFindPassingIfNone(block) {
+            var ifNone = function() { return 'nothing here'; };
+            return doFind(ifNone, block);
+          }
           
           it('should not yield', function() {
             var yieldedValues = [];
-            doFind(_ifNone, function(s) {
+            doFindPassingIfNone(function(s) {
               yieldedValues[yieldedValues.length] = arguments;
             });
             expect(yieldedValues).to(equal, []);
           });
           
           it('should return the expected value', function() {
-            var returnValue = doFind(_ifNone, function(s) {
-              return false;
-            });
+            var returnValue = doFindPassingIfNone(function(s) { });
             expect(returnValue).to(equal, 'nothing here');
           });
         
           it('should not mutate itself', function() {
-            doFind(_ifNone, function(s) { return false; });
+            doFindPassingIfNone(function(s) { });
             expect(_array).to(equal, []);
           });
         });
@@ -236,30 +226,25 @@ Screw.Unit(function() {
         });
         
         describe('and an "initial" argument', function() {
-          var _initial = null;
-          
-          before(function() {
-            _initial = 'nothing here';
-          });
+          function doInjectPassingInitial(block) {
+            return doInject('starting point', block);
+          }
           
           it('should not yield', function() {
             var yieldedValues = [];
-            doInject(_initial, function(memo, s) {
+            doInjectPassingInitial(function(memo, s) {
               yieldedValues[yieldedValues.length] = s;
-              return memo;
             });
             expect(yieldedValues).to(equal, []);
           });
           
           it('should return the expected value', function() {
-            var returnValue = doInject(_initial, function(memo, s) {
-              return memo;
-            });
-            expect(returnValue).to(equal, 'nothing here');
+            var returnValue = doInjectPassingInitial(function(memo, s) { });
+            expect(returnValue).to(equal, 'starting point');
           });
           
           it('should not mutate itself', function() {
-            doInject(_initial, function(memo, s) { return memo; });
+            doInjectPassingInitial(function(memo, s) { });
             expect(_array).to(equal, []);
           });
         });
@@ -340,6 +325,11 @@ Screw.Unit(function() {
           });
           expect(returnValue).to(equal, ['item: foo']);
         });
+        
+        it('should not mutate itself', function() {
+          doCollect(function(s) { });
+          expect(_array).to(equal, ['foo']);
+        });
       });
       
       describe('when sent #collectThis with a block', function() {
@@ -381,49 +371,81 @@ Screw.Unit(function() {
           expect(yieldedValues).to(equal, [['foo']]);
         });
         
-        it('should return the element when detecting', function() {
-          var returnValue = doDetect(function(s) {
-            return s == 'foo';
+        describe('that returns true', function() {
+          it('should return the element', function() {
+            var returnValue = doDetect(function(s) { return true; });
+            expect(returnValue).to(equal, 'foo');
           });
-          expect(returnValue).to(equal, 'foo');
+          
+          it('should not mutate itself', function() {
+            doDetect(function(s) { return true; });
+            expect(_array).to(equal, ['foo']);
+          });
         });
         
-        it('should return null when not detecting', function() {
-          var returnValue = doDetect(function(s) {
-            return s == 'bizzle';
-          });
-          expect(returnValue).to(be_null);
-        });
-        
-        describe('and an "ifNone" argument', function() {
+        describe('that returns true and with an "ifNone" argument', function() {
           var _ifNone = null;
           
           before(function() {
-            _ifNone = function(s) {
-              return 'nothing here';
-            };
+            _ifNone = function() { return 'nothing here'; };
           });
           
-          it('should yield the element once', function() {
+          it('should yield the element once to the block', function() {
             var yieldedValues = [];
-            doDetect(_ifNone, function(s) {
+            return doDetect(_ifNone, function(s) {
               yieldedValues[yieldedValues.length] = arguments;
+              return true;
             });
             expect(yieldedValues).to(equal, [['foo']]);
           });
           
-          it('should return the element when detecting', function() {
-            var returnValue = doDetect(_ifNone, function(s) {
-              return s == 'foo';
-            });
+          it('should return the element', function() {
+            var returnValue = doDetect(_ifNone, function(s) { return true; });
             expect(returnValue).to(equal, 'foo');
           });
           
-          it('should return the expected value when not detecting', function() {
-            var returnValue = doDetect(_ifNone, function(s) {
-              return s == 'bizzle';
+          it('should not mutate itself', function() {
+            doDetect(_ifNone, function(s) { return true; });
+            expect(_array).to(equal, ['foo']);
+          });
+        });
+        
+        describe('that returns false', function() {
+          it('should return null', function() {
+            var returnValue = doDetect(function(s) { return false; });
+            expect(returnValue).to(be_null);
+          });
+          
+          it('should not mutate itself', function() {
+            doDetect(function(s) { return false; });
+            expect(_array).to(equal, ['foo']);
+          });
+        });
+        
+        describe('that returns false and with an "ifNone" argument', function() {
+          var _ifNone = null;
+          
+          before(function() {
+            _ifNone = function() { return 'nothing here'; };
+          });
+          
+          it('should yield the element once to the block', function() {
+            var yieldedValues = [];
+            return doDetect(_ifNone, function(s) {
+              yieldedValues[yieldedValues.length] = arguments;
+              return false;
             });
+            expect(yieldedValues).to(equal, [['foo']]);
+          });
+          
+          it('should return the expected value', function() {
+            var returnValue = doDetect(_ifNone, function(s) { return false; });
             expect(returnValue).to(equal, 'nothing here');
+          });
+          
+          it('should not mutate itself', function() {
+            doDetect(_ifNone, function(s) { return false; });
+            expect(_array).to(equal, ['foo']);
           });
         });
       });
@@ -445,6 +467,11 @@ Screw.Unit(function() {
           var returnValue = doEach(function(s) { });
           expect(returnValue).to(equal, _array);
         });
+        
+        it('should not mutate itself', function() {
+          doEach(function(s) { });
+          expect(_array).to(equal, ['foo']);
+        });
       });
       
       describe('when sent #eachWithIndex with a block', function() {
@@ -464,6 +491,11 @@ Screw.Unit(function() {
           var returnValue = doEachWithIndex(function(s, i) { });
           expect(returnValue).to(equal, _array);
         });
+        
+        it('should not mutate itself', function() {
+          doEachWithIndex(function(s, i) { });
+          expect(_array).to(equal, ['foo']);
+        });
       });
       
       describe('when sent #find with a block', function() {
@@ -479,49 +511,81 @@ Screw.Unit(function() {
           expect(yieldedValues).to(equal, [['foo']]);
         });
         
-        it('should return the element when finding', function() {
-          var returnValue = doFind(function(s) {
-            return s == 'foo';
+        describe('that returns true', function() {
+          it('should return the element', function() {
+            var returnValue = doFind(function(s) { return true; });
+            expect(returnValue).to(equal, 'foo');
           });
-          expect(returnValue).to(equal, 'foo');
+          
+          it('should not mutate itself', function() {
+            doFind(function(s) { return true; });
+            expect(_array).to(equal, ['foo']);
+          });
         });
         
-        it('should return null when not finding', function() {
-          var returnValue = doFind(function(s) {
-            return s == 'bizzle';
-          });
-          expect(returnValue).to(be_null);
-        });
-        
-        describe('and an "ifNone" argument', function() {
+        describe('that returns true and with an "ifNone" argument', function() {
           var _ifNone = null;
           
           before(function() {
-            _ifNone = function(s) {
-              return 'nothing here';
-            };
+            _ifNone = function() { return 'nothing here'; };
           });
           
-          it('should yield the element once', function() {
+          it('should yield the element once to the block', function() {
             var yieldedValues = [];
-            doFind(_ifNone, function(s) {
+            return doFind(_ifNone, function(s) {
               yieldedValues[yieldedValues.length] = arguments;
+              return true;
             });
             expect(yieldedValues).to(equal, [['foo']]);
           });
           
-          it('should return the element when finding', function() {
-            var returnValue = doFind(_ifNone, function(s) {
-              return s == 'foo';
-            });
+          it('should return the element', function() {
+            var returnValue = doFind(_ifNone, function(s) { return true; });
             expect(returnValue).to(equal, 'foo');
           });
           
-          it('should return the expected value when not finding', function() {
-            var returnValue = doFind(_ifNone, function(s) {
-              return s == 'bizzle';
+          it('should not mutate itself', function() {
+            doFind(_ifNone, function(s) { return true; });
+            expect(_array).to(equal, ['foo']);
+          });
+        });
+        
+        describe('that returns false', function() {
+          it('should return null', function() {
+            var returnValue = doFind(function(s) { return false; });
+            expect(returnValue).to(be_null);
+          });
+          
+          it('should not mutate itself', function() {
+            doFind(function(s) { return false; });
+            expect(_array).to(equal, ['foo']);
+          });
+        });
+        
+        describe('that returns false and with an "ifNone" argument', function() {
+          var _ifNone = null;
+          
+          before(function() {
+            _ifNone = function() { return 'nothing here'; };
+          });
+          
+          it('should yield the element once to the block', function() {
+            var yieldedValues = [];
+            return doFind(_ifNone, function(s) {
+              yieldedValues[yieldedValues.length] = arguments;
+              return false;
             });
+            expect(yieldedValues).to(equal, [['foo']]);
+          });
+          
+          it('should return the expected value', function() {
+            var returnValue = doFind(_ifNone, function(s) { return false; });
             expect(returnValue).to(equal, 'nothing here');
+          });
+          
+          it('should not mutate itself', function() {
+            doFind(_ifNone, function(s) { return false; });
+            expect(_array).to(equal, ['foo']);
           });
         });
       });
@@ -535,37 +599,49 @@ Screw.Unit(function() {
           var yieldedValues = [];
           doInject(function(memo, s) {
             yieldedValues[yieldedValues.length] = arguments;
-            return memo;
+            return memo + '|' + s;
           });
           expect(yieldedValues).to(equal, []);
         });
         
         it('should return the element', function() {
-          var returnValue = doInject(function(memo, s) { return memo; });
+          var returnValue = doInject(function(memo, s) {
+            return memo + '|' + s;
+          });
           expect(returnValue).to(equal, 'foo');
+        });
+        
+        it('should not mutate itself', function() {
+          doInject(function(memo, s) { return memo + '|' + s; });
+          expect(_array).to(equal, ['foo']);
         });
         
         describe('and an "initial" argument', function() {
           var _initial = null;
           
           before(function() {
-            _initial = 'nothing here';
+            _initial = 'starting point';
           });
           
           it('should yield the expected memo and the element once', function() {
             var yieldedValues = [];
             doInject(_initial, function(memo, s) {
               yieldedValues[yieldedValues.length] = arguments;
-              return memo;
+              return memo + '|' + s;
             });
-            expect(yieldedValues).to(equal, [['nothing here', 'foo']]);
+            expect(yieldedValues).to(equal, [['starting point', 'foo']]);
           });
           
-          it('should return the expected value', function() {
+          it('should return the result of the yield', function() {
             var returnValue = doInject(_initial, function(memo, s) {
-              return memo;
+              return memo + '|' + s;
             });
-            expect(returnValue).to(equal, 'nothing here');
+            expect(returnValue).to(equal, 'starting point|foo');
+          });
+          
+          it('should not mutate itself', function() {
+            doInject(_initial, function(memo, s) { return memo + '|' + s; });
+            expect(_array).to(equal, ['foo']);
           });
         });
       });
@@ -588,6 +664,11 @@ Screw.Unit(function() {
             return 'item: ' + s;
           });
           expect(returnValue).to(equal, ['item: foo']);
+        });
+        
+        it('should not mutate itself', function() {
+          doMap(function(s) { });
+          expect(_array).to(equal, ['foo']);
         });
       });
       
@@ -644,6 +725,11 @@ Screw.Unit(function() {
           });
           expect(returnValue).to(equal, ['item: foo', 'item: bar']);
         });
+        
+        it('should not mutate itself', function() {
+          doCollect(function(s) { return s; });
+          expect(_array).to(equal, ['foo', 'bar']);
+        });
       });
       
       describe('when sent #collectThis with a block', function() {
@@ -651,7 +737,7 @@ Screw.Unit(function() {
           return _array.collectThis.apply(_array, arguments);
         }
         
-        it('should yield the element once each', function() {
+        it('should yield the elements once each', function() {
           var yieldedValues = [];
           doCollectThis(function(s) {
             yieldedValues[yieldedValues.length] = arguments;
@@ -685,49 +771,81 @@ Screw.Unit(function() {
           expect(yieldedValues).to(equal, [['foo'], ['bar']]);
         });
         
-        it('should return the detected element when detecting', function() {
-          var returnValue = doDetect(function(s) {
-            return s == 'foo';
+        describe('that returns true', function() {
+          it('should return the first element', function() {
+            var returnValue = doDetect(function(s) { return true; });
+            expect(returnValue).to(equal, 'foo');
           });
-          expect(returnValue).to(equal, 'foo');
+          
+          it('should not mutate itself', function() {
+            doDetect(function(s) { return true; });
+            expect(_array).to(equal, ['foo', 'bar']);
+          });
         });
         
-        it('should return null when not detecting', function() {
-          var returnValue = doDetect(function(s) {
-            return s == 'bizzle';
-          });
-          expect(returnValue).to(be_null);
-        });
-        
-        describe('and an "ifNone" argument', function() {
+        describe('that returns true and with an "ifNone" argument', function() {
           var _ifNone = null;
           
           before(function() {
-            _ifNone = function(s) {
-              return 'nothing here';
-            };
+            _ifNone = function() { return 'nothing here'; };
           });
           
-          it('should yield the elements once each', function() {
+          it('should yield the elements to the block once each', function() {
             var yieldedValues = [];
-            doDetect(_ifNone, function(s) {
+            return doDetect(_ifNone, function(s) {
               yieldedValues[yieldedValues.length] = arguments;
+              return true;
             });
             expect(yieldedValues).to(equal, [['foo'], ['bar']]);
           });
           
-          it('should return the detected element when detecting', function() {
-            var returnValue = doDetect(_ifNone, function(s) {
-              return s == 'foo';
-            });
+          it('should return the first element', function() {
+            var returnValue = doDetect(_ifNone, function(s) { return true; });
             expect(returnValue).to(equal, 'foo');
           });
           
-          it('should return the expected value when not detecting', function() {
-            var returnValue = doDetect(_ifNone, function(s) {
-              return s == 'bizzle';
+          it('should not mutate itself', function() {
+            doDetect(_ifNone, function(s) { return true; });
+            expect(_array).to(equal, ['foo', 'bar']);
+          });
+        });
+        
+        describe('that returns false', function() {
+          it('should return null', function() {
+            var returnValue = doDetect(function(s) { return false; });
+            expect(returnValue).to(be_null);
+          });
+          
+          it('should not mutate itself', function() {
+            doDetect(function(s) { return false; });
+            expect(_array).to(equal, ['foo', 'bar']);
+          });
+        });
+        
+        describe('that returns false and with an "ifNone" argument', function() {
+          var _ifNone = null;
+          
+          before(function() {
+            _ifNone = function() { return 'nothing here'; };
+          });
+          
+          it('should yield the elements to the block once each', function() {
+            var yieldedValues = [];
+            return doDetect(_ifNone, function(s) {
+              yieldedValues[yieldedValues.length] = arguments;
+              return false;
             });
+            expect(yieldedValues).to(equal, [['foo'], ['bar']]);
+          });
+          
+          it('should return the expected value', function() {
+            var returnValue = doDetect(_ifNone, function(s) { return false; });
             expect(returnValue).to(equal, 'nothing here');
+          });
+          
+          it('should not mutate itself', function() {
+            doDetect(_ifNone, function(s) { return false; });
+            expect(_array).to(equal, ['foo', 'bar']);
           });
         });
       });
@@ -749,6 +867,11 @@ Screw.Unit(function() {
           var returnValue = doEach(function(s) { });
           expect(returnValue).to(equal, _array);
         });
+        
+        it('should not mutate itself', function() {
+          doEach(function(s) { });
+          expect(_array).to(equal, ['foo', 'bar']);
+        });
       });
       
       describe('when sent #eachWithIndex with a block', function() {
@@ -768,6 +891,11 @@ Screw.Unit(function() {
           var returnValue = doEachWithIndex(function(s, i) { });
           expect(returnValue).to(equal, _array);
         });
+        
+        it('should not mutate itself', function() {
+          doEachWithIndex(function(s) { });
+          expect(_array).to(equal, ['foo', 'bar']);
+        });
       });
       
       describe('when sent #find with a block', function() {
@@ -783,49 +911,81 @@ Screw.Unit(function() {
           expect(yieldedValues).to(equal, [['foo'], ['bar']]);
         });
         
-        it('should return the found element when finding', function() {
-          var returnValue = doFind(function(s) {
-            return s == 'foo';
+        describe('that returns true', function() {
+          it('should return the first element', function() {
+            var returnValue = doFind(function(s) { return true; });
+            expect(returnValue).to(equal, 'foo');
           });
-          expect(returnValue).to(equal, 'foo');
+          
+          it('should not mutate itself', function() {
+            doFind(function(s) { return true; });
+            expect(_array).to(equal, ['foo', 'bar']);
+          });
         });
         
-        it('should return null when not finding', function() {
-          var returnValue = doFind(function(s) {
-            return s == 'bizzle';
-          });
-          expect(returnValue).to(be_null);
-        });
-        
-        describe('and an "ifNone" argument', function() {
+        describe('that returns true and with an "ifNone" argument', function() {
           var _ifNone = null;
           
           before(function() {
-            _ifNone = function(s) {
-              return 'nothing here';
-            };
+            _ifNone = function() { return 'nothing here'; };
           });
           
-          it('should yield the elements once each', function() {
+          it('should yield the elements to the block once each', function() {
             var yieldedValues = [];
-            doFind(_ifNone, function(s) {
+            return doFind(_ifNone, function(s) {
               yieldedValues[yieldedValues.length] = arguments;
+              return true;
             });
             expect(yieldedValues).to(equal, [['foo'], ['bar']]);
           });
           
-          it('should return the found element when finding', function() {
-            var returnValue = doFind(_ifNone, function(s) {
-              return s == 'foo';
-            });
+          it('should return the first element', function() {
+            var returnValue = doFind(_ifNone, function(s) { return true; });
             expect(returnValue).to(equal, 'foo');
           });
           
-          it('should return the expected value when not finding', function() {
-            var returnValue = doFind(_ifNone, function(s) {
-              return s == 'bizzle';
+          it('should not mutate itself', function() {
+            doFind(_ifNone, function(s) { return true; });
+            expect(_array).to(equal, ['foo', 'bar']);
+          });
+        });
+        
+        describe('that returns false', function() {
+          it('should return null', function() {
+            var returnValue = doFind(function(s) { return false; });
+            expect(returnValue).to(be_null);
+          });
+          
+          it('should not mutate itself', function() {
+            doFind(function(s) { return false; });
+            expect(_array).to(equal, ['foo', 'bar']);
+          });
+        });
+        
+        describe('that returns false and with an "ifNone" argument', function() {
+          var _ifNone = null;
+          
+          before(function() {
+            _ifNone = function() { return 'nothing here'; };
+          });
+          
+          it('should yield the elements to the block once each', function() {
+            var yieldedValues = [];
+            return doFind(_ifNone, function(s) {
+              yieldedValues[yieldedValues.length] = arguments;
+              return false;
             });
+            expect(yieldedValues).to(equal, [['foo'], ['bar']]);
+          });
+          
+          it('should return the expected value', function() {
+            var returnValue = doFind(_ifNone, function(s) { return false; });
             expect(returnValue).to(equal, 'nothing here');
+          });
+          
+          it('should not mutate itself', function() {
+            doFind(_ifNone, function(s) { return false; });
+            expect(_array).to(equal, ['foo', 'bar']);
           });
         });
       });
@@ -835,43 +995,55 @@ Screw.Unit(function() {
           return _array.inject.apply(_array, arguments);
         }
         
-        it('should yield once the first and the second elements', function() {
+        it('should yield the second element once with the first element as the memo', function() {
           var yieldedValues = [];
           doInject(function(memo, s) {
             yieldedValues[yieldedValues.length] = arguments;
-            return memo;
+            return memo + '|' + s;
           });
           expect(yieldedValues).to(equal, [['foo', 'bar']]);
         });
         
-        it('should return the first element', function() {
-          var returnValue = doInject(function(memo, s) { return memo; });
-          expect(returnValue).to(equal, 'foo');
+        it('should return the result of the yield', function() {
+          var returnValue = doInject(function(memo, s) {
+            return memo + '|' + s;
+          });
+          expect(returnValue).to(equal, 'foo|bar');
+        });
+        
+        it('should not mutate itself', function() {
+          doInject(function(memo, s) { return memo + '|' + s; });
+          expect(_array).to(equal, ['foo', 'bar']);
         });
         
         describe('and an "initial" argument', function() {
           var _initial = null;
           
           before(function() {
-            _initial = 'nothing here';
+            _initial = 'starting point';
           });
           
           it('should yield the expected memo and the elements once each', function() {
             var yieldedValues = [];
             doInject(_initial, function(memo, s) {
               yieldedValues[yieldedValues.length] = arguments;
-              return memo;
+              return memo + '|' + s;
             });
             expect(yieldedValues).to(equal,
-                                     [['nothing here', 'foo'],
-                                      ['nothing here', 'bar']]);
+                                     [['starting point',     'foo'],
+                                      ['starting point|foo', 'bar']]);
           });
           
-          it('should return the expected value', function() {
+          it('should return the result of the last yield', function() {
             var returnValue = doInject(_initial, function(memo, s) {
-              return memo;
+              return memo + '|' + s;
             });
-            expect(returnValue).to(equal, 'nothing here');
+            expect(returnValue).to(equal, 'starting point|foo|bar');
+          });
+          
+          it('should not mutate itself', function() {
+            doInject(_initial, function(memo, s) { return memo + '|' + s; });
+            expect(_array).to(equal, ['foo', 'bar']);
           });
         });
       });
@@ -895,6 +1067,11 @@ Screw.Unit(function() {
           });
           expect(returnValue).to(equal, ['item: foo', 'item: bar']);
         });
+        
+        it('should not mutate itself', function() {
+          doMap(function(s) { });
+          expect(_array).to(equal, ['foo', 'bar']);
+        });
       });
       
       describe('when sent #mapThis with a block', function() {
@@ -902,7 +1079,7 @@ Screw.Unit(function() {
           return _array.mapThis.apply(_array, arguments);
         }
         
-        it('should yield the element once each', function() {
+        it('should yield the elements once each', function() {
           var yieldedValues = [];
           doMapThis(function(s) {
             yieldedValues[yieldedValues.length] = arguments;
