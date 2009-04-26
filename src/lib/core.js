@@ -97,12 +97,13 @@ Array.prototype.collectThis = function(block) {
 Array.prototype.detect = function(ifNone, block) {
   function detectOrNone(noneValue, block) {
     var result = noneValue;
-    this.each(function(item) {
-      if (block(item) === true) {
+    for (var i = 0; i < this.length; i += 1) {
+      var item = this[i];
+      if (block(item)) {
         result = item;
-        return;
+        break;
       }
-    });
+    }
     return result;
   }
   
