@@ -96,15 +96,11 @@ Array.prototype.collectThis = function(block) {
  */
 Array.prototype.detect = function(ifNone, block) {
   function detectOrNone(noneValue, block) {
-    var result = noneValue;
     for (var i = 0; i < this.length; i += 1) {
       var item = this[i];
-      if (block(item)) {
-        result = item;
-        break;
-      }
+      if (block(item)) return item;
     }
-    return result;
+    return noneValue;
   }
   
   var noneValue = (arguments.length > 1) ? ifNone() : null;
