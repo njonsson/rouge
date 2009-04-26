@@ -74,7 +74,8 @@ Array.prototype.collectThis = function(block) {
  * 
  * <pre>
  * var array = ['foo', 'bar', 'baz'];
- * var result = array.collect(function() { return 'nothing here'; }, function(item) {
+ * var ifNone = function() { return 'nothing here'; };
+ * var result = array.detect(ifNone, function(item) {
  *   return item == 'bizzle';
  * });
  * result // => 'nothing here'
