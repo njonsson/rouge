@@ -7,6 +7,30 @@ Screw.Unit(function() {
         _array = [];
       });
       
+      describe('when sent #areAll with a block', function() {
+        function doAreAll() {
+          return _array.areAll.apply(_array, arguments);
+        }
+        
+        it('should not yield', function() {
+          var yieldedValues = [];
+          doAreAll(function(s) {
+            yieldedValues[yieldedValues.length] = arguments;
+          });
+          expect(yieldedValues).to(equal, []);
+        });
+        
+        it('should return true', function() {
+          var returnValue = doAreAll(function(s) { });
+          expect(returnValue).to(equal, true);
+        });
+        
+        it('should not mutate itself', function() {
+          doAreAll(function(s) { });
+          expect(_array).to(equal, []);
+        });
+      });
+      
       describe('when sent #collect with a block', function() {
         function doCollect() {
           return _array.collect.apply(_array, arguments);
