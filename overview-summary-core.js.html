@@ -1,0 +1,531 @@
+<!doctype html public "-//W3C//DTD HTML 4.0 Frameset//EN""http://www.w3.org/TR/REC-html40/frameset.dtd">
+<html>
+<head>
+<title>
+Rouge Overview
+</title>
+<link rel ="stylesheet" type="text/css" href="stylesheet.css" title="Style">
+<script>
+function asd() {
+	
+		parent.document.title="core.js Overview";
+	
+}
+</script>
+</head>
+<body bgcolor="white" onload="asd();">
+
+<!-- ========== START OF NAVBAR ========== -->
+<a name="navbar_top"><!-- --></a>
+<table border="0" width="100%" cellpadding="1" cellspacing="0">
+<tr>
+<td colspan=2 bgcolor="#EEEEFF" class="NavBarCell1">
+<a name="navbar_top_firstrow"><!-- --></a>
+<table border="0" cellpadding="0" cellspacing="3">
+  <tr align="center" valign="top">
+  
+  
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-summary.html"><font class="NavBarFont1"><b>Overview</b></font></a>&nbsp;</td>
+  <td bgcolor="#FFFFFF" class="NavBarCell1Rev">	&nbsp;<font class="NavBarFont1Rev"><b>File</b></font>&nbsp;</td>
+  
+
+  <td bgcolor="#FFFFFF" class="NavBarCell1"> 	<font class="NavBarFont1">Class</font>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-tree.html"><font class="NavBarFont1"><b>Tree</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="index-all.html"--><font class="NavBarFont1"><b>Index</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="help-doc.html"><font class="NavBarFont1"><b>Help</b></font></a>&nbsp;</td>
+  </tr>
+</table>
+</td>
+<td bgcolor="#EEEEFF" align="right" valign="top">
+<em>
+<b>Rouge</b></em>
+</td>
+</tr>
+
+<tr>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+&nbsp;PREV&nbsp;
+&nbsp;NEXT</font></td>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+  <a href="index.html" target="_top"><b>FRAMES</b></a>  &nbsp;
+&nbsp;<a href="overview-summary.html" target="_top"><b>NO FRAMES</b></a>
+&nbsp;&nbsp;
+<script>
+  <!--
+  if(window==top) {
+    document.writeln('<A HREF="allclasses-noframe.html" TARGET=""><B>All Classes</B></A>');
+  }
+  //-->
+</script>
+<noscript>
+<a href="allclasses-noframe.html" target=""><b>All Classes</b></a>
+</noscript>
+</font></td>
+</tr>
+</table>
+<!-- =========== END OF NAVBAR =========== -->
+
+<hr>
+<center>
+	
+	   <h2>core.js</h2>
+	
+</center>
+
+	
+
+
+<h4>Summary</h4>
+<p>
+	
+		Defines a JavaScript-idiomatic implementation of the Ruby core library.
+ 
+ <BR/><BR/><B>Author:</B> Nils Jonsson <nils@alumni.rice.edu><BR/>
+	
+</p>
+
+<hr>
+
+
+
+<!-- ========== METHOD SUMMARY =========== -->
+
+<!-- ========== END METHOD SUMMARY =========== -->
+
+
+        <pre class="sourceview"><span class="comment">/**
+ * <span class="attrib">@fileoverview</span>
+ * Defines a JavaScript-idiomatic implementation of the Ruby core library.
+ * 
+ * <span class="attrib">@author</span> Nils Jonsson &lt;nils<span class="attrib">@alumni</span>.rice.edu&gt;
+ */</span>
+
+<span class="comment">/**
+ * Passes each element in the array to &lt;i&gt;block&lt;/i&gt;, returning &lt;tt&gt;true&lt;/tt&gt; if
+ * &lt;i&gt;block&lt;/i&gt; never returns &lt;tt&gt;false&lt;/tt&gt; or &lt;tt&gt;null&lt;/tt&gt;. If &lt;i&gt;block&lt;/i&gt;
+ * is not given, Rouge adds an implicit block that will return &lt;tt&gt;true&lt;/tt&gt;
+ * only if none of the elements is &lt;tt&gt;false&lt;/tt&gt; or &lt;tt&gt;null&lt;/tt&gt;.
+ * 
+ * &lt;pre&gt;
+ * var array = ['foo', 'bar', 'bizzle'];
+ * var result = array.areAll(function(item) {
+ *   return item.length &gt;= 3;
+ * });
+ * result // =&gt; true
+ * array  // =&gt; ['foo', 'bar', 'bizzle']
+ * 
+ * var array = ['foo', 'bar', 'bizzle'];
+ * var result = array.areAll(function(item) {
+ *   return item.length &gt;= 4;
+ * });
+ * result // =&gt; false
+ * array  // =&gt; ['foo', 'bar', 'bizzle']
+ * &lt;/pre&gt;
+ * 
+ * Without the optional &lt;i&gt;block&lt;/i&gt;:
+ * 
+ * &lt;pre&gt;
+ * var array = [null, true, 99];
+ * var result = array.areAll();
+ * result // =&gt; false
+ * array  // =&gt; [null, true, 99]
+ * &lt;/pre&gt;
+ * 
+ * <span class="attrib">@param</span> {Function} block (optional) The function to execute. Should have one
+ *                         parameter
+ * <span class="attrib">@returns</span> {Boolean} &lt;tt&gt;true&lt;/tt&gt; if &lt;i&gt;block&lt;/t&gt; does not return
+ *                    &lt;tt&gt;false&lt;/tt&gt; or &lt;tt&gt;null&lt;/tt&gt; for any element
+ * 
+ * <span class="attrib">@see</span> #areAny #areAny
+ */</span>
+Array.<span class="reserved">prototype</span>.areAll = <span class="reserved">function</span>(block) {
+  <span class="reserved">if</span> (block === undefined) {
+    block = <span class="reserved">function</span>(item) {
+      <span class="reserved">return</span> ! ((item === null) || (item === false));
+    };
+  }
+  <span class="reserved">for</span> (var i = 0; i &lt; <span class="reserved">this</span>.length; i += 1) {
+    var result = block(<span class="reserved">this</span>[i]);
+    <span class="reserved">if</span> ((result === null) || (result === false)) <span class="reserved">return</span> false;
+  }
+  <span class="reserved">return</span> true;
+};
+
+<span class="comment">/**
+ * Passes each element in the array to &lt;i&gt;block&lt;/i&gt;, returning &lt;tt&gt;true&lt;/tt&gt; if
+ * &lt;i&gt;block&lt;/i&gt; ever returns a value other than &lt;tt&gt;false&lt;/tt&gt; or &lt;tt&gt;null&lt;/tt&gt;.
+ * If &lt;i&gt;block&lt;/i&gt; is not given, Rouge adds an implicit block that will return
+ * &lt;tt&gt;true&lt;/tt&gt; if any of the elements is not &lt;tt&gt;false&lt;/tt&gt; or &lt;tt&gt;null&lt;/tt&gt;.
+ * 
+ * &lt;pre&gt;
+ * var array = ['foo', 'bar', 'bizzle'];
+ * var result = array.areAny(function(item) {
+ *   return item.length &gt;= 3;
+ * });
+ * result // =&gt; true
+ * array  // =&gt; ['foo', 'bar', 'bizzle']
+ * 
+ * var array = ['foo', 'bar', 'bizzle'];
+ * var result = array.areAny(function(item) {
+ *   return item.length &lt;= 2;
+ * });
+ * result // =&gt; false
+ * array  // =&gt; ['foo', 'bar', 'bizzle']
+ * &lt;/pre&gt;
+ * 
+ * Without the optional &lt;i&gt;block&lt;/i&gt;:
+ * 
+ * &lt;pre&gt;
+ * var array = [null, true, 99];
+ * var result = array.areAny();
+ * result // =&gt; true
+ * array  // =&gt; [null, true, 99]
+ * &lt;/pre&gt;
+ * 
+ * <span class="attrib">@param</span> {Function} block (optional) The function to execute. Should have one
+ *                         parameter
+ * <span class="attrib">@returns</span> {Boolean} &lt;tt&gt;true&lt;/tt&gt; if &lt;i&gt;block&lt;/t&gt; returns a value other than
+ *                    &lt;tt&gt;false&lt;/tt&gt; or &lt;tt&gt;null&lt;/tt&gt; for any element
+ * 
+ * <span class="attrib">@see</span> #areAll #areAll
+ */</span>
+Array.<span class="reserved">prototype</span>.areAny = <span class="reserved">function</span>(block) {
+  <span class="reserved">if</span> (block === undefined) {
+    block = <span class="reserved">function</span>(item) {
+      <span class="reserved">return</span> ! ((item === null) || (item === false));
+    };
+  }
+  <span class="reserved">for</span> (var i = 0; i &lt; <span class="reserved">this</span>.length; i += 1) {
+    var result = block(<span class="reserved">this</span>[i]);
+    <span class="reserved">if</span> (! ((result === null) || (result === false))) <span class="reserved">return</span> true;
+  }
+  <span class="reserved">return</span> false;
+};
+
+<span class="comment">/**
+ * Creates a different array of the same size. Invokes &lt;i&gt;block&lt;/i&gt; once for
+ * each element in the array, passing that element as an argument.
+ * 
+ * &lt;pre&gt;
+ * var array = ['foo', 'bar', 'baz'];
+ * var result = array.collect(function(item) {
+ *   return item + '!';
+ * });
+ * result // =&gt; ['foo!', 'bar!', 'baz!']
+ * array  // =&gt; ['foo', 'bar', 'baz']
+ * &lt;/pre&gt;
+ * 
+ * <span class="attrib">@param</span> {Function} block The function to execute. Should have one parameter
+ * <span class="attrib">@returns</span> {Array} An array containing the values returned by &lt;i&gt;block&lt;/i&gt;
+ * 
+ * <span class="attrib">@see</span> #map #map
+ */</span>
+Array.<span class="reserved">prototype</span>.collect = <span class="reserved">function</span>(block) {
+  var result = [];
+  <span class="reserved">this</span>.each(<span class="reserved">function</span>(item) {
+    result[result.length] = block.apply(<span class="reserved">this</span>, [item]);
+  });
+  <span class="reserved">return</span> result;
+};
+
+<span class="comment">/**
+ * Invokes &lt;i&gt;block&lt;/i&gt; once for each element in the array, replacing that
+ * element with the value returned by &lt;i&gt;block&lt;/i&gt;.
+ * 
+ * &lt;pre&gt;
+ * var array = ['foo', 'bar', 'baz'];
+ * var result = array.collectThis(function(item) {
+ *   return item + '!';
+ * });
+ * result // =&gt; ['foo!', 'bar!', 'baz!']
+ * array  // =&gt; ['foo!', 'bar!', 'baz!']
+ * &lt;/pre&gt;
+ * 
+ * <span class="attrib">@param</span> {Function} block The function to execute. Should have one parameter
+ * <span class="attrib">@returns</span> {Array} The array
+ * 
+ * <span class="attrib">@see</span> #mapThis #mapThis
+ */</span>
+Array.<span class="reserved">prototype</span>.collectThis = <span class="reserved">function</span>(block) {
+  var self = <span class="reserved">this</span>;
+  <span class="reserved">this</span>.eachWithIndex(<span class="reserved">function</span>(item, index) {
+    self[index] = block.apply(<span class="reserved">this</span>, [item]);
+  });
+  <span class="reserved">return</span> <span class="reserved">this</span>;
+};
+
+<span class="comment">/**
+ * Finds an element in the array. Invokes &lt;i&gt;block&lt;/i&gt; once for each element in
+ * the array, passing that element as an argument.
+ * 
+ * &lt;pre&gt;
+ * var array = ['foo', 'bar', 'baz'];
+ * var result = array.collect(function(item) {
+ *   return item === 'bar';
+ * });
+ * result // =&gt; 'bar'
+ * array  // =&gt; ['foo', 'bar', 'baz']
+ * &lt;/pre&gt;
+ * 
+ * With the optional &lt;i&gt;ifNone&lt;/i&gt; argument:
+ * 
+ * &lt;pre&gt;
+ * var array = ['foo', 'bar', 'baz'];
+ * var ifNone = function() { return 'nothing here'; };
+ * var result = array.detect(ifNone, function(item) {
+ *   return item === 'bizzle';
+ * });
+ * result // =&gt; 'nothing here'
+ * array  // =&gt; ['foo', 'bar', 'baz']
+ * &lt;/pre&gt;
+ * 
+ * <span class="attrib">@param</span> {Function} ifNone (optional) A function that returns the value to be
+ *                          returned by &lt;i&gt;#detect&lt;/i&gt; if there are no matches
+ * <span class="attrib">@param</span> {Function} block The function to execute. Should have one parameter
+ *                         and return either &lt;tt&gt;true&lt;/tt&gt; or &lt;tt&gt;false&lt;/tt&gt;
+ * <span class="attrib">@returns</span> The first element for which &lt;i&gt;block&lt;/i&gt; returns &lt;tt&gt;true&lt;/tt&gt;. If
+ *          &lt;i&gt;block&lt;/i&gt; never returns &lt;tt&gt;true&lt;/tt&gt; and &lt;i&gt;ifNone&lt;/i&gt; is
+ *          specified, then the return value of a call to &lt;i&gt;ifNone&lt;/i&gt; is used.
+ *          If &lt;i&gt;block&lt;/i&gt; never returns &lt;tt&gt;true&lt;/tt&gt; and &lt;i&gt;ifNone&lt;/i&gt; is not
+ *          specified, then &lt;tt&gt;null&lt;/tt&gt; is used
+ * 
+ * <span class="attrib">@see</span> #find #find
+ */</span>
+Array.<span class="reserved">prototype</span>.detect = <span class="reserved">function</span>(ifNone, block) {
+  <span class="reserved">function</span> detectOrNone(ifNone, block) {
+    <span class="reserved">for</span> (var i = 0; i &lt; <span class="reserved">this</span>.length; i += 1) {
+      var item = <span class="reserved">this</span>[i];
+      <span class="reserved">if</span> (block.apply(<span class="reserved">this</span>, [item])) <span class="reserved">return</span> item;
+    }
+    <span class="reserved">return</span> ifNone.apply(<span class="reserved">this</span>, []);
+  }
+  
+  var ifNoneToUse = (arguments.length &gt; 1) ?
+                    ifNone :
+                    <span class="reserved">function</span>() { <span class="reserved">return</span> null; };
+  <span class="reserved">if</span> (arguments.length === 1) {
+    block = arguments[0];
+  }
+  <span class="reserved">return</span> detectOrNone.apply(<span class="reserved">this</span>, [ifNoneToUse, block]);
+};
+
+<span class="comment">/**
+ * Invokes &lt;i&gt;block&lt;/i&gt; once for each element in the array, passing that element
+ * as an argument.
+ * 
+ * &lt;pre&gt;
+ * var array = ['foo', 'bar', 'baz'];
+ * array.each(function(item) {
+ *   alert(item);
+ * });
+ * &lt;/pre&gt;
+ * 
+ * opens three alert boxes:
+ * 
+ * &lt;ul&gt;
+ *   &lt;li&gt;foo&lt;/li&gt;
+ *   &lt;li&gt;bar&lt;/li&gt;
+ *   &lt;li&gt;baz&lt;/li&gt;
+ * &lt;/ul&gt;
+ * 
+ * <span class="attrib">@param</span> {Function} block The function to execute. Should have one parameter
+ * <span class="attrib">@returns</span> {Array} The array
+ * 
+ * <span class="attrib">@see</span> #eachWithIndex #eachWithIndex
+ */</span>
+Array.<span class="reserved">prototype</span>.each = <span class="reserved">function</span>(block) {
+  <span class="reserved">return</span> <span class="reserved">this</span>.eachWithIndex(<span class="reserved">function</span>(item, index) {
+    <span class="reserved">return</span> block.apply(<span class="reserved">this</span>, [item]);
+  });
+};
+
+<span class="comment">/**
+ * Invokes &lt;i&gt;block&lt;/i&gt; once for each element in the array, passing that element
+ * and its index as arguments.
+ * 
+ * &lt;pre&gt;
+ * var array = ['foo', 'bar', 'baz'];
+ * array.eachWithIndex(function(item, index) {
+ *   alert(index + ': ' + item);
+ * });
+ * &lt;/pre&gt;
+ * 
+ * opens three alert boxes:
+ * 
+ * &lt;ul&gt;
+ *   &lt;li&gt;0: foo&lt;/li&gt;
+ *   &lt;li&gt;1: bar&lt;/li&gt;
+ *   &lt;li&gt;2: baz&lt;/li&gt;
+ * &lt;/ul&gt;
+ * 
+ * <span class="attrib">@param</span> {Function} block The function to execute. Should have two parameters
+ * <span class="attrib">@returns</span> {Array} The array
+ * 
+ * <span class="attrib">@see</span> #each #each
+ */</span>
+Array.<span class="reserved">prototype</span>.eachWithIndex = <span class="reserved">function</span>(block) {
+  <span class="reserved">for</span> (var i = 0; i &lt; <span class="reserved">this</span>.length; i += 1) {
+    block.apply(<span class="reserved">this</span>, [<span class="reserved">this</span>[i], i]);
+  }
+  <span class="reserved">return</span> <span class="reserved">this</span>;
+};
+
+<span class="comment">/**
+ * An alias for &lt;b&gt;#detect&lt;/b&gt;.
+ * 
+ * <span class="attrib">@param</span> {Function} ifNone (optional) A function that returns the value to be
+ *                          returned by &lt;i&gt;#find&lt;/i&gt; if there are no matches
+ * <span class="attrib">@param</span> {Function} block The function to execute. Should have one parameter
+ *                         and return either &lt;tt&gt;true&lt;/tt&gt; or &lt;tt&gt;false&lt;/tt&gt;
+ * <span class="attrib">@returns</span> The first element for which &lt;i&gt;block&lt;/i&gt; returns &lt;tt&gt;true&lt;/tt&gt;. If
+ *          &lt;i&gt;block&lt;/i&gt; never returns &lt;tt&gt;true&lt;/tt&gt; and &lt;i&gt;ifNone&lt;/i&gt; is
+ *          specified, then the return value of a call to &lt;i&gt;ifNone&lt;/i&gt; is used.
+ *          If &lt;i&gt;block&lt;/i&gt; never returns &lt;tt&gt;true&lt;/tt&gt; and &lt;i&gt;ifNone&lt;/i&gt; is not
+ *          specified, then &lt;tt&gt;null&lt;/tt&gt; is used
+ * 
+ * <span class="attrib">@see</span> #detect #detect
+ */</span>
+Array.<span class="reserved">prototype</span>.find = <span class="reserved">function</span>(ifNone, block) {
+  <span class="reserved">return</span> <span class="reserved">this</span>.detect.apply(<span class="reserved">this</span>, arguments);
+};
+
+<span class="comment">/**
+ * Combines the elements of the array by applying &lt;i&gt;block&lt;/i&gt; to an accumulator
+ * value (&lt;i&gt;memo&lt;/i&gt;) and each element in turn. Invokes &lt;i&gt;block&lt;/i&gt; once for
+ * each element in the array, passing &lt;i&gt;memo&lt;/i&gt; and that element as arguments.
+ * At each invocation of &lt;i&gt;block&lt;/i&gt;, &lt;i&gt;memo&lt;/i&gt; is set to the value returned
+ * by &lt;i&gt;block&lt;/i&gt; previously.
+ * 
+ * The first form lets you supply an initial value for &lt;i&gt;memo&lt;/i&gt;.
+ * 
+ * &lt;pre&gt;
+ * var array = [1, 2, 3, 4];
+ * var result = array.inject(10, function(memo, item) {
+ *   return memo * item;
+ * });
+ * result // =&gt; 240
+ * array  // =&gt; [1, 2, 3, 4]
+ * &lt;/pre&gt;
+ * 
+ * The second form uses the first element as the &lt;i&gt;initial&lt;/i&gt; value (and skips
+ * that element while iterating).
+ * 
+ * &lt;pre&gt;
+ * var array = [1, 2, 3, 4];
+ * var result = array.inject(function(memo, item) {
+ *   return memo * item;
+ * });
+ * result // =&gt; 24
+ * array  // =&gt; [1, 2, 3, 4]
+ * &lt;/pre&gt;
+ * 
+ * <span class="attrib">@param</span> {Object} initial (optional) The initial value of the &lt;i&gt;memo&lt;/i&gt;
+ *                         argument passed to &lt;i&gt;block&lt;/i&gt;
+ * <span class="attrib">@param</span> {Function} block The function to execute. Should have two parameters
+ *                         (&lt;i&gt;memo&lt;/i&gt; and the element) and return the new
+ *                         value of &lt;i&gt;memo&lt;/i&gt;
+ * <span class="attrib">@returns</span> The value returned from the last invocation of &lt;i&gt;block&lt;/i&gt;
+ */</span>
+Array.<span class="reserved">prototype</span>.inject = <span class="reserved">function</span>(initial, block) {
+  var memo = null;
+  
+  <span class="reserved">if</span> (arguments.length === 1) {
+    memo = <span class="reserved">this</span>[0];
+    block = arguments[0];
+    <span class="reserved">for</span> (var i = 1; i &lt; <span class="reserved">this</span>.length; i += 1) {
+      memo = block.apply(<span class="reserved">this</span>, [memo, <span class="reserved">this</span>[i]]);
+    }
+    <span class="reserved">return</span> memo;
+  }
+  
+  memo = initial;
+  <span class="reserved">this</span>.each(<span class="reserved">function</span>(item) {
+    memo = block.apply(<span class="reserved">this</span>, [memo, item]);
+  });
+  <span class="reserved">return</span> memo;
+};
+
+<span class="comment">/**
+ * An alias for &lt;b&gt;#collect&lt;/b&gt;.
+ * 
+ * <span class="attrib">@param</span> {Function} block The function to execute. Should have one parameter
+ * <span class="attrib">@returns</span> {Array} An array containing the values returned by &lt;i&gt;block&lt;/i&gt;
+ * 
+ * <span class="attrib">@see</span> #collect #collect
+ */</span>
+Array.<span class="reserved">prototype</span>.map = <span class="reserved">function</span>(block) {
+  <span class="reserved">return</span> <span class="reserved">this</span>.collect.apply(<span class="reserved">this</span>, arguments);
+};
+
+<span class="comment">/**
+ * An alias for &lt;b&gt;#collectThis&lt;/b&gt;.
+ * 
+ * <span class="attrib">@param</span> {Function} block The function to execute. Should have one parameter
+ * <span class="attrib">@returns</span> {Array} The array
+ * 
+ * <span class="attrib">@see</span> #collectThis #collectThis
+ */</span>
+Array.<span class="reserved">prototype</span>.mapThis = <span class="reserved">function</span>(block) {
+  <span class="reserved">return</span> <span class="reserved">this</span>.collectThis.apply(<span class="reserved">this</span>, arguments);
+};
+</pre>
+	<hr>
+
+
+
+<!-- ========== START OF NAVBAR ========== -->
+<a name="navbar_top"><!-- --></a>
+<table border="0" width="100%" cellpadding="1" cellspacing="0">
+<tr>
+<td colspan=2 bgcolor="#EEEEFF" class="NavBarCell1">
+<a name="navbar_top_firstrow"><!-- --></a>
+<table border="0" cellpadding="0" cellspacing="3">
+  <tr align="center" valign="top">
+  
+  
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-summary.html"><font class="NavBarFont1"><b>Overview</b></font></a>&nbsp;</td>
+  <td bgcolor="#FFFFFF" class="NavBarCell1Rev">	&nbsp;<font class="NavBarFont1Rev"><b>File</b></font>&nbsp;</td>
+  
+
+  <td bgcolor="#FFFFFF" class="NavBarCell1"> <font class="NavBarFont1">Class</font>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="overview-tree.html"><font class="NavBarFont1"><b>Tree</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="index-all.html"--><font class="NavBarFont1"><b>Index</b></font></a>&nbsp;</td>
+  <td bgcolor="#EEEEFF" class="NavBarCell1">    <a href="help-doc.html"><font class="NavBarFont1"><b>Help</b></font></a>&nbsp;</td>
+  </tr>
+</table>
+</td>
+<td bgcolor="#EEEEFF" align="right" valign="top"><em>
+<b>Rouge</b></em>
+</td>
+</tr>
+
+<tr>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+&nbsp;PREV&nbsp;
+&nbsp;NEXT</font></td>
+<td bgcolor="white" class="NavBarCell2"><font size="-2">
+  <a href="index.html" target="_top"><b>FRAMES</b></a>  &nbsp;
+&nbsp;<a href="overview-summary.html" target="_top"><b>NO FRAMES</b></a>
+&nbsp;&nbsp;
+<script>
+  <!--
+  if(window==top) {
+    document.writeln('<A HREF="allclasses-noframe.html" TARGET=""><B>All Classes</B></A>');
+  }
+  //-->
+</script>
+<noscript>
+<a href="allclasses-noframe.html" target=""><b>All Classes</b></a>
+</noscript>
+</font></td>
+</tr>
+</table>
+<!-- =========== END OF NAVBAR =========== -->
+
+<hr>
+<font size="-1">
+
+</font>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Sat May  9 18:34:29 2009</div>
+</body>
+</html>

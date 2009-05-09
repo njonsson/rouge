@@ -1,0 +1,994 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN""http://www.w3.org/TR/REC-html40/loose.dtd">
+<!--NewPage-->
+<HTML>
+<HEAD>
+<TITLE>
+Array
+</TITLE>
+<LINK REL ="stylesheet" TYPE="text/css" HREF="stylesheet.css" TITLE="Style">
+</HEAD>
+<SCRIPT>
+function asd()
+{
+parent.document.title="Array";
+}
+</SCRIPT>
+<BODY BGCOLOR="white" onload="asd();">
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_bottom"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=3 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_bottom_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="overview-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <FONT CLASS="NavBarFont1">File</FONT>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev">&nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="overview-tree.html"><FONT CLASS="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <!--TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"-->    <!--A HREF="deprecated-list.html"--><!--FONT CLASS="NavBarFont1">Deprecated</FONT--><!--/A--><!--&nbsp;</TD-->
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="index-all.html"--><FONT CLASS="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="help-doc.html"><FONT CLASS="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+<B>Rouge</B>
+</EM>
+</TD
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<B>PREV CLASS</B><!-- 
+   NEXT CLASS 
+-->
+&nbsp;<B>NEXT CLASS</B></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="" TARGET="_top"><B>NO FRAMES</B></A>  &nbsp;
+&nbsp;
+<SCRIPT>
+  <!--
+  if(window==top) {
+    document.writeln('<A HREF="allclasses-noframe.html" TARGET=""><B>All Classes</B></A>');
+  }
+  //-->
+</SCRIPT>
+<NOSCRIPT>
+<A HREF="allclasses-noframe.html" TARGET=""><B>All Classes</B></A>
+</NOSCRIPT>
+</FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY:&nbsp;<A HREF="#field_summary">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+<HR>
+
+<!-- ======== START OF CLASS DATA ======== -->
+<H2>Class Array</H2>
+<PRE>Object
+   |
+   +--<b>Array</b>
+</PRE>
+
+
+<HR>
+<DL>
+   <!-- Class definition -->
+   <DT>class 
+   <B>Array</B>
+   
+
+</DL>
+   
+   <HR>
+
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+
+<!-- ======== END NESTED CLASS SUMMARY ======== -->
+
+
+<!-- =========== FIELD SUMMARY =========== -->
+
+
+   
+
+<!-- =========== END FIELD SUMMARY =========== -->
+
+
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+
+<!-- ======== END CONSTRUCTOR SUMMARY ======== -->
+
+&nbsp;
+
+<!-- ========== METHOD SUMMARY =========== -->
+
+<A NAME="method_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Method Summary</B></FONT></TD>
+</TR>
+
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&nbsp;Boolean</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#areAll">areAll</A></B>(&lt;Function&gt; block)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Passes each element in the array to <i>block</i>, returning <tt>true</tt> if
+ <i>block</i> never returns <tt>false</tt> or <tt>null</tt>.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&nbsp;Boolean</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#areAny">areAny</A></B>(&lt;Function&gt; block)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Passes each element in the array to <i>block</i>, returning <tt>true</tt> if
+ <i>block</i> ever returns a value other than <tt>false</tt> or <tt>null</tt>.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&nbsp;<a href="Array.html">Array</a></CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#collect">collect</A></B>(&lt;Function&gt; block)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Creates a different array of the same size.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&nbsp;<a href="Array.html">Array</a></CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#collectThis">collectThis</A></B>(&lt;Function&gt; block)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Invokes <i>block</i> once for each element in the array, replacing that
+ element with the value returned by <i>block</i>.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&nbsp;Object</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#detect">detect</A></B>(&lt;Function&gt; ifNone, &lt;Function&gt; block)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Finds an element in the array.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&nbsp;<a href="Array.html">Array</a></CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#each">each</A></B>(&lt;Function&gt; block)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Invokes <i>block</i> once for each element in the array, passing that element
+ as an argument.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&nbsp;<a href="Array.html">Array</a></CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#eachWithIndex">eachWithIndex</A></B>(&lt;Function&gt; block)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Invokes <i>block</i> once for each element in the array, passing that element
+ and its index as arguments.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&nbsp;Object</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#find">find</A></B>(&lt;Function&gt; ifNone, &lt;Function&gt; block)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 An alias for <b>#detect</b>.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&nbsp;Object</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#inject">inject</A></B>(&lt;Object&gt; initial, &lt;Function&gt; block)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Combines the elements of the array by applying <i>block</i> to an accumulator
+ value (<i>memo</i>) and each element in turn.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&nbsp;<a href="Array.html">Array</a></CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#map">map</A></B>(&lt;Function&gt; block)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 An alias for <b>#collect</b>.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
+	    <CODE>&nbsp;<a href="Array.html">Array</a></CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#mapThis">mapThis</A></B>(&lt;Function&gt; block)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 An alias for <b>#collectThis</b>.
+      </TD>
+   </TR>
+
+
+</TABLE>
+
+
+
+<P>
+<!-- ========== END METHOD SUMMARY =========== -->
+
+
+<!-- ============ FIELD DETAIL START =========== -->
+
+
+<!-- ============ FIELD DETAIL END =========== -->
+
+    <!-- ========= CONSTRUCTOR DETAIL START ======== -->
+
+
+<!-- Constructor return value(s) -->
+
+<!-- End constructor return value(s) -->
+
+<!-- ADDITIONAL ATTRIBUTES -->
+
+<HR/>
+<!-- END ADDITIONAL ATTRIBUTES  -->
+
+<!-- ========= CONSTRUCTOR DETAIL END ======== -->
+
+
+<!-- ============ METHOD DETAIL START ========== -->
+
+<A NAME="method_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+   <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+      <TD COLSPAN=1><FONT SIZE="+2">
+         <B>Method Detail</B></FONT>
+      </TD>
+   </TR>
+</TABLE>
+
+<!-- One single method detail entry -->
+
+   <A NAME="areAll"><!-- --></A>
+   <H3>areAll</H3>
+   <PRE>Boolean <B>areAll</B>(&lt;Function&gt; block)</PRE>
+   
+      <UL>Passes each element in the array to <i>block</i>, returning <tt>true</tt> if
+ <i>block</i> never returns <tt>false</tt> or <tt>null</tt>. If <i>block</i>
+ is not given, Rouge adds an implicit block that will return <tt>true</tt>
+ only if none of the elements is <tt>false</tt> or <tt>null</tt>.
+ 
+ <pre>
+ var array = ['foo', 'bar', 'bizzle'];
+ var result = array.areAll(function(item) {
+   return item.length >= 3;
+ });
+ result // => true
+ array  // => ['foo', 'bar', 'bizzle']
+ 
+ var array = ['foo', 'bar', 'bizzle'];
+ var result = array.areAll(function(item) {
+   return item.length >= 4;
+ });
+ result // => false
+ array  // => ['foo', 'bar', 'bizzle']
+ </pre>
+ 
+ Without the optional <i>block</i>:
+ 
+ <pre>
+ var array = [null, true, 99];
+ var result = array.areAll();
+ result // => false
+ array  // => [null, true, 99]
+ </pre></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>block</CODE> -  (optional) The function to execute. Should have one                          parameter  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+         <tt>true</tt> if <i>block</t> does not return                     <tt>false</tt> or <tt>null</tt> for any element     
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>See:</B><UL>- <a href="#areAny">#areAny</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="areAny"><!-- --></A>
+   <H3>areAny</H3>
+   <PRE>Boolean <B>areAny</B>(&lt;Function&gt; block)</PRE>
+   
+      <UL>Passes each element in the array to <i>block</i>, returning <tt>true</tt> if
+ <i>block</i> ever returns a value other than <tt>false</tt> or <tt>null</tt>.
+ If <i>block</i> is not given, Rouge adds an implicit block that will return
+ <tt>true</tt> if any of the elements is not <tt>false</tt> or <tt>null</tt>.
+ 
+ <pre>
+ var array = ['foo', 'bar', 'bizzle'];
+ var result = array.areAny(function(item) {
+   return item.length >= 3;
+ });
+ result // => true
+ array  // => ['foo', 'bar', 'bizzle']
+ 
+ var array = ['foo', 'bar', 'bizzle'];
+ var result = array.areAny(function(item) {
+   return item.length <= 2;
+ });
+ result // => false
+ array  // => ['foo', 'bar', 'bizzle']
+ </pre>
+ 
+ Without the optional <i>block</i>:
+ 
+ <pre>
+ var array = [null, true, 99];
+ var result = array.areAny();
+ result // => true
+ array  // => [null, true, 99]
+ </pre></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>block</CODE> -  (optional) The function to execute. Should have one                          parameter  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+         <tt>true</tt> if <i>block</t> returns a value other than                     <tt>false</tt> or <tt>null</tt> for any element     
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>See:</B><UL>- <a href="#areAll">#areAll</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="collect"><!-- --></A>
+   <H3>collect</H3>
+   <PRE><a href="Array.html">Array</a> <B>collect</B>(&lt;Function&gt; block)</PRE>
+   
+      <UL>Creates a different array of the same size. Invokes <i>block</i> once for
+ each element in the array, passing that element as an argument.
+ 
+ <pre>
+ var array = ['foo', 'bar', 'baz'];
+ var result = array.collect(function(item) {
+   return item + '!';
+ });
+ result // => ['foo!', 'bar!', 'baz!']
+ array  // => ['foo', 'bar', 'baz']
+ </pre></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>block</CODE> -  The function to execute. Should have one parameter  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+         An array containing the values returned by <i>block</i>     
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>See:</B><UL>- <a href="#map">#map</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="collectThis"><!-- --></A>
+   <H3>collectThis</H3>
+   <PRE><a href="Array.html">Array</a> <B>collectThis</B>(&lt;Function&gt; block)</PRE>
+   
+      <UL>Invokes <i>block</i> once for each element in the array, replacing that
+ element with the value returned by <i>block</i>.
+ 
+ <pre>
+ var array = ['foo', 'bar', 'baz'];
+ var result = array.collectThis(function(item) {
+   return item + '!';
+ });
+ result // => ['foo!', 'bar!', 'baz!']
+ array  // => ['foo!', 'bar!', 'baz!']
+ </pre></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>block</CODE> -  The function to execute. Should have one parameter  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+         The array     
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>See:</B><UL>- <a href="#mapThis">#mapThis</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="detect"><!-- --></A>
+   <H3>detect</H3>
+   <PRE>Object <B>detect</B>(&lt;Function&gt; ifNone, &lt;Function&gt; block)</PRE>
+   
+      <UL>Finds an element in the array. Invokes <i>block</i> once for each element in
+ the array, passing that element as an argument.
+ 
+ <pre>
+ var array = ['foo', 'bar', 'baz'];
+ var result = array.collect(function(item) {
+   return item === 'bar';
+ });
+ result // => 'bar'
+ array  // => ['foo', 'bar', 'baz']
+ </pre>
+ 
+ With the optional <i>ifNone</i> argument:
+ 
+ <pre>
+ var array = ['foo', 'bar', 'baz'];
+ var ifNone = function() { return 'nothing here'; };
+ var result = array.detect(ifNone, function(item) {
+   return item === 'bizzle';
+ });
+ result // => 'nothing here'
+ array  // => ['foo', 'bar', 'baz']
+ </pre></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>ifNone</CODE> -  (optional) A function that returns the value to be                           returned by <i>#detect</i> if there are no matches  
+      </UL> 
+   
+     <UL><CODE>block</CODE> -  The function to execute. Should have one parameter                          and return either <tt>true</tt> or <tt>false</tt>  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        The first element for which <i>block</i> returns <tt>true</tt>. If           <i>block</i> never returns <tt>true</tt> and <i>ifNone</i> is           specified, then the return value of a call to <i>ifNone</i> is used.           If <i>block</i> never returns <tt>true</tt> and <i>ifNone</i> is not           specified, then <tt>null</tt> is used     
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>See:</B><UL>- <a href="#find">#find</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="each"><!-- --></A>
+   <H3>each</H3>
+   <PRE><a href="Array.html">Array</a> <B>each</B>(&lt;Function&gt; block)</PRE>
+   
+      <UL>Invokes <i>block</i> once for each element in the array, passing that element
+ as an argument.
+ 
+ <pre>
+ var array = ['foo', 'bar', 'baz'];
+ array.each(function(item) {
+   alert(item);
+ });
+ </pre>
+ 
+ opens three alert boxes:
+ 
+ <ul>
+   <li>foo</li>
+   <li>bar</li>
+   <li>baz</li>
+ </ul></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>block</CODE> -  The function to execute. Should have one parameter  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+         The array     
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>See:</B><UL>- <a href="#eachWithIndex">#eachWithIndex</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="eachWithIndex"><!-- --></A>
+   <H3>eachWithIndex</H3>
+   <PRE><a href="Array.html">Array</a> <B>eachWithIndex</B>(&lt;Function&gt; block)</PRE>
+   
+      <UL>Invokes <i>block</i> once for each element in the array, passing that element
+ and its index as arguments.
+ 
+ <pre>
+ var array = ['foo', 'bar', 'baz'];
+ array.eachWithIndex(function(item, index) {
+   alert(index + ': ' + item);
+ });
+ </pre>
+ 
+ opens three alert boxes:
+ 
+ <ul>
+   <li>0: foo</li>
+   <li>1: bar</li>
+   <li>2: baz</li>
+ </ul></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>block</CODE> -  The function to execute. Should have two parameters  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+         The array     
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>See:</B><UL>- <a href="#each">#each</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="find"><!-- --></A>
+   <H3>find</H3>
+   <PRE>Object <B>find</B>(&lt;Function&gt; ifNone, &lt;Function&gt; block)</PRE>
+   
+      <UL>An alias for <b>#detect</b>.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>ifNone</CODE> -  (optional) A function that returns the value to be                           returned by <i>#find</i> if there are no matches  
+      </UL> 
+   
+     <UL><CODE>block</CODE> -  The function to execute. Should have one parameter                          and return either <tt>true</tt> or <tt>false</tt>  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        The first element for which <i>block</i> returns <tt>true</tt>. If           <i>block</i> never returns <tt>true</tt> and <i>ifNone</i> is           specified, then the return value of a call to <i>ifNone</i> is used.           If <i>block</i> never returns <tt>true</tt> and <i>ifNone</i> is not           specified, then <tt>null</tt> is used     
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>See:</B><UL>- <a href="#detect">#detect</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="inject"><!-- --></A>
+   <H3>inject</H3>
+   <PRE>Object <B>inject</B>(&lt;Object&gt; initial, &lt;Function&gt; block)</PRE>
+   
+      <UL>Combines the elements of the array by applying <i>block</i> to an accumulator
+ value (<i>memo</i>) and each element in turn. Invokes <i>block</i> once for
+ each element in the array, passing <i>memo</i> and that element as arguments.
+ At each invocation of <i>block</i>, <i>memo</i> is set to the value returned
+ by <i>block</i> previously.
+ 
+ The first form lets you supply an initial value for <i>memo</i>.
+ 
+ <pre>
+ var array = [1, 2, 3, 4];
+ var result = array.inject(10, function(memo, item) {
+   return memo * item;
+ });
+ result // => 240
+ array  // => [1, 2, 3, 4]
+ </pre>
+ 
+ The second form uses the first element as the <i>initial</i> value (and skips
+ that element while iterating).
+ 
+ <pre>
+ var array = [1, 2, 3, 4];
+ var result = array.inject(function(memo, item) {
+   return memo * item;
+ });
+ result // => 24
+ array  // => [1, 2, 3, 4]
+ </pre></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>initial</CODE> -  (optional) The initial value of the <i>memo</i>                          argument passed to <i>block</i>  
+      </UL> 
+   
+     <UL><CODE>block</CODE> -  The function to execute. Should have two parameters                          (<i>memo</i> and the element) and return the new                          value of <i>memo</i>  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        The value returned from the last invocation of <i>block</i> 
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="map"><!-- --></A>
+   <H3>map</H3>
+   <PRE><a href="Array.html">Array</a> <B>map</B>(&lt;Function&gt; block)</PRE>
+   
+      <UL>An alias for <b>#collect</b>.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>block</CODE> -  The function to execute. Should have one parameter  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+         An array containing the values returned by <i>block</i>     
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>See:</B><UL>- <a href="#collect">#collect</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="mapThis"><!-- --></A>
+   <H3>mapThis</H3>
+   <PRE><a href="Array.html">Array</a> <B>mapThis</B>(&lt;Function&gt; block)</PRE>
+   
+      <UL>An alias for <b>#collectThis</b>.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>block</CODE> -  The function to execute. Should have one parameter  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+         The array     
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>See:</B><UL>- <a href="#collectThis">#collectThis</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+
+
+<!-- ============ METHOD DETAIL END ========== -->
+
+<!-- ========= END OF CLASS DATA ========= -->
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_bottom"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=3 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_bottom_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="overview-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"> <FONT CLASS="NavBarFont1">File</FONT>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="overview-tree.html"><FONT CLASS="NavBarFont1"><b>Tree</b></FONT></A>&nbsp;</TD>
+  <!--TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"-->    <!--A HREF="deprecated-list.html"--><!--FONT CLASS="NavBarFont1">Deprecated</FONT--><!--/A--><!--&nbsp;</TD-->
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="index-all.html"><FONT CLASS="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="help-doc.html"><FONT CLASS="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+<B>Rouge</B>
+</EM>
+</TD
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<B>PREV CLASS</B><!-- 
+   NEXT CLASS 
+-->
+&nbsp;<B>NEXT CLASS</B></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="" TARGET="_top"><B>NO FRAMES</B></A>  &nbsp;
+&nbsp;
+<SCRIPT>
+  <!--
+  if(window==top) {
+    document.writeln('<A HREF="allclasses-noframe.html" TARGET=""><B>All Classes</B></A>');
+  }
+  //-->
+</SCRIPT>
+<NOSCRIPT>
+<A HREF="allclasses-noframe.html" TARGET=""><B>All Classes</B></A>
+</NOSCRIPT>
+</FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY:&nbsp;<A HREF="#field_summary">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+<FONT SIZE="-1">
+
+</FONT>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Sat May  9 18:34:29 2009</div>
+</BODY>
+</HTML>
