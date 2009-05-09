@@ -52,7 +52,7 @@ Array.prototype.areAll = function(block) {
 Array.prototype.collect = function(block) {
   var result = [];
   this.each(function(item) {
-    result[result.length] = block(item);
+    result[result.length] = block.apply(this, [item]);
   });
   return result;
 };
@@ -78,7 +78,7 @@ Array.prototype.collect = function(block) {
 Array.prototype.collectThis = function(block) {
   var self = this;
   this.eachWithIndex(function(item, index) {
-    self[index] = block(item);
+    self[index] = block.apply(this, [item]);
   });
   return this;
 };
@@ -90,7 +90,7 @@ Array.prototype.collectThis = function(block) {
  * <pre>
  * var array = ['foo', 'bar', 'baz'];
  * var result = array.collect(function(item) {
- *   return item == 'bar';
+ *   return item === 'bar';
  * });
  * result // => 'bar'
  * array  // => ['foo', 'bar', 'baz']
@@ -102,7 +102,7 @@ Array.prototype.collectThis = function(block) {
  * var array = ['foo', 'bar', 'baz'];
  * var ifNone = function() { return 'nothing here'; };
  * var result = array.detect(ifNone, function(item) {
- *   return item == 'bizzle';
+ *   return item === 'bizzle';
  * });
  * result // => 'nothing here'
  * array  // => ['foo', 'bar', 'baz']
@@ -121,19 +121,21 @@ Array.prototype.collectThis = function(block) {
  * @see #find #find
  */
 Array.prototype.detect = function(ifNone, block) {
-  function detectOrNone(noneValue, block) {
+  function detectOrNone(ifNone, block) {
     for (var i = 0; i < this.length; i += 1) {
       var item = this[i];
-      if (block(item)) return item;
+      if (block.apply(this, [item])) return item;
     }
-    return noneValue;
+    return ifNone.apply(this, []);
   }
   
-  var noneValue = (arguments.length > 1) ? ifNone() : null;
+  var ifNoneToUse = (arguments.length > 1) ?
+                    ifNone :
+                    function() { return null; };
   if (arguments.length === 1) {
-    block = ifNone;
+    block = arguments[0];
   }
-  return detectOrNone.apply(this, [noneValue, block]);
+  return detectOrNone.apply(this, [ifNoneToUse, block]);
 };
 
 /**
@@ -162,7 +164,7 @@ Array.prototype.detect = function(ifNone, block) {
  */
 Array.prototype.each = function(block) {
   return this.eachWithIndex(function(item, index) {
-    return block(item);
+    return block.apply(this, [item]);
   });
 };
 
@@ -192,7 +194,7 @@ Array.prototype.each = function(block) {
  */
 Array.prototype.eachWithIndex = function(block) {
   for (var i = 0; i < this.length; i += 1) {
-    block(this[i], i);
+    block.apply(this, [this[i], i]);
   }
   return this;
 };
@@ -254,18 +256,20 @@ Array.prototype.find = function(ifNone, block) {
  * @returns The value returned from the last invocation of <i>block</i>
  */
 Array.prototype.inject = function(initial, block) {
-  var memo = this[0];
+  var memo = null;
+  
   if (arguments.length === 1) {
-    block = initial;
-    for (var i = 1; i < this.length; i++) {
-      memo = block(memo, this[i]);
+    memo = this[0];
+    block = arguments[0];
+    for (var i = 1; i < this.length; i += 1) {
+      memo = block.apply(this, [memo, this[i]]);
     }
     return memo;
   }
   
   memo = initial;
   this.each(function(item) {
-    memo = block(memo, item);
+    memo = block.apply(this, [memo, item]);
   });
   return memo;
 };

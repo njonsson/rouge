@@ -1,5 +1,42 @@
 Screw.Unit(function() {
   describe('Array', function() {
+    function doMethod(methodName, options) {
+      var argumentsToArray = function(argumentsObject) {
+        var array = [];
+        for (var i = 0; i < argumentsObject.length; i += 1) {
+          array.push(argumentsObject[i]);
+        }
+        return array;
+      };
+      
+      var wrapWithCallbacksRecording = function(func, callbacks) {
+        return function() {
+          callbacks.push({'this':      options.on,
+                          'arguments': argumentsToArray(arguments)});
+          return func.apply(options.on, arguments);
+        };
+      };
+      
+      // For convenience
+      if (! (options.with instanceof Array)) options.with = [options.with];
+      
+      var result = {callbacks: []};
+      for (var i = 0; i < options.with.length; i += 1) {
+        var arg = options.with[i];
+        if (arg instanceof Function) {
+          var callbacksForFunction = [];
+          options.with[i] = wrapWithCallbacksRecording.apply(options.on,
+                                                                  [arg,
+                                                                   callbacksForFunction]);
+          result.callbacks.push(callbacksForFunction);
+        }
+      }
+      
+      result.returnValue = options.on[methodName].apply(options.on,
+                                                        options.with);
+      return result;
+    }
+    
     describe('that is empty', function() {
       var _array = null;
       
@@ -9,315 +46,287 @@ Screw.Unit(function() {
       
       describe('when sent #areAll with a block', function() {
         function doAreAll() {
-          return _array.areAll.apply(_array, arguments);
+          return doMethod('areAll', {'on': _array, 'with': function(s) { }});
         }
         
         it('should not yield', function() {
-          var yieldedValues = [];
-          doAreAll(function(s) {
-            yieldedValues[yieldedValues.length] = arguments;
-          });
-          expect(yieldedValues).to(equal, []);
+          expect(doAreAll().callbacks[0]).to(be_empty);
         });
         
         it('should return true', function() {
-          var returnValue = doAreAll(function(s) { });
-          expect(returnValue).to(equal, true);
+          expect(doAreAll().returnValue).to(equal, true);
         });
         
         it('should not mutate itself', function() {
-          doAreAll(function(s) { });
+          doAreAll();
           expect(_array).to(equal, []);
         });
       });
       
       describe('when sent #collect with a block', function() {
         function doCollect() {
-          return _array.collect.apply(_array, arguments);
+          return doMethod('collect', {'on': _array, 'with': function(s) { }});
         }
         
         it('should not yield', function() {
-          var yieldedValues = [];
-          doCollect(function(s) {
-            yieldedValues[yieldedValues.length] = arguments;
-          });
-          expect(yieldedValues).to(equal, []);
+          expect(doCollect().callbacks[0]).to(be_empty);
         });
         
         it('should return itself', function() {
-          var returnValue = doCollect(function(s) { });
-          expect(returnValue).to(equal, _array);
+          expect(doCollect().returnValue).to(equal, _array);
         });
         
         it('should not mutate itself', function() {
-          doCollect(function(s) { });
+          doCollect();
           expect(_array).to(equal, []);
         });
       });
       
       describe('when sent #collectThis with a block', function() {
         function doCollectThis() {
-          return _array.collectThis.apply(_array, arguments);
+          return doMethod('collectThis',
+                          {'on':   _array,
+                           'with': function(s) { }});
         }
         
         it('should not yield', function() {
-          var yieldedValues = [];
-          doCollectThis(function(s) {
-            yieldedValues[yieldedValues.length] = arguments;
-          });
-          expect(yieldedValues).to(equal, []);
+          expect(doCollectThis().callbacks[0]).to(be_empty);
         });
         
         it('should return itself', function() {
-          var returnValue = doCollectThis(function(s) { });
-          expect(returnValue).to(equal, _array);
+          expect(doCollectThis().returnValue).to(equal, _array);
         });
         
         it('should not mutate itself', function() {
-          doCollectThis(function(s) { });
+          doCollectThis();
           expect(_array).to(equal, []);
         });
       });
       
       describe('when sent #detect with a block', function() {
         function doDetect() {
-          return _array.detect.apply(_array, arguments);
+          return doMethod('detect', {'on': _array, 'with': function(s) { }});
         }
         
         it('should not yield', function() {
-          var yieldedValues = [];
-          doDetect(function(s) {
-            yieldedValues[yieldedValues.length] = arguments;
-          });
-          expect(yieldedValues).to(equal, []);
+          expect(doDetect().callbacks[0]).to(be_empty);
         });
         
         it('should return null', function() {
-          var returnValue = doDetect(function(s) { });
-          expect(returnValue).to(be_null);
+          expect(doDetect().returnValue).to(be_null);
         });
         
         it('should not mutate itself', function() {
-          doDetect(function(s) { });
+          doDetect();
           expect(_array).to(equal, []);
         });
+      });
+      
+      describe('when sent #detect with an "ifNone" and a block', function() {
+        function doDetectPassingIfNone(block) {
+          return doMethod('detect',
+                          {'on':   _array,
+                           'with': [function() { return 'nothing here'; },
+                                    function(s) { }]});
+        }
         
-        describe('and an "ifNone" argument', function() {
-          function doDetectPassingIfNone(block) {
-            var ifNone = function() { return 'nothing here'; };
-            return doDetect(ifNone, block);
-          }
-          
-          it('should not yield', function() {
-            var yieldedValues = [];
-            doDetectPassingIfNone(function(s) {
-              yieldedValues[yieldedValues.length] = arguments;
-            });
-            expect(yieldedValues).to(equal, []);
-          });
-          
-          it('should return the expected value', function() {
-            var returnValue = doDetectPassingIfNone(function(s) { });
-            expect(returnValue).to(equal, 'nothing here');
-          });
-          
-          it('should not mutate itself', function() {
-            doDetectPassingIfNone(function(s) { });
-            expect(_array).to(equal, []);
-          });
+        it('should call the "ifNone" once', function() {
+          expect(doDetectPassingIfNone().callbacks[0].length).to(equal, 1);
+        });
+        
+        it("should call the \"ifNone\" with itself as the 'this' value", function() {
+          expect(doDetectPassingIfNone().callbacks[0][0].this).to(equal, _array);
+        });
+        
+        it('should call the "ifNone" with no arguments', function() {
+          expect(doDetectPassingIfNone().callbacks[0][0].arguments).to(be_empty);
+        });
+        
+        it('should not yield to the block', function() {
+          expect(doDetectPassingIfNone().callbacks[1]).to(be_empty);
+        });
+        
+        it('should return the result of the "ifNone"', function() {
+          expect(doDetectPassingIfNone().returnValue).to(equal, 'nothing here');
+        });
+        
+        it('should not mutate itself', function() {
+          doDetectPassingIfNone();
+          expect(_array).to(equal, []);
         });
       });
       
       describe('when sent #each with a block', function() {
         function doEach() {
-          return _array.each.apply(_array, arguments);
+          return doMethod('each', {'on': _array, 'with': function(s) { }});
         }
         
         it('should not yield', function() {
-          var yieldedValues = [];
-          doEach(function(s) {
-            yieldedValues[yieldedValues.length] = arguments;
-          });
-          expect(yieldedValues).to(equal, []);
+          expect(doEach().callbacks[0]).to(be_empty);
         });
         
         it('should return itself', function() {
-          var returnValue = doEach(function(s) { });
-          expect(returnValue).to(equal, _array);
+          expect(doEach().returnValue).to(equal, _array);
         });
         
         it('should not mutate itself', function() {
-          doEach(function(s) { });
+          doEach();
           expect(_array).to(equal, []);
         });
       });
       
       describe('when sent #eachWithIndex with a block', function() {
         function doEachWithIndex() {
-          return _array.eachWithIndex.apply(_array, arguments);
+          return doMethod('eachWithIndex',
+                          {'on':   _array,
+                           'with': function(s, i) { }});
         }
         
         it('should not yield', function() {
-          var yieldedValues = [];
-          doEachWithIndex(function(s, i) {
-            yieldedValues[yieldedValues.length] = arguments;
-          });
-          expect(yieldedValues).to(equal, []);
+          expect(doEachWithIndex().callbacks[0]).to(be_empty);
         });
         
         it('should return itself', function() {
-          var returnValue = doEachWithIndex(function(s, i) { });
-          expect(returnValue).to(equal, _array);
+          expect(doEachWithIndex().returnValue).to(equal, _array);
         });
         
         it('should not mutate itself', function() {
-          doEachWithIndex(function(s, i) { });
+          doEachWithIndex();
           expect(_array).to(equal, []);
         });
       });
       
       describe('when sent #find with a block', function() {
         function doFind() {
-          return _array.find.apply(_array, arguments);
+          return doMethod('find', {'on': _array, 'with': function(s) { }});
         }
         
         it('should not yield', function() {
-          var yieldedValues = [];
-          doFind(function(s) {
-            yieldedValues[yieldedValues.length] = arguments;
-          });
-          expect(yieldedValues).to(equal, []);
+          expect(doFind().callbacks[0]).to(be_empty);
         });
         
         it('should return null', function() {
-          var returnValue = doFind(function(s) { });
-          expect(returnValue).to(be_null);
+          expect(doFind().returnValue).to(be_null);
         });
         
         it('should not mutate itself', function() {
-          doFind(function(s) { });
+          doFind();
           expect(_array).to(equal, []);
         });
+      });
+      
+      describe('when sent #find with an "ifNone" and a block', function() {
+        function doFindPassingIfNone(block) {
+          return doMethod('find',
+                          {'on':   _array,
+                           'with': [function() { return 'nothing here'; },
+                                    function(s) { }]});
+        }
         
-        describe('and an "ifNone" argument', function() {
-          function doFindPassingIfNone(block) {
-            var ifNone = function() { return 'nothing here'; };
-            return doFind(ifNone, block);
-          }
-          
-          it('should not yield', function() {
-            var yieldedValues = [];
-            doFindPassingIfNone(function(s) {
-              yieldedValues[yieldedValues.length] = arguments;
-            });
-            expect(yieldedValues).to(equal, []);
-          });
-          
-          it('should return the expected value', function() {
-            var returnValue = doFindPassingIfNone(function(s) { });
-            expect(returnValue).to(equal, 'nothing here');
-          });
+        it('should call the "ifNone" once', function() {
+          expect(doFindPassingIfNone().callbacks[0].length).to(equal, 1);
+        });
         
-          it('should not mutate itself', function() {
-            doFindPassingIfNone(function(s) { });
-            expect(_array).to(equal, []);
-          });
+        it("should call the \"ifNone\" with itself as the 'this' value", function() {
+          expect(doFindPassingIfNone().callbacks[0][0].this).to(equal, _array);
+        });
+        
+        it('should call the "ifNone" with no arguments', function() {
+          expect(doFindPassingIfNone().callbacks[0][0].arguments).to(be_empty);
+        });
+        
+        it('should not yield to the block', function() {
+          expect(doFindPassingIfNone().callbacks[1]).to(be_empty);
+        });
+        
+        it('should return the result of the "ifNone"', function() {
+          expect(doFindPassingIfNone().returnValue).to(equal, 'nothing here');
+        });
+        
+        it('should not mutate itself', function() {
+          doFindPassingIfNone();
+          expect(_array).to(equal, []);
         });
       });
       
       describe('when sent #inject with a block', function() {
         function doInject() {
-          return _array.inject.apply(_array, arguments);
+          return doMethod('inject',
+                          {'on':   _array,
+                           'with': function(memo, s) { }});
         }
         
         it('should not yield', function() {
-          var yieldedValues = [];
-          doInject(function(memo, s) {
-            yieldedValues[yieldedValues.length] = arguments;
-            return memo;
-          });
-          expect(yieldedValues).to(equal, []);
+          expect(doInject().callbacks[0]).to(be_empty);
         });
         
         it('should return null', function() {
-          var returnValue = doInject(function(memo, s) { return memo; });
-          expect(returnValue).to(be_null);
+          expect(doInject().returnValue).to(be_null);
         });
         
         it('should not mutate itself', function() {
-          doInject(function(memo, s) { return memo; });
+          doInject();
           expect(_array).to(equal, []);
         });
+      });
+      
+      describe('when sent #inject with an "initial" and a block', function() {
+        function doInjectPassingInitial(block) {
+          return doMethod('inject',
+                          {'on':   _array,
+                           'with': ['starting point',
+                                    function(memo, s) { }]});
+        }
         
-        describe('and an "initial" argument', function() {
-          function doInjectPassingInitial(block) {
-            return doInject('starting point', block);
-          }
-          
-          it('should not yield', function() {
-            var yieldedValues = [];
-            doInjectPassingInitial(function(memo, s) {
-              yieldedValues[yieldedValues.length] = s;
-            });
-            expect(yieldedValues).to(equal, []);
-          });
-          
-          it('should return the expected value', function() {
-            var returnValue = doInjectPassingInitial(function(memo, s) { });
-            expect(returnValue).to(equal, 'starting point');
-          });
-          
-          it('should not mutate itself', function() {
-            doInjectPassingInitial(function(memo, s) { });
-            expect(_array).to(equal, []);
-          });
+        it('should not yield', function() {
+          expect(doInjectPassingInitial().callbacks[0]).to(equal, []);
+        });
+        
+        it('should return the "initial"', function() {
+          expect(doInjectPassingInitial().returnValue).to(equal,
+                                                          'starting point');
+        });
+        
+        it('should not mutate itself', function() {
+          doInjectPassingInitial();
+          expect(_array).to(equal, []);
         });
       });
       
       describe('when sent #map with a block', function() {
         function doMap() {
-          return _array.map.apply(_array, arguments);
+          return doMethod('map', {'on': _array, 'with': function(s) { }});
         }
         
         it('should not yield', function() {
-          var yieldedValues = [];
-          doMap(function(s) {
-            yieldedValues[yieldedValues.length] = arguments;
-          });
-          expect(yieldedValues).to(equal, []);
+          expect(doMap().callbacks[0]).to(equal, []);
         });
         
         it('should return itself', function() {
-          var returnValue = doMap(function(s) { });
-          expect(returnValue).to(equal, _array);
+          expect(doMap().returnValue).to(equal, _array);
         });
         
         it('should not mutate itself', function() {
-          doMap(function(s) { });
+          doMap();
           expect(_array).to(equal, []);
         });
       });
       
       describe('when sent #mapThis with a block', function() {
         function doMapThis() {
-          return _array.mapThis.apply(_array, arguments);
+          return doMethod('mapThis', {'on': _array, 'with': function(s) { }});
         }
         
         it('should not yield', function() {
-          var yieldedValues = [];
-          doMapThis(function(s) {
-            yieldedValues[yieldedValues.length] = arguments;
-          });
-          expect(yieldedValues).to(equal, []);
+          expect(doMapThis().callbacks[0]).to(equal, []);
         });
         
         it('should return itself', function() {
-          var returnValue = doMapThis(function(s) { });
-          expect(returnValue).to(equal, _array);
+          expect(doMapThis().returnValue).to(equal, _array);
         });
         
         it('should not mutate itself', function() {
-          doMapThis(function(s) { });
+          doMapThis();
           expect(_array).to(equal, []);
         });
       });
@@ -332,392 +341,510 @@ Screw.Unit(function() {
       
       describe('when sent #collect with a block', function() {
         function doCollect() {
-          return _array.collect.apply(_array, arguments);
+          return doMethod('collect',
+                          {'on':   _array,
+                           'with': function(s) { return 'item: ' + s; }});
         }
         
-        it('should yield the element once', function() {
-          var yieldedValues = [];
-          doCollect(function(s) {
-            yieldedValues[yieldedValues.length] = arguments;
-          });
-          expect(yieldedValues).to(equal, [['foo']]);
+        it('should yield once', function() {
+          expect(doCollect().callbacks[0].length).to(equal, 1);
         });
         
-        it('should return an array containing the yielded value', function() {
-          var returnValue = doCollect(function(s) {
-            return 'item: ' + s;
-          });
-          expect(returnValue).to(equal, ['item: foo']);
+        it("should yield with itself as the 'this' value", function() {
+          expect(doCollect().callbacks[0][0].this).to(equal, _array);
+        });
+        
+        it('should yield the element', function() {
+          expect(doCollect().callbacks[0][0].arguments).to(equal, ['foo']);
+        });
+        
+        it('should return an array containing the value returned by the block', function() {
+          expect(doCollect().returnValue).to(equal, ['item: foo']);
         });
         
         it('should not mutate itself', function() {
-          doCollect(function(s) { });
+          doCollect();
           expect(_array).to(equal, ['foo']);
         });
       });
       
       describe('when sent #collectThis with a block', function() {
         function doCollectThis() {
-          return _array.collectThis.apply(_array, arguments);
+          return doMethod('collectThis',
+                          {'on':   _array,
+                           'with': function(s) { return 'item: ' + s; }});
         }
         
-        it('should yield the element once', function() {
-          var yieldedValues = [];
-          doCollectThis(function(s) {
-            yieldedValues[yieldedValues.length] = arguments;
-          });
-          expect(yieldedValues).to(equal, [['foo']]);
+        it('should yield once', function() {
+          expect(doCollectThis().callbacks[0].length).to(equal, 1);
+        });
+        
+        it("should yield with itself as the 'this' value", function() {
+          expect(doCollectThis().callbacks[0][0].this).to(equal, _array);
+        });
+        
+        it('should yield the element', function() {
+          expect(doCollectThis().callbacks[0][0].arguments).to(equal, ['foo']);
         });
         
         it('should return itself', function() {
-          var returnValue = doCollectThis(function(s) { });
-          expect(returnValue).to(equal, _array);
+          expect(doCollectThis().returnValue).to(equal, _array);
         });
         
         it('should mutate itself as expected', function() {
-          doCollectThis(function(s) {
-            return 'item: ' + s;
-          });
+          doCollectThis();
           expect(_array).to(equal, ['item: foo']);
         });
       });
       
-      describe('when sent #detect with a block', function() {
-        function doDetect() {
-          return _array.detect.apply(_array, arguments);
+      describe('when sent #detect with a block that returns true', function() {
+        function doDetectTrue() {
+          return doMethod('detect',
+                          {'on':   _array,
+                           'with': function(s) { return true; }});
         }
         
-        it('should yield the element once', function() {
-          var yieldedValues = [];
-          doDetect(function(s) {
-            yieldedValues[yieldedValues.length] = arguments;
-          });
-          expect(yieldedValues).to(equal, [['foo']]);
+        it('should yield once', function() {
+          expect(doDetectTrue().callbacks[0].length).to(equal, 1);
         });
         
-        describe('that returns true', function() {
-          it('should return the element', function() {
-            var returnValue = doDetect(function(s) { return true; });
-            expect(returnValue).to(equal, 'foo');
-          });
-          
-          it('should not mutate itself', function() {
-            doDetect(function(s) { return true; });
-            expect(_array).to(equal, ['foo']);
-          });
+        it("should yield with itself as the 'this' value", function() {
+          expect(doDetectTrue().callbacks[0][0].this).to(equal, _array);
         });
         
-        describe('that returns true and with an "ifNone" argument', function() {
-          var _ifNone = null;
-          
-          before(function() {
-            _ifNone = function() { return 'nothing here'; };
-          });
-          
-          it('should yield the element once to the block', function() {
-            var yieldedValues = [];
-            return doDetect(_ifNone, function(s) {
-              yieldedValues[yieldedValues.length] = arguments;
-              return true;
-            });
-            expect(yieldedValues).to(equal, [['foo']]);
-          });
-          
-          it('should return the element', function() {
-            var returnValue = doDetect(_ifNone, function(s) { return true; });
-            expect(returnValue).to(equal, 'foo');
-          });
-          
-          it('should not mutate itself', function() {
-            doDetect(_ifNone, function(s) { return true; });
-            expect(_array).to(equal, ['foo']);
-          });
+        it('should yield the element', function() {
+          expect(doDetectTrue().callbacks[0][0].arguments).to(equal, ['foo']);
         });
         
-        describe('that returns false', function() {
-          it('should return null', function() {
-            var returnValue = doDetect(function(s) { return false; });
-            expect(returnValue).to(be_null);
-          });
-          
-          it('should not mutate itself', function() {
-            doDetect(function(s) { return false; });
-            expect(_array).to(equal, ['foo']);
-          });
+        it('should return the element', function() {
+          expect(doDetectTrue().returnValue).to(equal, 'foo');
         });
         
-        describe('that returns false and with an "ifNone" argument', function() {
-          var _ifNone = null;
-          
-          before(function() {
-            _ifNone = function() { return 'nothing here'; };
-          });
-          
-          it('should yield the element once to the block', function() {
-            var yieldedValues = [];
-            return doDetect(_ifNone, function(s) {
-              yieldedValues[yieldedValues.length] = arguments;
-              return false;
-            });
-            expect(yieldedValues).to(equal, [['foo']]);
-          });
-          
-          it('should return the expected value', function() {
-            var returnValue = doDetect(_ifNone, function(s) { return false; });
-            expect(returnValue).to(equal, 'nothing here');
-          });
-          
-          it('should not mutate itself', function() {
-            doDetect(_ifNone, function(s) { return false; });
-            expect(_array).to(equal, ['foo']);
-          });
+        it('should not mutate itself', function() {
+          doDetectTrue();
+          expect(_array).to(equal, ['foo']);
+        });
+      });
+      
+      describe('when sent #detect with a block that returns false', function() {
+        function doDetectFalse() {
+          return doMethod('detect',
+                          {'on':   _array,
+                           'with': function(s) { return false; }});
+        }
+        
+        it('should yield once', function() {
+          expect(doDetectFalse().callbacks[0].length).to(equal, 1);
+        });
+        
+        it("should yield with itself as the 'this' value", function() {
+          expect(doDetectFalse().callbacks[0][0].this).to(equal, _array);
+        });
+        
+        it('should yield the element', function() {
+          expect(doDetectFalse().callbacks[0][0].arguments).to(equal, ['foo']);
+        });
+        
+        it('should return null', function() {
+          expect(doDetectFalse().returnValue).to(be_null);
+        });
+        
+        it('should not mutate itself', function() {
+          doDetectFalse();
+          expect(_array).to(equal, ['foo']);
+        });
+      });
+      
+      describe('when sent #detect with an "ifNone" and a block that returns true', function() {
+        function doDetectTruePassingIfNone(block) {
+          return doMethod('detect',
+                          {'on':   _array,
+                           'with': [function() { return 'nothing here'; },
+                                    function(s) { return true; }]});
+        }
+        
+        it('should not call the "ifNone"', function() {
+          expect(doDetectTruePassingIfNone().callbacks[0]).to(be_empty);
+        });
+        
+        it('should yield to the block once', function() {
+          expect(doDetectTruePassingIfNone().callbacks[1].length).to(equal, 1);
+        });
+        
+        it("should yield to the block with itself as the 'this' value", function() {
+          expect(doDetectTruePassingIfNone().callbacks[1][0].this).to(equal,
+                                                                      _array);
+        });
+        
+        it('should yield the element to the block', function() {
+          expect(doDetectTruePassingIfNone().callbacks[1][0].arguments).to(equal,
+                                                                           ['foo']);
+        });
+        
+        it('should return the element', function() {
+          expect(doDetectTruePassingIfNone().returnValue).to(equal, 'foo');
+        });
+        
+        it('should not mutate itself', function() {
+          doDetectTruePassingIfNone();
+          expect(_array).to(equal, ['foo']);
+        });
+      });
+      
+      describe('when sent #detect with an "ifNone" and a block that returns false', function() {
+        function doDetectFalsePassingIfNone(block) {
+          return doMethod('detect',
+                          {'on':   _array,
+                           'with': [function() { return 'nothing here'; },
+                                    function(s) { return false; }]});
+        }
+        
+        it('should call the "ifNone" once', function() {
+          expect(doDetectFalsePassingIfNone().callbacks[0].length).to(equal, 1);
+        });
+        
+        it("should call the \"ifNone\" with itself as the 'this' value", function() {
+          expect(doDetectFalsePassingIfNone().callbacks[0][0].this).to(equal,
+                                                                       _array);
+        });
+        
+        it('should call the "ifNone" with no arguments', function() {
+          expect(doDetectFalsePassingIfNone().callbacks[0][0].arguments).to(be_empty);
+        });
+        
+        it('should yield to the block once', function() {
+          expect(doDetectFalsePassingIfNone().callbacks[1].length).to(equal, 1);
+        });
+        
+        it("should yield to the block with itself as the 'this' value", function() {
+          expect(doDetectFalsePassingIfNone().callbacks[1][0].this).to(equal,
+                                                                       _array);
+        });
+        
+        it('should yield the element to the block', function() {
+          expect(doDetectFalsePassingIfNone().callbacks[1][0].arguments).to(equal,
+                                                                            ['foo']);
+        });
+        
+        it('should return the result of the "ifNone"', function() {
+          expect(doDetectFalsePassingIfNone().returnValue).to(equal,
+                                                              'nothing here');
+        });
+        
+        it('should not mutate itself', function() {
+          doDetectFalsePassingIfNone();
+          expect(_array).to(equal, ['foo']);
         });
       });
       
       describe('when sent #each with a block', function() {
         function doEach() {
-          return _array.each.apply(_array, arguments);
+          return doMethod('each',
+                          {'on':   _array,
+                           'with': function(s) { }});
         }
         
-        it('should yield the element once', function() {
-          var yieldedValues = [];
-          doEach(function(s) {
-            yieldedValues[yieldedValues.length] = arguments;
-          });
-          expect(yieldedValues).to(equal, [['foo']]);
+        it('should yield once', function() {
+          expect(doEach().callbacks[0].length).to(equal, 1);
+        });
+        
+        it("should yield with itself as the 'this' value", function() {
+          expect(doEach().callbacks[0][0].this).to(equal, _array);
+        });
+        
+        it('should yield the element', function() {
+          expect(doEach().callbacks[0][0].arguments).to(equal, ['foo']);
         });
         
         it('should return itself', function() {
-          var returnValue = doEach(function(s) { });
-          expect(returnValue).to(equal, _array);
+          expect(doEach().returnValue).to(equal, _array);
         });
         
         it('should not mutate itself', function() {
-          doEach(function(s) { });
+          doEach();
           expect(_array).to(equal, ['foo']);
         });
       });
       
       describe('when sent #eachWithIndex with a block', function() {
         function doEachWithIndex() {
-          return _array.eachWithIndex.apply(_array, arguments);
+          return doMethod('eachWithIndex',
+                          {'on':   _array,
+                           'with': function(s, i) { }});
         }
         
-        it('should yield the element and 0 once', function() {
-          var yieldedValues = [];
-          doEachWithIndex(function(s, i) {
-            yieldedValues[yieldedValues.length] = arguments;
-          });
-          expect(yieldedValues).to(equal, [['foo', 0]]);
+        it('should yield once', function() {
+          expect(doEachWithIndex().callbacks[0].length).to(equal, 1);
+        });
+        
+        it("should yield with itself as the 'this' value", function() {
+          expect(doEachWithIndex().callbacks[0][0].this).to(equal, _array);
+        });
+        
+        it('should yield the element and 0', function() {
+          expect(doEachWithIndex().callbacks[0][0].arguments).to(equal,
+                                                                 ['foo', 0]);
         });
         
         it('should return itself', function() {
-          var returnValue = doEachWithIndex(function(s, i) { });
-          expect(returnValue).to(equal, _array);
+          expect(doEachWithIndex().returnValue).to(equal, _array);
         });
         
         it('should not mutate itself', function() {
-          doEachWithIndex(function(s, i) { });
+          doEachWithIndex();
           expect(_array).to(equal, ['foo']);
         });
       });
       
-      describe('when sent #find with a block', function() {
-        function doFind() {
-          return _array.find.apply(_array, arguments);
+      describe('when sent #find with a block that returns true', function() {
+        function doFindTrue() {
+          return doMethod('find',
+                          {'on':   _array,
+                           'with': function(s) { return true; }});
         }
         
-        it('should yield the element once', function() {
-          var yieldedValues = [];
-          doFind(function(s) {
-            yieldedValues[yieldedValues.length] = arguments;
-          });
-          expect(yieldedValues).to(equal, [['foo']]);
+        it('should yield once', function() {
+          expect(doFindTrue().callbacks[0].length).to(equal, 1);
         });
         
-        describe('that returns true', function() {
-          it('should return the element', function() {
-            var returnValue = doFind(function(s) { return true; });
-            expect(returnValue).to(equal, 'foo');
-          });
-          
-          it('should not mutate itself', function() {
-            doFind(function(s) { return true; });
-            expect(_array).to(equal, ['foo']);
-          });
+        it("should yield with itself as the 'this' value", function() {
+          expect(doFindTrue().callbacks[0][0].this).to(equal, _array);
         });
         
-        describe('that returns true and with an "ifNone" argument', function() {
-          var _ifNone = null;
-          
-          before(function() {
-            _ifNone = function() { return 'nothing here'; };
-          });
-          
-          it('should yield the element once to the block', function() {
-            var yieldedValues = [];
-            return doFind(_ifNone, function(s) {
-              yieldedValues[yieldedValues.length] = arguments;
-              return true;
-            });
-            expect(yieldedValues).to(equal, [['foo']]);
-          });
-          
-          it('should return the element', function() {
-            var returnValue = doFind(_ifNone, function(s) { return true; });
-            expect(returnValue).to(equal, 'foo');
-          });
-          
-          it('should not mutate itself', function() {
-            doFind(_ifNone, function(s) { return true; });
-            expect(_array).to(equal, ['foo']);
-          });
+        it('should yield the element', function() {
+          expect(doFindTrue().callbacks[0][0].arguments).to(equal, ['foo']);
         });
         
-        describe('that returns false', function() {
-          it('should return null', function() {
-            var returnValue = doFind(function(s) { return false; });
-            expect(returnValue).to(be_null);
-          });
-          
-          it('should not mutate itself', function() {
-            doFind(function(s) { return false; });
-            expect(_array).to(equal, ['foo']);
-          });
+        it('should return the element', function() {
+          expect(doFindTrue().returnValue).to(equal, 'foo');
         });
         
-        describe('that returns false and with an "ifNone" argument', function() {
-          var _ifNone = null;
-          
-          before(function() {
-            _ifNone = function() { return 'nothing here'; };
-          });
-          
-          it('should yield the element once to the block', function() {
-            var yieldedValues = [];
-            return doFind(_ifNone, function(s) {
-              yieldedValues[yieldedValues.length] = arguments;
-              return false;
-            });
-            expect(yieldedValues).to(equal, [['foo']]);
-          });
-          
-          it('should return the expected value', function() {
-            var returnValue = doFind(_ifNone, function(s) { return false; });
-            expect(returnValue).to(equal, 'nothing here');
-          });
-          
-          it('should not mutate itself', function() {
-            doFind(_ifNone, function(s) { return false; });
-            expect(_array).to(equal, ['foo']);
-          });
+        it('should not mutate itself', function() {
+          doFindTrue();
+          expect(_array).to(equal, ['foo']);
+        });
+      });
+      
+      describe('when sent #find with a block that returns false', function() {
+        function doFindFalse() {
+          return doMethod('find',
+                          {'on':   _array,
+                           'with': function(s) { return false; }});
+        }
+        
+        it('should yield once', function() {
+          expect(doFindFalse().callbacks[0].length).to(equal, 1);
+        });
+        
+        it("should yield with itself as the 'this' value", function() {
+          expect(doFindFalse().callbacks[0][0].this).to(equal, _array);
+        });
+        
+        it('should yield the element', function() {
+          expect(doFindFalse().callbacks[0][0].arguments).to(equal, ['foo']);
+        });
+        
+        it('should return null', function() {
+          expect(doFindFalse().returnValue).to(be_null);
+        });
+        
+        it('should not mutate itself', function() {
+          doFindFalse();
+          expect(_array).to(equal, ['foo']);
+        });
+      });
+      
+      describe('when sent #find with an "ifNone" and a block that returns true', function() {
+        function doFindTruePassingIfNone(block) {
+          return doMethod('find',
+                          {'on':   _array,
+                           'with': [function() { return 'nothing here'; },
+                                    function(s) { return true; }]});
+        }
+        
+        it('should not call the "ifNone"', function() {
+          expect(doFindTruePassingIfNone().callbacks[0]).to(be_empty);
+        });
+        
+        it('should yield to the block once', function() {
+          expect(doFindTruePassingIfNone().callbacks[1].length).to(equal, 1);
+        });
+        
+        it("should yield to the block with itself as the 'this' value", function() {
+          expect(doFindTruePassingIfNone().callbacks[1][0].this).to(equal,
+                                                                    _array);
+        });
+        
+        it('should yield the element to the block', function() {
+          expect(doFindTruePassingIfNone().callbacks[1][0].arguments).to(equal,
+                                                                         ['foo']);
+        });
+        
+        it('should return the element', function() {
+          expect(doFindTruePassingIfNone().returnValue).to(equal, 'foo');
+        });
+        
+        it('should not mutate itself', function() {
+          doFindTruePassingIfNone();
+          expect(_array).to(equal, ['foo']);
+        });
+      });
+      
+      describe('when sent #find with an "ifNone" and a block that returns false', function() {
+        function doFindFalsePassingIfNone(block) {
+          return doMethod('find',
+                          {'on':   _array,
+                           'with': [function() { return 'nothing here'; },
+                                    function(s) { return false; }]});
+        }
+        
+        it('should call the "ifNone" once', function() {
+          expect(doFindFalsePassingIfNone().callbacks[0].length).to(equal, 1);
+        });
+        
+        it("should call the \"ifNone\" with itself as the 'this' value", function() {
+          expect(doFindFalsePassingIfNone().callbacks[0][0].this).to(equal,
+                                                                     _array);
+        });
+        
+        it('should call the "ifNone" with no arguments', function() {
+          expect(doFindFalsePassingIfNone().callbacks[0][0].arguments).to(be_empty);
+        });
+        
+        it('should yield to the block once', function() {
+          expect(doFindFalsePassingIfNone().callbacks[1].length).to(equal, 1);
+        });
+        
+        it("should yield to the block with itself as the 'this' value", function() {
+          expect(doFindFalsePassingIfNone().callbacks[1][0].this).to(equal,
+                                                                     _array);
+        });
+        
+        it('should yield the element to the block', function() {
+          expect(doFindFalsePassingIfNone().callbacks[1][0].arguments).to(equal,
+                                                                          ['foo']);
+        });
+        
+        it('should return the result of the "ifNone"', function() {
+          expect(doFindFalsePassingIfNone().returnValue).to(equal,
+                                                            'nothing here');
+        });
+        
+        it('should not mutate itself', function() {
+          doFindFalsePassingIfNone();
+          expect(_array).to(equal, ['foo']);
         });
       });
       
       describe('when sent #inject with a block', function() {
         function doInject() {
-          return _array.inject.apply(_array, arguments);
+          return doMethod('inject',
+                          {'on':   _array,
+                           'with': function(memo, s) { }});
         }
         
         it('should not yield', function() {
-          var yieldedValues = [];
-          doInject(function(memo, s) {
-            yieldedValues[yieldedValues.length] = arguments;
-            return memo + '|' + s;
-          });
-          expect(yieldedValues).to(equal, []);
+          expect(doInject().callbacks[0]).to(be_empty);
         });
         
         it('should return the element', function() {
-          var returnValue = doInject(function(memo, s) {
-            return memo + '|' + s;
-          });
-          expect(returnValue).to(equal, 'foo');
+          expect(doInject().returnValue).to(equal, 'foo');
         });
         
         it('should not mutate itself', function() {
-          doInject(function(memo, s) { return memo + '|' + s; });
+          doInject();
           expect(_array).to(equal, ['foo']);
         });
+      });
+      
+      describe('when sent #inject with an "initial" and a block', function() {
+        function doInjectWithInitial() {
+          return doMethod('inject',
+                          {'on':   _array,
+                           'with': ['starting point',
+                                    function(memo, s) {
+                                      return 'item: ' + s;
+                                    }]});
+        }
         
-        describe('and an "initial" argument', function() {
-          var _initial = null;
-          
-          before(function() {
-            _initial = 'starting point';
-          });
-          
-          it('should yield the expected memo and the element once', function() {
-            var yieldedValues = [];
-            doInject(_initial, function(memo, s) {
-              yieldedValues[yieldedValues.length] = arguments;
-              return memo + '|' + s;
-            });
-            expect(yieldedValues).to(equal, [['starting point', 'foo']]);
-          });
-          
-          it('should return the result of the yield', function() {
-            var returnValue = doInject(_initial, function(memo, s) {
-              return memo + '|' + s;
-            });
-            expect(returnValue).to(equal, 'starting point|foo');
-          });
-          
-          it('should not mutate itself', function() {
-            doInject(_initial, function(memo, s) { return memo + '|' + s; });
-            expect(_array).to(equal, ['foo']);
-          });
+        it('should yield once', function() {
+          expect(doInjectWithInitial().callbacks[0].length).to(equal, 1);
+        });
+        
+        it("should yield with itself as the 'this' value", function() {
+          expect(doInjectWithInitial().callbacks[0][0].this).to(equal, _array);
+        });
+        
+        it('should yield the "initial" and the element', function() {
+          expect(doInjectWithInitial().callbacks[0][0].arguments).to(equal,
+                                                                     ['starting point',
+                                                                      'foo']);
+        });
+        
+        it('should return the value returned by the block', function() {
+          expect(doInjectWithInitial().returnValue).to(equal, 'item: foo');
+        });
+        
+        it('should not mutate itself', function() {
+          doInjectWithInitial();
+          expect(_array).to(equal, ['foo']);
         });
       });
       
       describe('when sent #map with a block', function() {
         function doMap() {
-          return _array.map.apply(_array, arguments);
+          return doMethod('map',
+                          {'on':   _array,
+                           'with': function(s) { return 'item: ' + s; }});
         }
         
-        it('should yield the element once', function() {
-          var yieldedValues = [];
-          doMap(function(s) {
-            yieldedValues[yieldedValues.length] = arguments;
-          });
-          expect(yieldedValues).to(equal, [['foo']]);
+        it('should yield once', function() {
+          expect(doMap().callbacks[0].length).to(equal, 1);
         });
         
-        it('should return an array containing the yielded value', function() {
-          var returnValue = doMap(function(s) {
-            return 'item: ' + s;
-          });
-          expect(returnValue).to(equal, ['item: foo']);
+        it("should yield with itself as the 'this' value", function() {
+          expect(doMap().callbacks[0][0].this).to(equal, _array);
+        });
+        
+        it('should yield the element', function() {
+          expect(doMap().callbacks[0][0].arguments).to(equal, ['foo']);
+        });
+        
+        it('should return an array containing the value returned by the block', function() {
+          expect(doMap().returnValue).to(equal, ['item: foo']);
         });
         
         it('should not mutate itself', function() {
-          doMap(function(s) { });
+          doMap();
           expect(_array).to(equal, ['foo']);
         });
       });
       
       describe('when sent #mapThis with a block', function() {
         function doMapThis() {
-          return _array.mapThis.apply(_array, arguments);
+          return doMethod('mapThis',
+                          {'on':   _array,
+                           'with': function(s) { return 'item: ' + s; }});
         }
         
-        it('should yield the element once', function() {
-          var yieldedValues = [];
-          doMapThis(function(s) {
-            yieldedValues[yieldedValues.length] = arguments;
-          });
-          expect(yieldedValues).to(equal, [['foo']]);
+        it('should yield once', function() {
+          expect(doMapThis().callbacks[0].length).to(equal, 1);
+        });
+        
+        it("should yield with itself as the 'this' value", function() {
+          expect(doMapThis().callbacks[0][0].this).to(equal, _array);
+        });
+        
+        it('should yield the element', function() {
+          expect(doMapThis().callbacks[0][0].arguments).to(equal, ['foo']);
         });
         
         it('should return itself', function() {
-          var returnValue = doMapThis(function(s) { });
-          expect(returnValue).to(equal, _array);
+          expect(doMapThis().returnValue).to(equal, _array);
         });
         
         it('should mutate itself as expected', function() {
-          doMapThis(function(s) {
-            return 'item: ' + s;
-          });
+          doMapThis();
           expect(_array).to(equal, ['item: foo']);
         });
       });
@@ -732,394 +859,613 @@ Screw.Unit(function() {
       
       describe('when sent #collect with a block', function() {
         function doCollect() {
-          return _array.collect.apply(_array, arguments);
+          return doMethod('collect',
+                          {'on':   _array,
+                           'with': function(s) { return 'item: ' + s; }});
         }
         
-        it('should yield the elements once each', function() {
-          var yieldedValues = [];
-          doCollect(function(s) {
-            yieldedValues[yieldedValues.length] = arguments;
-          });
-          expect(yieldedValues).to(equal, [['foo'], ['bar']]);
+        it('should yield twice', function() {
+          expect(doCollect().callbacks[0].length).to(equal, 2);
         });
         
-        it('should return an array of the yielded values', function() {
-          var returnValue = doCollect(function(s) {
-            return 'item: ' + s;
-          });
-          expect(returnValue).to(equal, ['item: foo', 'item: bar']);
+        it("should yield with itself as the 'this' value the first time", function() {
+          expect(doCollect().callbacks[0][0].this).to(equal, _array);
+        });
+        
+        it("should yield with itself as the 'this' value the second time", function() {
+          expect(doCollect().callbacks[0][1].this).to(equal, _array);
+        });
+        
+        it('should yield the first element the first time', function() {
+          expect(doCollect().callbacks[0][0].arguments).to(equal, ['foo']);
+        });
+        
+        it('should yield the second element the second time', function() {
+          expect(doCollect().callbacks[0][1].arguments).to(equal, ['bar']);
+        });
+        
+        it('should return an array containing the values returned by the block', function() {
+          expect(doCollect().returnValue).to(equal, ['item: foo', 'item: bar']);
         });
         
         it('should not mutate itself', function() {
-          doCollect(function(s) { return s; });
+          doCollect();
           expect(_array).to(equal, ['foo', 'bar']);
         });
       });
       
       describe('when sent #collectThis with a block', function() {
         function doCollectThis() {
-          return _array.collectThis.apply(_array, arguments);
+          return doMethod('collectThis',
+                          {'on':   _array,
+                           'with': function(s) { return 'item: ' + s; }});
         }
         
-        it('should yield the elements once each', function() {
-          var yieldedValues = [];
-          doCollectThis(function(s) {
-            yieldedValues[yieldedValues.length] = arguments;
-          });
-          expect(yieldedValues).to(equal, [['foo'], ['bar']]);
+        it('should yield twice', function() {
+          expect(doCollectThis().callbacks[0].length).to(equal, 2);
+        });
+        
+        it("should yield with itself as the 'this' value the first time", function() {
+          expect(doCollectThis().callbacks[0][0].this).to(equal, _array);
+        });
+        
+        it("should yield with itself as the 'this' value the second time", function() {
+          expect(doCollectThis().callbacks[0][1].this).to(equal, _array);
+        });
+        
+        it('should yield the first element the first time', function() {
+          expect(doCollectThis().callbacks[0][0].arguments).to(equal, ['foo']);
+        });
+        
+        it('should yield the second element the second time', function() {
+          expect(doCollectThis().callbacks[0][1].arguments).to(equal, ['bar']);
         });
         
         it('should return itself', function() {
-          var returnValue = doCollectThis(function(s) { });
-          expect(returnValue).to(equal, _array);
+          expect(doCollectThis().returnValue).to(equal, _array);
         });
         
         it('should mutate itself as expected', function() {
-          doCollectThis(function(s) {
-            return 'item: ' + s;
-          });
+          doCollectThis();
           expect(_array).to(equal, ['item: foo', 'item: bar']);
         });
       });
       
-      describe('when sent #detect with a block', function() {
-        function doDetect() {
-          return _array.detect.apply(_array, arguments);
+      describe('when sent #detect with a block that returns true', function() {
+        function doDetectTrue() {
+          return doMethod('detect',
+                          {'on':   _array,
+                           'with': function(s) { return true; }});
         }
         
-        it('should yield the elements once each', function() {
-          var yieldedValues = [];
-          doDetect(function(s) {
-            yieldedValues[yieldedValues.length] = arguments;
-          });
-          expect(yieldedValues).to(equal, [['foo'], ['bar']]);
+        it('should yield once', function() {
+          expect(doDetectTrue().callbacks[0].length).to(equal, 1);
         });
         
-        describe('that returns true', function() {
-          it('should return the first element', function() {
-            var returnValue = doDetect(function(s) { return true; });
-            expect(returnValue).to(equal, 'foo');
-          });
-          
-          it('should not mutate itself', function() {
-            doDetect(function(s) { return true; });
-            expect(_array).to(equal, ['foo', 'bar']);
-          });
+        it("should yield with itself as the 'this' value", function() {
+          expect(doDetectTrue().callbacks[0][0].this).to(equal, _array);
         });
         
-        describe('that returns true and with an "ifNone" argument', function() {
-          var _ifNone = null;
-          
-          before(function() {
-            _ifNone = function() { return 'nothing here'; };
-          });
-          
-          it('should yield the elements to the block once each', function() {
-            var yieldedValues = [];
-            return doDetect(_ifNone, function(s) {
-              yieldedValues[yieldedValues.length] = arguments;
-              return true;
-            });
-            expect(yieldedValues).to(equal, [['foo'], ['bar']]);
-          });
-          
-          it('should return the first element', function() {
-            var returnValue = doDetect(_ifNone, function(s) { return true; });
-            expect(returnValue).to(equal, 'foo');
-          });
-          
-          it('should not mutate itself', function() {
-            doDetect(_ifNone, function(s) { return true; });
-            expect(_array).to(equal, ['foo', 'bar']);
-          });
+        it('should yield the first element', function() {
+          expect(doDetectTrue().callbacks[0][0].arguments).to(equal, ['foo']);
         });
         
-        describe('that returns false', function() {
-          it('should return null', function() {
-            var returnValue = doDetect(function(s) { return false; });
-            expect(returnValue).to(be_null);
-          });
-          
-          it('should not mutate itself', function() {
-            doDetect(function(s) { return false; });
-            expect(_array).to(equal, ['foo', 'bar']);
-          });
+        it('should return the first element', function() {
+          expect(doDetectTrue().returnValue).to(equal, 'foo');
         });
         
-        describe('that returns false and with an "ifNone" argument', function() {
-          var _ifNone = null;
-          
-          before(function() {
-            _ifNone = function() { return 'nothing here'; };
-          });
-          
-          it('should yield the elements to the block once each', function() {
-            var yieldedValues = [];
-            return doDetect(_ifNone, function(s) {
-              yieldedValues[yieldedValues.length] = arguments;
-              return false;
-            });
-            expect(yieldedValues).to(equal, [['foo'], ['bar']]);
-          });
-          
-          it('should return the expected value', function() {
-            var returnValue = doDetect(_ifNone, function(s) { return false; });
-            expect(returnValue).to(equal, 'nothing here');
-          });
-          
-          it('should not mutate itself', function() {
-            doDetect(_ifNone, function(s) { return false; });
-            expect(_array).to(equal, ['foo', 'bar']);
-          });
+        it('should not mutate itself', function() {
+          doDetectTrue();
+          expect(_array).to(equal, ['foo', 'bar']);
+        });
+      });
+      
+      describe('when sent #detect with a block that returns false', function() {
+        function doDetectFalse() {
+          return doMethod('detect',
+                          {'on':   _array,
+                           'with': function(s) { return false; }});
+        }
+        
+        it('should yield twice', function() {
+          expect(doDetectFalse().callbacks[0].length).to(equal, 2);
+        });
+        
+        it("should yield with itself as the 'this' value the first time", function() {
+          expect(doDetectFalse().callbacks[0][0].this).to(equal, _array);
+        });
+        
+        it("should yield with itself as the 'this' value the second time", function() {
+          expect(doDetectFalse().callbacks[0][1].this).to(equal, _array);
+        });
+        
+        it('should yield the first element the first time', function() {
+          expect(doDetectFalse().callbacks[0][0].arguments).to(equal, ['foo']);
+        });
+        
+        it('should yield the second element the second time', function() {
+          expect(doDetectFalse().callbacks[0][1].arguments).to(equal, ['bar']);
+        });
+        
+        it('should return null', function() {
+          expect(doDetectFalse().returnValue).to(be_null);
+        });
+        
+        it('should not mutate itself', function() {
+          doDetectFalse();
+          expect(_array).to(equal, ['foo', 'bar']);
+        });
+      });
+      
+      describe('when sent #detect with an "ifNone" and a block that returns true', function() {
+        function doDetectTruePassingIfNone(block) {
+          return doMethod('detect',
+                          {'on':   _array,
+                           'with': [function() { return 'nothing here'; },
+                                    function(s) { return true; }]});
+        }
+        
+        it('should not call the "ifNone"', function() {
+          expect(doDetectTruePassingIfNone().callbacks[0]).to(be_empty);
+        });
+        
+        it('should yield to the block once', function() {
+          expect(doDetectTruePassingIfNone().callbacks[1].length).to(equal, 1);
+        });
+        
+        it("should yield to the block with itself as the 'this' value", function() {
+          expect(doDetectTruePassingIfNone().callbacks[1][0].this).to(equal,
+                                                                      _array);
+        });
+        
+        it('should yield the first element to the block', function() {
+          expect(doDetectTruePassingIfNone().callbacks[1][0].arguments).to(equal,
+                                                                           ['foo']);
+        });
+        
+        it('should return the first element', function() {
+          expect(doDetectTruePassingIfNone().returnValue).to(equal, 'foo');
+        });
+        
+        it('should not mutate itself', function() {
+          doDetectTruePassingIfNone();
+          expect(_array).to(equal, ['foo', 'bar']);
+        });
+      });
+      
+      describe('when sent #detect with an "ifNone" and a block that returns false', function() {
+        function doDetectFalsePassingIfNone(block) {
+          return doMethod('detect',
+                          {'on':   _array,
+                           'with': [function() { return 'nothing here'; },
+                                    function(s) { return false; }]});
+        }
+        
+        it('should call the "ifNone" once', function() {
+          expect(doDetectFalsePassingIfNone().callbacks[0].length).to(equal, 1);
+        });
+        
+        it("should call the \"ifNone\" with itself as the 'this' value", function() {
+          expect(doDetectFalsePassingIfNone().callbacks[0][0].this).to(equal,
+                                                                       _array);
+        });
+        
+        it('should call the "ifNone" with no arguments', function() {
+          expect(doDetectFalsePassingIfNone().callbacks[0][0].arguments).to(be_empty);
+        });
+        
+        it('should yield to the block twice', function() {
+          expect(doDetectFalsePassingIfNone().callbacks[1].length).to(equal, 2);
+        });
+        
+        it("should yield to the block with itself as the 'this' value the first time", function() {
+          expect(doDetectFalsePassingIfNone().callbacks[1][0].this).to(equal,
+                                                                       _array);
+        });
+        
+        it("should yield to the block with itself as the 'this' value the second time", function() {
+          expect(doDetectFalsePassingIfNone().callbacks[1][1].this).to(equal,
+                                                                       _array);
+        });
+        
+        it('should yield the first element to the block the first time', function() {
+          expect(doDetectFalsePassingIfNone().callbacks[1][0].arguments).to(equal,
+                                                                            ['foo']);
+        });
+        
+        it('should yield the second element to the block the second time', function() {
+          expect(doDetectFalsePassingIfNone().callbacks[1][1].arguments).to(equal,
+                                                                            ['bar']);
+        });
+        
+        it('should return the result of the "ifNone"', function() {
+          expect(doDetectFalsePassingIfNone().returnValue).to(equal,
+                                                              'nothing here');
+        });
+        
+        it('should not mutate itself', function() {
+          doDetectFalsePassingIfNone();
+          expect(_array).to(equal, ['foo', 'bar']);
         });
       });
       
       describe('when sent #each with a block', function() {
         function doEach() {
-          return _array.each.apply(_array, arguments);
+          return doMethod('each',
+                          {'on':   _array,
+                           'with': function(s) { }});
         }
         
-        it('should yield the elements once each', function() {
-          var yieldedValues = [];
-          doEach(function(s) {
-            yieldedValues[yieldedValues.length] = arguments;
-          });
-          expect(yieldedValues).to(equal, [['foo'], ['bar']]);
+        it('should yield twice', function() {
+          expect(doEach().callbacks[0].length).to(equal, 2);
+        });
+        
+        it("should yield with itself as the 'this' value the first time", function() {
+          expect(doEach().callbacks[0][0].this).to(equal, _array);
+        });
+        
+        it("should yield with itself as the 'this' value the second time", function() {
+          expect(doEach().callbacks[0][1].this).to(equal, _array);
+        });
+        
+        it('should yield the first element the first time', function() {
+          expect(doEach().callbacks[0][0].arguments).to(equal, ['foo']);
+        });
+        
+        it('should yield the second element the second time', function() {
+          expect(doEach().callbacks[0][1].arguments).to(equal, ['bar']);
         });
         
         it('should return itself', function() {
-          var returnValue = doEach(function(s) { });
-          expect(returnValue).to(equal, _array);
+          expect(doEach().returnValue).to(equal, _array);
         });
         
         it('should not mutate itself', function() {
-          doEach(function(s) { });
+          doEach();
           expect(_array).to(equal, ['foo', 'bar']);
         });
       });
       
       describe('when sent #eachWithIndex with a block', function() {
         function doEachWithIndex() {
-          return _array.eachWithIndex.apply(_array, arguments);
+          return doMethod('eachWithIndex',
+                          {'on':   _array,
+                           'with': function(s, i) { }});
         }
         
-        it('should yield the elements and their indexes once each', function() {
-          var yieldedValues = [];
-          doEachWithIndex(function(s, i) {
-            yieldedValues[yieldedValues.length] = arguments;
-          });
-          expect(yieldedValues).to(equal, [['foo', 0], ['bar', 1]]);
+        it('should yield twice', function() {
+          expect(doEachWithIndex().callbacks[0].length).to(equal, 2);
+        });
+        
+        it("should yield with itself as the 'this' value the first time", function() {
+          expect(doEachWithIndex().callbacks[0][0].this).to(equal, _array);
+        });
+        
+        it("should yield with itself as the 'this' value the second time", function() {
+          expect(doEachWithIndex().callbacks[0][1].this).to(equal, _array);
+        });
+        
+        it('should yield the first element and 0 the first time', function() {
+          expect(doEachWithIndex().callbacks[0][0].arguments).to(equal,
+                                                                 ['foo', 0]);
+        });
+        
+        it('should yield the second element and 1 the first time', function() {
+          expect(doEachWithIndex().callbacks[0][1].arguments).to(equal,
+                                                                 ['bar', 1]);
         });
         
         it('should return itself', function() {
-          var returnValue = doEachWithIndex(function(s, i) { });
-          expect(returnValue).to(equal, _array);
+          expect(doEachWithIndex().returnValue).to(equal, _array);
         });
         
         it('should not mutate itself', function() {
-          doEachWithIndex(function(s) { });
+          doEachWithIndex();
           expect(_array).to(equal, ['foo', 'bar']);
         });
       });
       
-      describe('when sent #find with a block', function() {
-        function doFind() {
-          return _array.find.apply(_array, arguments);
+      describe('when sent #find with a block that returns true', function() {
+        function doFindTrue() {
+          return doMethod('find',
+                          {'on':   _array,
+                           'with': function(s) { return true; }});
         }
         
-        it('should yield the elements once each', function() {
-          var yieldedValues = [];
-          doFind(function(s) {
-            yieldedValues[yieldedValues.length] = arguments;
-          });
-          expect(yieldedValues).to(equal, [['foo'], ['bar']]);
+        it('should yield once', function() {
+          expect(doFindTrue().callbacks[0].length).to(equal, 1);
         });
         
-        describe('that returns true', function() {
-          it('should return the first element', function() {
-            var returnValue = doFind(function(s) { return true; });
-            expect(returnValue).to(equal, 'foo');
-          });
-          
-          it('should not mutate itself', function() {
-            doFind(function(s) { return true; });
-            expect(_array).to(equal, ['foo', 'bar']);
-          });
+        it("should yield with itself as the 'this' value", function() {
+          expect(doFindTrue().callbacks[0][0].this).to(equal, _array);
         });
         
-        describe('that returns true and with an "ifNone" argument', function() {
-          var _ifNone = null;
-          
-          before(function() {
-            _ifNone = function() { return 'nothing here'; };
-          });
-          
-          it('should yield the elements to the block once each', function() {
-            var yieldedValues = [];
-            return doFind(_ifNone, function(s) {
-              yieldedValues[yieldedValues.length] = arguments;
-              return true;
-            });
-            expect(yieldedValues).to(equal, [['foo'], ['bar']]);
-          });
-          
-          it('should return the first element', function() {
-            var returnValue = doFind(_ifNone, function(s) { return true; });
-            expect(returnValue).to(equal, 'foo');
-          });
-          
-          it('should not mutate itself', function() {
-            doFind(_ifNone, function(s) { return true; });
-            expect(_array).to(equal, ['foo', 'bar']);
-          });
+        it('should yield the first element', function() {
+          expect(doFindTrue().callbacks[0][0].arguments).to(equal, ['foo']);
         });
         
-        describe('that returns false', function() {
-          it('should return null', function() {
-            var returnValue = doFind(function(s) { return false; });
-            expect(returnValue).to(be_null);
-          });
-          
-          it('should not mutate itself', function() {
-            doFind(function(s) { return false; });
-            expect(_array).to(equal, ['foo', 'bar']);
-          });
+        it('should return the first element', function() {
+          expect(doFindTrue().returnValue).to(equal, 'foo');
         });
         
-        describe('that returns false and with an "ifNone" argument', function() {
-          var _ifNone = null;
-          
-          before(function() {
-            _ifNone = function() { return 'nothing here'; };
-          });
-          
-          it('should yield the elements to the block once each', function() {
-            var yieldedValues = [];
-            return doFind(_ifNone, function(s) {
-              yieldedValues[yieldedValues.length] = arguments;
-              return false;
-            });
-            expect(yieldedValues).to(equal, [['foo'], ['bar']]);
-          });
-          
-          it('should return the expected value', function() {
-            var returnValue = doFind(_ifNone, function(s) { return false; });
-            expect(returnValue).to(equal, 'nothing here');
-          });
-          
-          it('should not mutate itself', function() {
-            doFind(_ifNone, function(s) { return false; });
-            expect(_array).to(equal, ['foo', 'bar']);
-          });
+        it('should not mutate itself', function() {
+          doFindTrue();
+          expect(_array).to(equal, ['foo', 'bar']);
+        });
+      });
+      
+      describe('when sent #find with a block that returns false', function() {
+        function doFindFalse() {
+          return doMethod('find',
+                          {'on':   _array,
+                           'with': function(s) { return false; }});
+        }
+        
+        it('should yield twice', function() {
+          expect(doFindFalse().callbacks[0].length).to(equal, 2);
+        });
+        
+        it("should yield with itself as the 'this' value the first time", function() {
+          expect(doFindFalse().callbacks[0][0].this).to(equal, _array);
+        });
+        
+        it("should yield with itself as the 'this' value the second time", function() {
+          expect(doFindFalse().callbacks[0][1].this).to(equal, _array);
+        });
+        
+        it('should yield the first element the first time', function() {
+          expect(doFindFalse().callbacks[0][0].arguments).to(equal, ['foo']);
+        });
+        
+        it('should yield the second element the second time', function() {
+          expect(doFindFalse().callbacks[0][1].arguments).to(equal, ['bar']);
+        });
+        
+        it('should return null', function() {
+          expect(doFindFalse().returnValue).to(be_null);
+        });
+        
+        it('should not mutate itself', function() {
+          doFindFalse();
+          expect(_array).to(equal, ['foo', 'bar']);
+        });
+      });
+      
+      describe('when sent #find with an "ifNone" and a block that returns true', function() {
+        function doFindTruePassingIfNone(block) {
+          return doMethod('find',
+                          {'on':   _array,
+                           'with': [function() { return 'nothing here'; },
+                                    function(s) { return true; }]});
+        }
+        
+        it('should not call the "ifNone"', function() {
+          expect(doFindTruePassingIfNone().callbacks[0]).to(be_empty);
+        });
+        
+        it('should yield to the block once', function() {
+          expect(doFindTruePassingIfNone().callbacks[1].length).to(equal, 1);
+        });
+        
+        it("should yield to the block with itself as the 'this' value", function() {
+          expect(doFindTruePassingIfNone().callbacks[1][0].this).to(equal,
+                                                                    _array);
+        });
+        
+        it('should yield the first element to the block', function() {
+          expect(doFindTruePassingIfNone().callbacks[1][0].arguments).to(equal,
+                                                                         ['foo']);
+        });
+        
+        it('should return the first element', function() {
+          expect(doFindTruePassingIfNone().returnValue).to(equal, 'foo');
+        });
+        
+        it('should not mutate itself', function() {
+          doFindTruePassingIfNone();
+          expect(_array).to(equal, ['foo', 'bar']);
+        });
+      });
+      
+      describe('when sent #find with an "ifNone" and a block that returns false', function() {
+        function doFindFalsePassingIfNone(block) {
+          return doMethod('find',
+                          {'on':   _array,
+                           'with': [function() { return 'nothing here'; },
+                                    function(s) { return false; }]});
+        }
+        
+        it('should call the "ifNone" once', function() {
+          expect(doFindFalsePassingIfNone().callbacks[0].length).to(equal, 1);
+        });
+        
+        it("should call the \"ifNone\" with itself as the 'this' value", function() {
+          expect(doFindFalsePassingIfNone().callbacks[0][0].this).to(equal,
+                                                                     _array);
+        });
+        
+        it('should call the "ifNone" with no arguments', function() {
+          expect(doFindFalsePassingIfNone().callbacks[0][0].arguments).to(be_empty);
+        });
+        
+        it('should yield to the block twice', function() {
+          expect(doFindFalsePassingIfNone().callbacks[1].length).to(equal, 2);
+        });
+        
+        it("should yield to the block with itself as the 'this' value the first time", function() {
+          expect(doFindFalsePassingIfNone().callbacks[1][0].this).to(equal,
+                                                                     _array);
+        });
+        
+        it("should yield to the block with itself as the 'this' value the second time", function() {
+          expect(doFindFalsePassingIfNone().callbacks[1][1].this).to(equal,
+                                                                     _array);
+        });
+        
+        it('should yield the first element to the block the first time', function() {
+          expect(doFindFalsePassingIfNone().callbacks[1][0].arguments).to(equal,
+                                                                          ['foo']);
+        });
+        
+        it('should yield the second element to the block the second time', function() {
+          expect(doFindFalsePassingIfNone().callbacks[1][1].arguments).to(equal,
+                                                                          ['bar']);
+        });
+        
+        it('should return the result of the "ifNone"', function() {
+          expect(doFindFalsePassingIfNone().returnValue).to(equal,
+                                                            'nothing here');
+        });
+        
+        it('should not mutate itself', function() {
+          doFindFalsePassingIfNone();
+          expect(_array).to(equal, ['foo', 'bar']);
         });
       });
       
       describe('when sent #inject with a block', function() {
         function doInject() {
-          return _array.inject.apply(_array, arguments);
+          return doMethod('inject',
+                          {'on':   _array,
+                           'with': function(memo, s) { return 'item: ' + s; }});
         }
         
-        it('should yield the second element once with the first element as the memo', function() {
-          var yieldedValues = [];
-          doInject(function(memo, s) {
-            yieldedValues[yieldedValues.length] = arguments;
-            return memo + '|' + s;
-          });
-          expect(yieldedValues).to(equal, [['foo', 'bar']]);
+        it('should yield once', function() {
+          expect(doInject().callbacks[0].length).to(equal, 1);
         });
         
-        it('should return the result of the yield', function() {
-          var returnValue = doInject(function(memo, s) {
-            return memo + '|' + s;
-          });
-          expect(returnValue).to(equal, 'foo|bar');
+        it("should yield with itself as the 'this' value", function() {
+          expect(doInject().callbacks[0][0].this).to(equal, _array);
+        });
+        
+        it('should yield the first and the second element', function() {
+          expect(doInject().callbacks[0][0].arguments).to(equal, ['foo', 'bar']);
+        });
+        
+        it('should return the value returned by the block', function() {
+          expect(doInject().returnValue).to(equal, 'item: bar');
         });
         
         it('should not mutate itself', function() {
-          doInject(function(memo, s) { return memo + '|' + s; });
+          doInject();
           expect(_array).to(equal, ['foo', 'bar']);
         });
+      });
+      
+      describe('when sent #inject with an "initial" and a block', function() {
+        function doInjectWithInitial() {
+          return doMethod('inject',
+                          {'on':   _array,
+                           'with': ['starting point',
+                                    function(memo, s) {
+                                      return 'item: ' + s;
+                                    }]});
+        }
         
-        describe('and an "initial" argument', function() {
-          var _initial = null;
-          
-          before(function() {
-            _initial = 'starting point';
-          });
-          
-          it('should yield the expected memo and the elements once each', function() {
-            var yieldedValues = [];
-            doInject(_initial, function(memo, s) {
-              yieldedValues[yieldedValues.length] = arguments;
-              return memo + '|' + s;
-            });
-            expect(yieldedValues).to(equal,
-                                     [['starting point',     'foo'],
-                                      ['starting point|foo', 'bar']]);
-          });
-          
-          it('should return the result of the last yield', function() {
-            var returnValue = doInject(_initial, function(memo, s) {
-              return memo + '|' + s;
-            });
-            expect(returnValue).to(equal, 'starting point|foo|bar');
-          });
-          
-          it('should not mutate itself', function() {
-            doInject(_initial, function(memo, s) { return memo + '|' + s; });
-            expect(_array).to(equal, ['foo', 'bar']);
-          });
+        it('should yield twice', function() {
+          expect(doInjectWithInitial().callbacks[0].length).to(equal, 2);
+        });
+        
+        it("should yield with itself as the 'this' value the first time", function() {
+          expect(doInjectWithInitial().callbacks[0][0].this).to(equal, _array);
+        });
+        
+        it("should yield with itself as the 'this' value the second time", function() {
+          expect(doInjectWithInitial().callbacks[0][1].this).to(equal, _array);
+        });
+        
+        it('should yield the "initial" and the first element the first time', function() {
+          expect(doInjectWithInitial().callbacks[0][0].arguments).to(equal,
+                                                                     ['starting point',
+                                                                      'foo']);
+        });
+        
+        it('should yield the first value returned by the block and the second element the second time', function() {
+          expect(doInjectWithInitial().callbacks[0][1].arguments).to(equal,
+                                                                     ['item: foo',
+                                                                      'bar']);
+        });
+        
+        it('should return the last value returned by the block', function() {
+          expect(doInjectWithInitial().returnValue).to(equal, 'item: bar');
+        });
+        
+        it('should not mutate itself', function() {
+          doInjectWithInitial();
+          expect(_array).to(equal, ['foo', 'bar']);
         });
       });
       
       describe('when sent #map with a block', function() {
         function doMap() {
-          return _array.map.apply(_array, arguments);
+          return doMethod('map',
+                          {'on':   _array,
+                           'with': function(s) { return 'item: ' + s; }});
         }
         
-        it('should yield the elements once each', function() {
-          var yieldedValues = [];
-          doMap(function(s) {
-            yieldedValues[yieldedValues.length] = arguments;
-          });
-          expect(yieldedValues).to(equal, [['foo'], ['bar']]);
+        it('should yield twice', function() {
+          expect(doMap().callbacks[0].length).to(equal, 2);
         });
         
-        it('should return an array of the yielded values', function() {
-          var returnValue = doMap(function(s) {
-            return 'item: ' + s;
-          });
-          expect(returnValue).to(equal, ['item: foo', 'item: bar']);
+        it("should yield with itself as the 'this' value the first time", function() {
+          expect(doMap().callbacks[0][0].this).to(equal, _array);
+        });
+        
+        it("should yield with itself as the 'this' value the second time", function() {
+          expect(doMap().callbacks[0][1].this).to(equal, _array);
+        });
+        
+        it('should yield the first element the first time', function() {
+          expect(doMap().callbacks[0][0].arguments).to(equal, ['foo']);
+        });
+        
+        it('should yield the second element the second time', function() {
+          expect(doMap().callbacks[0][1].arguments).to(equal, ['bar']);
+        });
+        
+        it('should return an array containing the values returned by the block', function() {
+          expect(doMap().returnValue).to(equal, ['item: foo', 'item: bar']);
         });
         
         it('should not mutate itself', function() {
-          doMap(function(s) { });
+          doMap();
           expect(_array).to(equal, ['foo', 'bar']);
         });
       });
       
       describe('when sent #mapThis with a block', function() {
         function doMapThis() {
-          return _array.mapThis.apply(_array, arguments);
+          return doMethod('mapThis',
+                          {'on':   _array,
+                           'with': function(s) { return 'item: ' + s; }});
         }
         
-        it('should yield the elements once each', function() {
-          var yieldedValues = [];
-          doMapThis(function(s) {
-            yieldedValues[yieldedValues.length] = arguments;
-          });
-          expect(yieldedValues).to(equal, [['foo'], ['bar']]);
+        it('should yield twice', function() {
+          expect(doMapThis().callbacks[0].length).to(equal, 2);
+        });
+        
+        it("should yield with itself as the 'this' value the first time", function() {
+          expect(doMapThis().callbacks[0][0].this).to(equal, _array);
+        });
+        
+        it("should yield with itself as the 'this' value the second time", function() {
+          expect(doMapThis().callbacks[0][1].this).to(equal, _array);
+        });
+        
+        it('should yield the first element the first time', function() {
+          expect(doMapThis().callbacks[0][0].arguments).to(equal, ['foo']);
+        });
+        
+        it('should yield the second element the second time', function() {
+          expect(doMapThis().callbacks[0][1].arguments).to(equal, ['bar']);
         });
         
         it('should return itself', function() {
-          var returnValue = doMapThis(function(s) { });
-          expect(returnValue).to(equal, _array);
+          expect(doMapThis().returnValue).to(equal, _array);
         });
         
         it('should mutate itself as expected', function() {
-          doMapThis(function(s) {
-            return 'item: ' + s;
-          });
+          doMapThis();
           expect(_array).to(equal, ['item: foo', 'item: bar']);
         });
       });
