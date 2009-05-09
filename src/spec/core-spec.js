@@ -78,6 +78,40 @@ Screw.Unit(function() {
         });
       });
       
+      describe('when sent #areAny with a block', function() {
+        function doAreAny() {
+          return doMethod('areAny', {'on': _array, 'with': function(s) { }});
+        }
+        
+        it('should not yield', function() {
+          expect(doAreAny().callbacks[0]).to(be_empty);
+        });
+        
+        it('should return false', function() {
+          expect(doAreAny().returnValue).to(equal, false);
+        });
+        
+        it('should not mutate itself', function() {
+          doAreAny();
+          expect(_array).to(equal, []);
+        });
+      });
+      
+      describe('when sent #areAny without a block', function() {
+        function doAreAnyNoBlock() {
+          return doMethod('areAny', {'on': _array});
+        }
+        
+        it('should return false', function() {
+          expect(doAreAnyNoBlock().returnValue).to(equal, false);
+        });
+        
+        it('should not mutate itself', function() {
+          doAreAnyNoBlock();
+          expect(_array).to(equal, []);
+        });
+      });
+      
       describe('when sent #collect with a block', function() {
         function doCollect() {
           return doMethod('collect', {'on': _array, 'with': function(s) { }});
@@ -347,7 +381,7 @@ Screw.Unit(function() {
       });
     });
     
-    describe('with one element', function() {
+    describe('with one non-null element', function() {
       var _array = null;
       
       before(function() {
@@ -423,6 +457,79 @@ Screw.Unit(function() {
         
         it('should not mutate itself', function() {
           doAreAllNoBlock();
+          expect(_array).to(equal, ['foo']);
+        });
+      });
+      
+      describe('when sent #areAny with a block that returns true', function() {
+        function doAreAnyTrue() {
+          return doMethod('areAny',
+                          {'on':   _array,
+                           'with': function(s) { return true; }});
+        }
+        
+        it('should yield once', function() {
+          expect(doAreAnyTrue().callbacks[0].length).to(equal, 1);
+        });
+        
+        it("should yield with itself as the 'this' value", function() {
+          expect(doAreAnyTrue().callbacks[0][0].this).to(equal, _array);
+        });
+        
+        it('should yield the element', function() {
+          expect(doAreAnyTrue().callbacks[0][0].arguments).to(equal, ['foo']);
+        });
+        
+        it('should return true', function() {
+          expect(doAreAnyTrue().returnValue).to(be_true);
+        });
+        
+        it('should not mutate itself', function() {
+          doAreAnyTrue();
+          expect(_array).to(equal, ['foo']);
+        });
+      });
+      
+      describe('when sent #areAny with a block that returns false', function() {
+        function doAreAnyFalse() {
+          return doMethod('areAny',
+                          {'on':   _array,
+                           'with': function(s) { return false; }});
+        }
+        
+        it('should yield once', function() {
+          expect(doAreAnyFalse().callbacks[0].length).to(equal, 1);
+        });
+        
+        it("should yield with itself as the 'this' value", function() {
+          expect(doAreAnyFalse().callbacks[0][0].this).to(equal, _array);
+        });
+        
+        it('should yield the element', function() {
+          expect(doAreAnyFalse().callbacks[0][0].arguments).to(equal, ['foo']);
+        });
+        
+        it('should return false', function() {
+          expect(doAreAnyFalse().returnValue).to(be_false);
+        });
+        
+        it('should not mutate itself', function() {
+          doAreAnyFalse();
+          expect(_array).to(equal, ['foo']);
+        });
+      });
+      
+      describe('when sent #areAny without a block', function() {
+        function doAreAnyNoBlock() {
+          return doMethod('areAny', {'on': _array});
+        }
+        
+        it('should return true', function() {
+          expect(doAreAnyNoBlock().returnValue).to(be_true);
+        });
+        
+        it('should not mutate itself', function() {
+          doAreAnyNoBlock();
           expect(_array).to(equal, ['foo']);
         });
       });
@@ -938,7 +1045,83 @@ Screw.Unit(function() {
       });
     });
     
-    describe('with two elements', function() {
+    describe('with one null element', function() {
+      var _array = null;
+      
+      before(function() {
+        _array = [null];
+      });
+      
+      describe('when sent #areAll without a block', function() {
+        function doAreAllNoBlock() {
+          return doMethod('areAll', {'on': _array});
+        }
+        
+        it('should return false', function() {
+          expect(doAreAllNoBlock().returnValue).to(be_false);
+        });
+        
+        it('should not mutate itself', function() {
+          doAreAllNoBlock();
+          expect(_array).to(equal, [null]);
+        });
+      });
+      
+      describe('when sent #areAny without a block', function() {
+        function doAreAnyNoBlock() {
+          return doMethod('areAny', {'on': _array});
+        }
+        
+        it('should return false', function() {
+          expect(doAreAnyNoBlock().returnValue).to(be_false);
+        });
+        
+        it('should not mutate itself', function() {
+          doAreAnyNoBlock();
+          expect(_array).to(equal, [null]);
+        });
+      });
+    });
+    
+    describe('with one false element', function() {
+      var _array = null;
+      
+      before(function() {
+        _array = [false];
+      });
+      
+      describe('when sent #areAll without a block', function() {
+        function doAreAllNoBlock() {
+          return doMethod('areAll', {'on': _array});
+        }
+        
+        it('should return false', function() {
+          expect(doAreAllNoBlock().returnValue).to(be_false);
+        });
+        
+        it('should not mutate itself', function() {
+          doAreAllNoBlock();
+          expect(_array).to(equal, [false]);
+        });
+      });
+      
+      describe('when sent #areAny without a block', function() {
+        function doAreAnyNoBlock() {
+          return doMethod('areAny', {'on': _array});
+        }
+        
+        it('should return false', function() {
+          expect(doAreAnyNoBlock().returnValue).to(be_false);
+        });
+        
+        it('should not mutate itself', function() {
+          doAreAnyNoBlock();
+          expect(_array).to(equal, [false]);
+        });
+      });
+    });
+    
+    describe('with two non-null elements', function() {
       var _array = null;
       
       before(function() {
@@ -1022,6 +1205,87 @@ Screw.Unit(function() {
         
         it('should not mutate itself', function() {
           doAreAllNoBlock();
+          expect(_array).to(equal, ['foo', 'bar']);
+        });
+      });
+      
+      describe('when sent #areAny with a block that returns true', function() {
+        function doAreAnyTrue() {
+          return doMethod('areAny',
+                          {'on':   _array,
+                           'with': function(s) { return true; }});
+        }
+        
+        it('should yield once', function() {
+          expect(doAreAnyTrue().callbacks[0].length).to(equal, 1);
+        });
+        
+        it("should yield with itself as the 'this' value", function() {
+          expect(doAreAnyTrue().callbacks[0][0].this).to(equal, _array);
+        });
+        
+        it('should yield the first element', function() {
+          expect(doAreAnyTrue().callbacks[0][0].arguments).to(equal, ['foo']);
+        });
+        
+        it('should return true', function() {
+          expect(doAreAnyTrue().returnValue).to(be_true);
+        });
+        
+        it('should not mutate itself', function() {
+          doAreAnyTrue();
+          expect(_array).to(equal, ['foo', 'bar']);
+        });
+      });
+      
+      describe('when sent #areAny with a block that returns false', function() {
+        function doAreAnyFalse() {
+          return doMethod('areAny',
+                          {'on':   _array,
+                           'with': function(s) { return false; }});
+        }
+        
+        it('should yield twice', function() {
+          expect(doAreAnyFalse().callbacks[0].length).to(equal, 2);
+        });
+        
+        it("should yield with itself as the 'this' value the first time", function() {
+          expect(doAreAnyFalse().callbacks[0][0].this).to(equal, _array);
+        });
+        
+        it("should yield with itself as the 'this' value the second time", function() {
+          expect(doAreAnyFalse().callbacks[0][1].this).to(equal, _array);
+        });
+        
+        it('should yield the first element the first time', function() {
+          expect(doAreAnyFalse().callbacks[0][0].arguments).to(equal, ['foo']);
+        });
+        
+        it('should yield the second element the second time', function() {
+          expect(doAreAnyFalse().callbacks[0][1].arguments).to(equal, ['bar']);
+        });
+        
+        it('should return false', function() {
+          expect(doAreAnyFalse().returnValue).to(be_false);
+        });
+        
+        it('should not mutate itself', function() {
+          doAreAnyFalse();
+          expect(_array).to(equal, ['foo', 'bar']);
+        });
+      });
+      
+      describe('when sent #areAny without a block', function() {
+        function doAreAnyNoBlock() {
+          return doMethod('areAny', {'on': _array});
+        }
+        
+        it('should return true', function() {
+          expect(doAreAnyNoBlock().returnValue).to(be_true);
+        });
+        
+        it('should not mutate itself', function() {
+          doAreAnyNoBlock();
           expect(_array).to(equal, ['foo', 'bar']);
         });
       });
@@ -1661,6 +1925,21 @@ Screw.Unit(function() {
           expect(_array).to(equal, ['foo', null]);
         });
       });
+      
+      describe('when sent #areAny without a block', function() {
+        function doAreAnyNoBlock() {
+          return doMethod('areAny', {'on': _array});
+        }
+        
+        it('should return true', function() {
+          expect(doAreAnyNoBlock().returnValue).to(be_true);
+        });
+        
+        it('should not mutate itself', function() {
+          doAreAnyNoBlock();
+          expect(_array).to(equal, ['foo', null]);
+        });
+      });
     });
     
     describe('with one true element and one false element', function() {
@@ -1681,6 +1960,21 @@ Screw.Unit(function() {
         
         it('should not mutate itself', function() {
           doAreAllNoBlock();
+          expect(_array).to(equal, [true, false]);
+        });
+      });
+      
+      describe('when sent #areAny without a block', function() {
+        function doAreAnyNoBlock() {
+          return doMethod('areAny', {'on': _array});
+        }
+        
+        it('should return true', function() {
+          expect(doAreAnyNoBlock().returnValue).to(be_true);
+        });
+        
+        it('should not mutate itself', function() {
+          doAreAnyNoBlock();
           expect(_array).to(equal, [true, false]);
         });
       });
