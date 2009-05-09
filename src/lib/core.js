@@ -6,27 +6,54 @@
  */
 
 /**
- * Creates a different array of the same size. Invokes <i>block</i> once for
- * each element in the array, passing that element as an argument.
+ * Passes each element in the array to <i>block</i>, returning <tt>true</tt> if
+ * <i>block</i> never returns <tt>false</tt> or <tt>null</tt>. If <i>block</i>
+ * is not given, Rouge adds an implicit block of
+ * <tt>function(o) { return o; }</tt> (that is, <b>#areAll</b> will return
+ * <tt>true</tt> only if none of the elements is <tt>false</tt> or
+ * <tt>null</tt>.)
  * 
  * <pre>
- * var array = ['foo', 'bar', 'baz'];
- * var result = array.collect(function(item) {
- *   return item + '!';
+ * var array = ['foo', 'bar', 'bizzle'];
+ * var result = array.areAll(function(item) {
+ *   return word.length >= 3;
  * });
- * result // => ['foo!', 'bar!', 'baz!']
- * array  // => ['foo', 'bar', 'baz']
+ * result // => true
+ * array  // => ['foo', 'bar', 'bizzle']
+ * 
+ * var array = ['foo', 'bar', 'bizzle'];
+ * var result = array.areAll(function(item) {
+ *   return word.length >= 4;
+ * });
+ * result // => false
+ * array  // => ['foo', 'bar', 'bizzle']
  * </pre>
  * 
- * @param {Function} block The function to execute. Should have one parameter
- * @returns {Array} An array containing the values returned by <i>block</i>
+ * Without the optional <i>block</i>:
  * 
- * @see #map #map
+ * <pre>
+ * var array = [null, true, 99];
+ * var result = array.areAll();
+ * result // => false
+ * array  // => [null, true, 99]
+ * </pre>
+ * 
+ * @param {Function} block (optional) The function to execute. Should have one
+ *                         parameter
+ * @returns {Boolean} <tt>true</tt> if <i>block</t> does not return
+ *                    <tt>false</tt> or <tt>null</tt> for any element
+ * 
+ * @see #areAny #areAny
  */
 Array.prototype.areAll = function(block) {
+  if (block === undefined) {
+    block = function(item) {
+      return ! ((item === null) || (item === false));
+    };
+  }
   for (var i = 0; i < this.length; i += 1) {
-    var item = this[i];
-    if (! block(item)) return false;
+    var result = block(this[i]);
+    if ((result === null) || (result === false)) return false;
   }
   return true;
 };
