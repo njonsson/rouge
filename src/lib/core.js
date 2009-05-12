@@ -46,14 +46,15 @@
 Array.prototype.areAll = function(block) {
   if (block === undefined) {
     block = function(item) {
-      return ! ((item === null) || (item === false));
+      return ! Array.helpers.isNullOrFalse(item);
     };
   }
-  for (var i = 0; i < this.length; i += 1) {
-    var result = block(this[i]);
-    if ((result === null) || (result === false)) return false;
-  }
-  return true;
+  var result = true;
+  Array.helpers.iterate.apply(this, [function(item, i) {
+    result = block(this[i]);
+    if (Array.helpers.isNullOrFalse(result)) return true; // break
+  }]);
+  return ! Array.helpers.isNullOrFalse(result);
 };
 
 /**
@@ -97,14 +98,15 @@ Array.prototype.areAll = function(block) {
 Array.prototype.areAny = function(block) {
   if (block === undefined) {
     block = function(item) {
-      return ! ((item === null) || (item === false));
+      return ! Array.helpers.isNullOrFalse(item);
     };
   }
-  for (var i = 0; i < this.length; i += 1) {
-    var result = block(this[i]);
-    if (! ((result === null) || (result === false))) return true;
-  }
-  return false;
+  var result = false;
+  Array.helpers.iterate.apply(this, [function(item, i) {
+    result = block(this[i]);
+    if (! Array.helpers.isNullOrFalse(result)) return true;
+  }]);
+  return ! Array.helpers.isNullOrFalse(result);
 };
 
 /**
@@ -127,9 +129,9 @@ Array.prototype.areAny = function(block) {
  */
 Array.prototype.collect = function(block) {
   var result = [];
-  this.each(function(item) {
+  Array.helpers.iterate.apply(this, [function(item, i) {
     result[result.length] = block.apply(this, [item]);
-  });
+  }]);
   return result;
 };
 
@@ -153,9 +155,9 @@ Array.prototype.collect = function(block) {
  */
 Array.prototype.collectThis = function(block) {
   var self = this;
-  this.eachWithIndex(function(item, index) {
-    self[index] = block.apply(this, [item]);
-  });
+  Array.helpers.iterate.apply(this, [function(item, i) {
+    self[i] = block.apply(this, [item]);
+  }]);
   return this;
 };
 
@@ -198,19 +200,20 @@ Array.prototype.collectThis = function(block) {
  */
 Array.prototype.detect = function(ifNone, block) {
   function detectOrNone(ifNone, block) {
-    for (var i = 0; i < this.length; i += 1) {
-      var item = this[i];
-      if (block.apply(this, [item])) return item;
-    }
-    return ifNone.apply(this, []);
+    var found = [];
+    Array.helpers.iterate.apply(this, [function(item, i) {
+      if (! Array.helpers.isNullOrFalse(block.apply(this, [item]))) {
+        found.push(item);
+        return true; // break
+      }
+    }]);
+    return (found.length > 0) ? found.pop() : ifNone.apply(this, []);
   }
   
   var ifNoneToUse = (arguments.length > 1) ?
                     ifNone :
                     function() { return null; };
-  if (arguments.length === 1) {
-    block = arguments[0];
-  }
+  if (arguments.length === 1) block = arguments[0];
   return detectOrNone.apply(this, [ifNoneToUse, block]);
 };
 
@@ -239,9 +242,9 @@ Array.prototype.detect = function(ifNone, block) {
  * @see #eachWithIndex #eachWithIndex
  */
 Array.prototype.each = function(block) {
-  return this.eachWithIndex(function(item, index) {
-    return block.apply(this, [item]);
-  });
+  return Array.helpers.iterate.apply(this, [function(item, i) {
+    block.apply(this, [item]);
+  }]);
 };
 
 /**
@@ -269,10 +272,9 @@ Array.prototype.each = function(block) {
  * @see #each #each
  */
 Array.prototype.eachWithIndex = function(block) {
-  for (var i = 0; i < this.length; i += 1) {
-    block.apply(this, [this[i], i]);
-  }
-  return this;
+  return Array.helpers.iterate.apply(this, [function(item, i) {
+    block.apply(this, [item, i]);
+  }]);
 };
 
 /**
@@ -332,21 +334,18 @@ Array.prototype.find = function(ifNone, block) {
  * @returns The value returned from the last invocation of <i>block</i>
  */
 Array.prototype.inject = function(initial, block) {
-  var memo = null;
-  
+  var memo    = null;
+  var options = {};
   if (arguments.length === 1) {
-    memo = this[0];
-    block = arguments[0];
-    for (var i = 1; i < this.length; i += 1) {
-      memo = block.apply(this, [memo, this[i]]);
-    }
-    return memo;
+    memo          = this[0];
+    block         = arguments[0];
+    options.first = 1;
+  } else {
+    memo = initial;
   }
-  
-  memo = initial;
-  this.each(function(item) {
+  Array.helpers.iterate.apply(this, [options, function(item, i) {
     memo = block.apply(this, [memo, item]);
-  });
+  }]);
   return memo;
 };
 
@@ -372,4 +371,28 @@ Array.prototype.map = function(block) {
  */
 Array.prototype.mapThis = function(block) {
   return this.collectThis.apply(this, arguments);
+};
+
+/**
+ * @private
+ */
+Array.helpers = {
+  'isNullOrFalse': function(expr) {
+    return (expr === null) || (expr === false);
+  },
+  
+  'iterate': function(options, block) {
+    if (arguments.length === 1) {
+      block = options;
+      options = {};
+    }
+    
+    if (options.first === undefined) options.first = 0;
+    if (options.last  === undefined) options.last  = this.length - 1;
+    
+    for (var i = options.first; i <= options.last; i += 1) {
+      if (block.apply(this, [this[i], i])) break;
+    }
+    return this;
+  }
 };
