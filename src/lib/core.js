@@ -240,11 +240,62 @@ Array.prototype.detect = function(ifNone, block) {
  * @returns {Array} The array
  * 
  * @see #eachWithIndex #eachWithIndex
+ * @see #eachCons      #eachCons
  */
 Array.prototype.each = function(block) {
   return Array.helpers.iterate.apply(this, [function(item, i) {
     block.apply(this, [item]);
   }]);
+};
+
+/**
+ * Invokes <i>block</i> once for each array of <i>n</i> consecutive elements in
+ * the array, passing that array of <i>n</i> elements as an argument.
+ * 
+ * <pre>
+ * var array = ['foo', 'bar', 'baz'];
+ * array.eachCons(1, function(item) {
+ *   alert(item.toString());
+ * });
+ * </pre>
+ * 
+ * opens three alert boxes:
+ * 
+ * <ul>
+ *   <li>foo</li>
+ *   <li>bar</li>
+ *   <li>baz</li>
+ * </ul>
+ * 
+ * <pre>
+ * var array = ['foo', 'bar', 'baz'];
+ * array.eachCons(2, function(item) {
+ *   alert(item);
+ * });
+ * </pre>
+ * 
+ * opens two alert boxes:
+ * 
+ * <ul>
+ *   <li>foo,bar</li>
+ *   <li>bar,baz</li>
+ * </ul>
+ * 
+ * @param {Number} n The number of consecutive elements
+ * @param {Function} block The function to execute. Should have one parameter
+ * @returns {Array} The array
+ * 
+ * @see #each #each
+ */
+Array.prototype.eachCons = function(n, block) {
+  for (var i = 0; i + n <= this.length; i += 1) {
+    var slice = [];
+    for (var j = 0; j < n; j += 1) {
+      slice.push(this[i + j]);
+    }
+    block.apply(this, [slice]);
+  }
+  return this;
 };
 
 /**
