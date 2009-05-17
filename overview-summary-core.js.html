@@ -141,14 +141,15 @@ function asd() {
 Array.<span class="reserved">prototype</span>.areAll = <span class="reserved">function</span>(block) {
   <span class="reserved">if</span> (block === undefined) {
     block = <span class="reserved">function</span>(item) {
-      <span class="reserved">return</span> ! ((item === null) || (item === false));
+      <span class="reserved">return</span> ! Array.helpers.isNullOrFalse(item);
     };
   }
-  <span class="reserved">for</span> (var i = 0; i &lt; <span class="reserved">this</span>.length; i += 1) {
-    var result = block(<span class="reserved">this</span>[i]);
-    <span class="reserved">if</span> ((result === null) || (result === false)) <span class="reserved">return</span> false;
-  }
-  <span class="reserved">return</span> true;
+  var result = true;
+  Array.helpers.iterate.apply(<span class="reserved">this</span>, [<span class="reserved">function</span>(item, i) {
+    result = block(<span class="reserved">this</span>[i]);
+    <span class="reserved">if</span> (Array.helpers.isNullOrFalse(result)) <span class="reserved">return</span> true; <span class="comment">// break</span>
+  }]);
+  <span class="reserved">return</span> ! Array.helpers.isNullOrFalse(result);
 };
 
 <span class="comment">/**
@@ -192,14 +193,15 @@ Array.<span class="reserved">prototype</span>.areAll = <span class="reserved">fu
 Array.<span class="reserved">prototype</span>.areAny = <span class="reserved">function</span>(block) {
   <span class="reserved">if</span> (block === undefined) {
     block = <span class="reserved">function</span>(item) {
-      <span class="reserved">return</span> ! ((item === null) || (item === false));
+      <span class="reserved">return</span> ! Array.helpers.isNullOrFalse(item);
     };
   }
-  <span class="reserved">for</span> (var i = 0; i &lt; <span class="reserved">this</span>.length; i += 1) {
-    var result = block(<span class="reserved">this</span>[i]);
-    <span class="reserved">if</span> (! ((result === null) || (result === false))) <span class="reserved">return</span> true;
-  }
-  <span class="reserved">return</span> false;
+  var result = false;
+  Array.helpers.iterate.apply(<span class="reserved">this</span>, [<span class="reserved">function</span>(item, i) {
+    result = block(<span class="reserved">this</span>[i]);
+    <span class="reserved">if</span> (! Array.helpers.isNullOrFalse(result)) <span class="reserved">return</span> true;
+  }]);
+  <span class="reserved">return</span> ! Array.helpers.isNullOrFalse(result);
 };
 
 <span class="comment">/**
@@ -222,9 +224,9 @@ Array.<span class="reserved">prototype</span>.areAny = <span class="reserved">fu
  */</span>
 Array.<span class="reserved">prototype</span>.collect = <span class="reserved">function</span>(block) {
   var result = [];
-  <span class="reserved">this</span>.each(<span class="reserved">function</span>(item) {
+  Array.helpers.iterate.apply(<span class="reserved">this</span>, [<span class="reserved">function</span>(item, i) {
     result[result.length] = block.apply(<span class="reserved">this</span>, [item]);
-  });
+  }]);
   <span class="reserved">return</span> result;
 };
 
@@ -248,9 +250,9 @@ Array.<span class="reserved">prototype</span>.collect = <span class="reserved">f
  */</span>
 Array.<span class="reserved">prototype</span>.collectThis = <span class="reserved">function</span>(block) {
   var self = <span class="reserved">this</span>;
-  <span class="reserved">this</span>.eachWithIndex(<span class="reserved">function</span>(item, index) {
-    self[index] = block.apply(<span class="reserved">this</span>, [item]);
-  });
+  Array.helpers.iterate.apply(<span class="reserved">this</span>, [<span class="reserved">function</span>(item, i) {
+    self[i] = block.apply(<span class="reserved">this</span>, [item]);
+  }]);
   <span class="reserved">return</span> <span class="reserved">this</span>;
 };
 
@@ -293,19 +295,20 @@ Array.<span class="reserved">prototype</span>.collectThis = <span class="reserve
  */</span>
 Array.<span class="reserved">prototype</span>.detect = <span class="reserved">function</span>(ifNone, block) {
   <span class="reserved">function</span> detectOrNone(ifNone, block) {
-    <span class="reserved">for</span> (var i = 0; i &lt; <span class="reserved">this</span>.length; i += 1) {
-      var item = <span class="reserved">this</span>[i];
-      <span class="reserved">if</span> (block.apply(<span class="reserved">this</span>, [item])) <span class="reserved">return</span> item;
-    }
-    <span class="reserved">return</span> ifNone.apply(<span class="reserved">this</span>, []);
+    var found = [];
+    Array.helpers.iterate.apply(<span class="reserved">this</span>, [<span class="reserved">function</span>(item, i) {
+      <span class="reserved">if</span> (! Array.helpers.isNullOrFalse(block.apply(<span class="reserved">this</span>, [item]))) {
+        found.push(item);
+        <span class="reserved">return</span> true; <span class="comment">// break</span>
+      }
+    }]);
+    <span class="reserved">return</span> (found.length &gt; 0) ? found.pop() : ifNone.apply(<span class="reserved">this</span>, []);
   }
   
   var ifNoneToUse = (arguments.length &gt; 1) ?
                     ifNone :
                     <span class="reserved">function</span>() { <span class="reserved">return</span> null; };
-  <span class="reserved">if</span> (arguments.length === 1) {
-    block = arguments[0];
-  }
+  <span class="reserved">if</span> (arguments.length === 1) block = arguments[0];
   <span class="reserved">return</span> detectOrNone.apply(<span class="reserved">this</span>, [ifNoneToUse, block]);
 };
 
@@ -332,11 +335,124 @@ Array.<span class="reserved">prototype</span>.detect = <span class="reserved">fu
  * <span class="attrib">@returns</span> {Array} The array
  * 
  * <span class="attrib">@see</span> #eachWithIndex #eachWithIndex
+ * <span class="attrib">@see</span> #eachCons      #eachCons
+ * <span class="attrib">@see</span> #eachSlice     #eachSlice
  */</span>
 Array.<span class="reserved">prototype</span>.each = <span class="reserved">function</span>(block) {
-  <span class="reserved">return</span> <span class="reserved">this</span>.eachWithIndex(<span class="reserved">function</span>(item, index) {
-    <span class="reserved">return</span> block.apply(<span class="reserved">this</span>, [item]);
-  });
+  <span class="reserved">return</span> Array.helpers.iterate.apply(<span class="reserved">this</span>, [<span class="reserved">function</span>(item, i) {
+    block.apply(<span class="reserved">this</span>, [item]);
+  }]);
+};
+
+<span class="comment">/**
+ * Invokes &lt;i&gt;block&lt;/i&gt; once for each array of &lt;i&gt;n&lt;/i&gt; consecutive elements in
+ * the array, passing that array of &lt;i&gt;n&lt;/i&gt; elements as an argument.
+ * 
+ * &lt;pre&gt;
+ * var array = ['foo', 'bar', 'baz'];
+ * array.eachCons(1, function(item) {
+ *   alert(item.toString());
+ * });
+ * &lt;/pre&gt;
+ * 
+ * opens three alert boxes:
+ * 
+ * &lt;ul&gt;
+ *   &lt;li&gt;foo&lt;/li&gt;
+ *   &lt;li&gt;bar&lt;/li&gt;
+ *   &lt;li&gt;baz&lt;/li&gt;
+ * &lt;/ul&gt;
+ * 
+ * &lt;pre&gt;
+ * var array = ['foo', 'bar', 'baz'];
+ * array.eachCons(2, function(item) {
+ *   alert(item);
+ * });
+ * &lt;/pre&gt;
+ * 
+ * opens two alert boxes:
+ * 
+ * &lt;ul&gt;
+ *   &lt;li&gt;foo,bar&lt;/li&gt;
+ *   &lt;li&gt;bar,baz&lt;/li&gt;
+ * &lt;/ul&gt;
+ * 
+ * <span class="attrib">@param</span> {Number} n The number of consecutive elements
+ * <span class="attrib">@param</span> {Function} block The function to execute. Should have one parameter
+ * <span class="attrib">@returns</span> {Array} The array
+ * 
+ * <span class="attrib">@see</span> #each      #each
+ * <span class="attrib">@see</span> #eachSlice #eachSlice
+ */</span>
+Array.<span class="reserved">prototype</span>.eachCons = <span class="reserved">function</span>(n, block) {
+  <span class="reserved">for</span> (var i = 0; i + n &lt;= <span class="reserved">this</span>.length; i += 1) {
+    var slice = [];
+    <span class="reserved">for</span> (var j = 0; j &lt; n; j += 1) {
+      slice.push(<span class="reserved">this</span>[i + j]);
+    }
+    block.apply(<span class="reserved">this</span>, [slice]);
+  }
+  <span class="reserved">return</span> <span class="reserved">this</span>;
+};
+
+<span class="comment">/**
+ * Invokes &lt;i&gt;block&lt;/i&gt; once for each slice of &lt;i&gt;n&lt;/i&gt; consecutive elements in
+ * the array, passing that array of &lt;i&gt;n&lt;/i&gt; elements as an argument.
+ * 
+ * &lt;pre&gt;
+ * var array = ['foo', 'bar', 'baz'];
+ * array.eachSlice(1, function(item) {
+ *   alert(item.toString());
+ * });
+ * &lt;/pre&gt;
+ * 
+ * opens three alert boxes:
+ * 
+ * &lt;ul&gt;
+ *   &lt;li&gt;foo&lt;/li&gt;
+ *   &lt;li&gt;bar&lt;/li&gt;
+ *   &lt;li&gt;baz&lt;/li&gt;
+ * &lt;/ul&gt;
+ * 
+ * &lt;pre&gt;
+ * var array = ['foo', 'bar', 'baz'];
+ * array.eachSlice(2, function(item) {
+ *   alert(item);
+ * });
+ * &lt;/pre&gt;
+ * 
+ * opens two alert boxes:
+ * 
+ * &lt;ul&gt;
+ *   &lt;li&gt;foo,bar&lt;/li&gt;
+ *   &lt;li&gt;baz&lt;/li&gt;
+ * &lt;/ul&gt;
+ * 
+ * <span class="attrib">@param</span> {Number} n The number of elements per slice
+ * <span class="attrib">@param</span> {Function} block The function to execute. Should have one parameter
+ * <span class="attrib">@returns</span> {Array} The array
+ * 
+ * <span class="attrib">@see</span> #each     #each
+ * <span class="attrib">@see</span> #eachCons #eachCons
+ */</span>
+Array.<span class="reserved">prototype</span>.eachSlice = <span class="reserved">function</span>(n, block) {
+  var slice;
+  <span class="reserved">for</span> (var i = 0; i + n &lt;= <span class="reserved">this</span>.length; i += n) {
+    slice = [];
+    <span class="reserved">for</span> (var j = 0; j &lt; n; j += 1) {
+      slice.push(<span class="reserved">this</span>[i + j]);
+    }
+    block.apply(<span class="reserved">this</span>, [slice]);
+  }
+  var remainder = <span class="reserved">this</span>.length % n;
+  <span class="reserved">if</span> (remainder &gt; 0) {
+    slice = [];
+    <span class="reserved">for</span> (var j = 0; j &lt; remainder; j += 1) {
+      slice.push(<span class="reserved">this</span>[<span class="reserved">this</span>.length - remainder + j]);
+    }
+    block.apply(<span class="reserved">this</span>, [slice]);
+  }
+  <span class="reserved">return</span> <span class="reserved">this</span>;
 };
 
 <span class="comment">/**
@@ -364,10 +480,9 @@ Array.<span class="reserved">prototype</span>.each = <span class="reserved">func
  * <span class="attrib">@see</span> #each #each
  */</span>
 Array.<span class="reserved">prototype</span>.eachWithIndex = <span class="reserved">function</span>(block) {
-  <span class="reserved">for</span> (var i = 0; i &lt; <span class="reserved">this</span>.length; i += 1) {
-    block.apply(<span class="reserved">this</span>, [<span class="reserved">this</span>[i], i]);
-  }
-  <span class="reserved">return</span> <span class="reserved">this</span>;
+  <span class="reserved">return</span> Array.helpers.iterate.apply(<span class="reserved">this</span>, [<span class="reserved">function</span>(item, i) {
+    block.apply(<span class="reserved">this</span>, [item, i]);
+  }]);
 };
 
 <span class="comment">/**
@@ -427,21 +542,18 @@ Array.<span class="reserved">prototype</span>.find = <span class="reserved">func
  * <span class="attrib">@returns</span> The value returned from the last invocation of &lt;i&gt;block&lt;/i&gt;
  */</span>
 Array.<span class="reserved">prototype</span>.inject = <span class="reserved">function</span>(initial, block) {
-  var memo = null;
-  
+  var memo    = null;
+  var options = {};
   <span class="reserved">if</span> (arguments.length === 1) {
-    memo = <span class="reserved">this</span>[0];
-    block = arguments[0];
-    <span class="reserved">for</span> (var i = 1; i &lt; <span class="reserved">this</span>.length; i += 1) {
-      memo = block.apply(<span class="reserved">this</span>, [memo, <span class="reserved">this</span>[i]]);
-    }
-    <span class="reserved">return</span> memo;
+    memo          = <span class="reserved">this</span>[0];
+    block         = arguments[0];
+    options.first = 1;
+  } <span class="reserved">else</span> {
+    memo = initial;
   }
-  
-  memo = initial;
-  <span class="reserved">this</span>.each(<span class="reserved">function</span>(item) {
+  Array.helpers.iterate.apply(<span class="reserved">this</span>, [options, <span class="reserved">function</span>(item, i) {
     memo = block.apply(<span class="reserved">this</span>, [memo, item]);
-  });
+  }]);
   <span class="reserved">return</span> memo;
 };
 
@@ -467,6 +579,30 @@ Array.<span class="reserved">prototype</span>.map = <span class="reserved">funct
  */</span>
 Array.<span class="reserved">prototype</span>.mapThis = <span class="reserved">function</span>(block) {
   <span class="reserved">return</span> <span class="reserved">this</span>.collectThis.apply(<span class="reserved">this</span>, arguments);
+};
+
+<span class="comment">/**
+ * <span class="attrib">@private</span>
+ */</span>
+Array.helpers = {
+  <span class="literal">'isNullOrFalse'</span>: <span class="reserved">function</span>(expr) {
+    <span class="reserved">return</span> (expr === null) || (expr === false);
+  },
+  
+  <span class="literal">'iterate'</span>: <span class="reserved">function</span>(options, block) {
+    <span class="reserved">if</span> (arguments.length === 1) {
+      block = options;
+      options = {};
+    }
+    
+    <span class="reserved">if</span> (options.first === undefined) options.first = 0;
+    <span class="reserved">if</span> (options.last  === undefined) options.last  = <span class="reserved">this</span>.length - 1;
+    
+    <span class="reserved">for</span> (var i = options.first; i &lt;= options.last; i += 1) {
+      <span class="reserved">if</span> (block.apply(<span class="reserved">this</span>, [<span class="reserved">this</span>[i], i])) break;
+    }
+    <span class="reserved">return</span> <span class="reserved">this</span>;
+  }
 };
 </pre>
 	<hr>
@@ -526,6 +662,6 @@ Array.<span class="reserved">prototype</span>.mapThis = <span class="reserved">f
 <font size="-1">
 
 </font>
-<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Sat May  9 18:34:29 2009</div>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Sat May 16 22:08:13 2009</div>
 </body>
 </html>
