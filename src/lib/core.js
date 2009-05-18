@@ -403,10 +403,26 @@ Array.prototype.eachWithIndex = function(block) {
  *          If <i>block</i> never returns <tt>true</tt> and <i>ifNone</i> is not
  *          specified, then <tt>null</tt> is used
  * 
- * @see #detect #detect
+ * @see #detect  #detect
+ * @see #findAll #findAll
  */
 Array.prototype.find = function(ifNone, block) {
   return this.detect.apply(this, arguments);
+};
+
+/**
+ * An alias for <b>#select</b>.
+ * 
+ * @param {Function} block The function to execute. Should have one parameter
+ *                         and return either <tt>true</tt> or <tt>false</tt>
+ * @returns {Array} An array of the elements for which <i>block</i> returns
+ *                  <tt>true</tt>.
+ * 
+ * @see #select #select
+ * @see #find   #find
+ */
+Array.prototype.findAll = function(block) {
+  return this.select.apply(this, arguments);
 };
 
 /**
@@ -484,6 +500,69 @@ Array.prototype.map = function(block) {
  */
 Array.prototype.mapThis = function(block) {
   return this.collectThis.apply(this, arguments);
+};
+
+/**
+ * Filters the array to elements for which <i>block</i> returns <tt>false</tt>.
+ * Invokes <i>block</i> once for each element in the array, passing that element
+ * as an argument.
+ * 
+ * <pre>
+ * var array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+ * var result = array.reject(function(item) {
+ *   return (item % 2) === 0;
+ * });
+ * result // => [1, 3, 5, 7, 9]
+ * array  // => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+ * </pre>
+ * 
+ * @param {Function} block The function to execute. Should have one parameter
+ *                         and return either <tt>true</tt> or <tt>false</tt>
+ * @returns {Array} An array containing the values for which <i>block</i>
+ *                  returns <tt>false</tt>
+ * 
+ * @see #select #select
+ */
+Array.prototype.reject = function(block) {
+  var selected = [];
+  Array.helpers.iterate.apply(this, [function(item, i) {
+    if (Array.helpers.isNullOrFalse(block.apply(this, [item]))) {
+      selected.push(item);
+    }
+  }]);
+  return selected;
+};
+
+/**
+ * Filters the array to elements for which <i>block</i> returns <tt>true</tt>.
+ * Invokes <i>block</i> once for each element in the array, passing that element
+ * as an argument.
+ * 
+ * <pre>
+ * var array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+ * var result = array.select(function(item) {
+ *   return (item % 3) === 0;
+ * });
+ * result // => [3, 6, 9]
+ * array  // => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+ * </pre>
+ * 
+ * @param {Function} block The function to execute. Should have one parameter
+ *                         and return either <tt>true</tt> or <tt>false</tt>
+ * @returns {Array} An array containing the values for which <i>block</i>
+ *                  returns <tt>true</tt>
+ * 
+ * @see #findAll #findAll
+ * @see #reject  #reject
+ */
+Array.prototype.select = function(block) {
+  var selected = [];
+  Array.helpers.iterate.apply(this, [function(item, i) {
+    if (! Array.helpers.isNullOrFalse(block.apply(this, [item]))) {
+      selected.push(item);
+    }
+  }]);
+  return selected;
 };
 
 /**

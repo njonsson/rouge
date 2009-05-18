@@ -338,6 +338,25 @@ Screw.Unit(function() {
         });
       });
       
+      describe('when sent #findAll with a block', function() {
+        function doFindAll() {
+          return doMethod('findAll', {'on': array_, 'with': function(s) { }});
+        }
+        
+        it('should not yield', function() {
+          expect(doFindAll().callbacks[0]).to(equal, []);
+        });
+        
+        it('should return itself', function() {
+          expect(doFindAll().returnValue).to(equal, array_);
+        });
+        
+        it('should not mutate itself', function() {
+          doFindAll();
+          expect(array_).to(equal, []);
+        });
+      });
+      
       describe('when sent #inject with a block', function() {
         function doInject() {
           return doMethod('inject',
@@ -416,6 +435,44 @@ Screw.Unit(function() {
         
         it('should not mutate itself', function() {
           doMapThis();
+          expect(array_).to(equal, []);
+        });
+      });
+      
+      describe('when sent #reject with a block', function() {
+        function doReject() {
+          return doMethod('reject', {'on': array_, 'with': function(s) { }});
+        }
+        
+        it('should not yield', function() {
+          expect(doReject().callbacks[0]).to(equal, []);
+        });
+        
+        it('should return itself', function() {
+          expect(doReject().returnValue).to(equal, array_);
+        });
+        
+        it('should not mutate itself', function() {
+          doReject();
+          expect(array_).to(equal, []);
+        });
+      });
+      
+      describe('when sent #select with a block', function() {
+        function doSelect() {
+          return doMethod('select', {'on': array_, 'with': function(s) { }});
+        }
+        
+        it('should not yield', function() {
+          expect(doSelect().callbacks[0]).to(equal, []);
+        });
+        
+        it('should return itself', function() {
+          expect(doSelect().returnValue).to(equal, array_);
+        });
+        
+        it('should not mutate itself', function() {
+          doSelect();
           expect(array_).to(equal, []);
         });
       });
@@ -1059,6 +1116,63 @@ Screw.Unit(function() {
         });
       });
       
+      describe('when sent #findAll with a block that returns true', function() {
+        function doFindAllTrue() {
+          return doMethod('findAll',
+                          {'on': array_, 'with': function(s) { return true; }});
+        }
+        
+        it('should yield once', function() {
+          expect(doFindAllTrue().callbacks[0].length).to(equal, 1);
+        });
+        
+        it("should yield with itself as the 'this' value", function() {
+          expect(doFindAllTrue().callbacks[0][0].this).to(equal, array_);
+        });
+        
+        it('should yield the element', function() {
+          expect(doFindAllTrue().callbacks[0][0].arguments).to(equal, ['foo']);
+        });
+        
+        it('should return the array', function() {
+          expect(doFindAllTrue().returnValue).to(equal, ['foo']);
+        });
+        
+        it('should not mutate itself', function() {
+          doFindAllTrue();
+          expect(array_).to(equal, ['foo']);
+        });
+      });
+      
+      describe('when sent #findAll with a block that returns false', function() {
+        function doFindAllFalse() {
+          return doMethod('findAll',
+                          {'on': array_,
+                           'with': function(s) { return false; }});
+        }
+        
+        it('should yield once', function() {
+          expect(doFindAllFalse().callbacks[0].length).to(equal, 1);
+        });
+        
+        it("should yield with itself as the 'this' value", function() {
+          expect(doFindAllFalse().callbacks[0][0].this).to(equal, array_);
+        });
+        
+        it('should yield the element', function() {
+          expect(doFindAllFalse().callbacks[0][0].arguments).to(equal, ['foo']);
+        });
+        
+        it('should return an empty array', function() {
+          expect(doFindAllFalse().returnValue).to(be_empty);
+        });
+        
+        it('should not mutate itself', function() {
+          doFindAllFalse();
+          expect(array_).to(equal, ['foo']);
+        });
+      });
+      
       describe('when sent #inject with a block', function() {
         function doInject() {
           return doMethod('inject',
@@ -1169,6 +1283,120 @@ Screw.Unit(function() {
         it('should mutate itself as expected', function() {
           doMapThis();
           expect(array_).to(equal, ['item: foo']);
+        });
+      });
+      
+      describe('when sent #reject with a block that returns true', function() {
+        function doRejectTrue() {
+          return doMethod('reject',
+                          {'on': array_, 'with': function(s) { return true; }});
+        }
+        
+        it('should yield once', function() {
+          expect(doRejectTrue().callbacks[0].length).to(equal, 1);
+        });
+        
+        it("should yield with itself as the 'this' value", function() {
+          expect(doRejectTrue().callbacks[0][0].this).to(equal, array_);
+        });
+        
+        it('should yield the element', function() {
+          expect(doRejectTrue().callbacks[0][0].arguments).to(equal, ['foo']);
+        });
+        
+        it('should return an empty array', function() {
+          expect(doRejectTrue().returnValue).to(be_empty);
+        });
+        
+        it('should not mutate itself', function() {
+          doRejectTrue();
+          expect(array_).to(equal, ['foo']);
+        });
+      });
+      
+      describe('when sent #reject with a block that returns false', function() {
+        function doRejectFalse() {
+          return doMethod('reject',
+                          {'on': array_,
+                           'with': function(s) { return false; }});
+        }
+        
+        it('should yield once', function() {
+          expect(doRejectFalse().callbacks[0].length).to(equal, 1);
+        });
+        
+        it("should yield with itself as the 'this' value", function() {
+          expect(doRejectFalse().callbacks[0][0].this).to(equal, array_);
+        });
+        
+        it('should yield the element', function() {
+          expect(doRejectFalse().callbacks[0][0].arguments).to(equal, ['foo']);
+        });
+        
+        it('should return the array', function() {
+          expect(doRejectFalse().returnValue).to(equal, ['foo']);
+        });
+        
+        it('should not mutate itself', function() {
+          doRejectFalse();
+          expect(array_).to(equal, ['foo']);
+        });
+      });
+      
+      describe('when sent #select with a block that returns true', function() {
+        function doSelectTrue() {
+          return doMethod('select',
+                          {'on': array_, 'with': function(s) { return true; }});
+        }
+        
+        it('should yield once', function() {
+          expect(doSelectTrue().callbacks[0].length).to(equal, 1);
+        });
+        
+        it("should yield with itself as the 'this' value", function() {
+          expect(doSelectTrue().callbacks[0][0].this).to(equal, array_);
+        });
+        
+        it('should yield the element', function() {
+          expect(doSelectTrue().callbacks[0][0].arguments).to(equal, ['foo']);
+        });
+        
+        it('should return the array', function() {
+          expect(doSelectTrue().returnValue).to(equal, ['foo']);
+        });
+        
+        it('should not mutate itself', function() {
+          doSelectTrue();
+          expect(array_).to(equal, ['foo']);
+        });
+      });
+      
+      describe('when sent #select with a block that returns false', function() {
+        function doSelectFalse() {
+          return doMethod('select',
+                          {'on': array_,
+                           'with': function(s) { return false; }});
+        }
+        
+        it('should yield once', function() {
+          expect(doSelectFalse().callbacks[0].length).to(equal, 1);
+        });
+        
+        it("should yield with itself as the 'this' value", function() {
+          expect(doSelectFalse().callbacks[0][0].this).to(equal, array_);
+        });
+        
+        it('should yield the element', function() {
+          expect(doSelectFalse().callbacks[0][0].arguments).to(equal, ['foo']);
+        });
+        
+        it('should return an empty array', function() {
+          expect(doSelectFalse().returnValue).to(be_empty);
+        });
+        
+        it('should not mutate itself', function() {
+          doSelectFalse();
+          expect(array_).to(equal, ['foo']);
         });
       });
     });
@@ -2039,6 +2267,79 @@ Screw.Unit(function() {
         });
       });
       
+      describe('when sent #findAll with a block that returns true', function() {
+        function doFindAllTrue() {
+          return doMethod('findAll',
+                          {'on': array_, 'with': function(s) { return true; }});
+        }
+        
+        it('should yield twice', function() {
+          expect(doFindAllTrue().callbacks[0].length).to(equal, 2);
+        });
+        
+        it("should yield with itself as the 'this' value the first time", function() {
+          expect(doFindAllTrue().callbacks[0][0].this).to(equal, array_);
+        });
+        
+        it('should yield the first element the first time', function() {
+          expect(doFindAllTrue().callbacks[0][0].arguments).to(equal, ['foo']);
+        });
+        
+        it("should yield with itself as the 'this' value the second time", function() {
+          expect(doFindAllTrue().callbacks[0][1].this).to(equal, array_);
+        });
+        
+        it('should yield the second element the second time', function() {
+          expect(doFindAllTrue().callbacks[0][1].arguments).to(equal, ['bar']);
+        });
+        
+        it('should return the array', function() {
+          expect(doFindAllTrue().returnValue).to(equal, ['foo', 'bar']);
+        });
+        
+        it('should not mutate itself', function() {
+          doFindAllTrue();
+          expect(array_).to(equal, ['foo', 'bar']);
+        });
+      });
+      
+      describe('when sent #findAll with a block that returns false', function() {
+        function doFindAllFalse() {
+          return doMethod('findAll',
+                          {'on': array_,
+                           'with': function(s) { return false; }});
+        }
+        
+        it('should yield twice', function() {
+          expect(doFindAllFalse().callbacks[0].length).to(equal, 2);
+        });
+        
+        it("should yield with itself as the 'this' value the first time", function() {
+          expect(doFindAllFalse().callbacks[0][0].this).to(equal, array_);
+        });
+        
+        it('should yield the first element the first time', function() {
+          expect(doFindAllFalse().callbacks[0][0].arguments).to(equal, ['foo']);
+        });
+        
+        it("should yield with itself as the 'this' value the second time", function() {
+          expect(doFindAllFalse().callbacks[0][1].this).to(equal, array_);
+        });
+        
+        it('should yield the second element the second time', function() {
+          expect(doFindAllFalse().callbacks[0][1].arguments).to(equal, ['bar']);
+        });
+        
+        it('should return an empty array', function() {
+          expect(doFindAllFalse().returnValue).to(be_empty);
+        });
+        
+        it('should not mutate itself', function() {
+          doFindAllFalse();
+          expect(array_).to(equal, ['foo', 'bar']);
+        });
+      });
+      
       describe('when sent #inject with a block', function() {
         function doInject() {
           return doMethod('inject',
@@ -2184,6 +2485,152 @@ Screw.Unit(function() {
         it('should mutate itself as expected', function() {
           doMapThis();
           expect(array_).to(equal, ['item: foo', 'item: bar']);
+        });
+      });
+      
+      describe('when sent #reject with a block that returns true', function() {
+        function doRejectTrue() {
+          return doMethod('reject',
+                          {'on': array_, 'with': function(s) { return true; }});
+        }
+        
+        it('should yield twice', function() {
+          expect(doRejectTrue().callbacks[0].length).to(equal, 2);
+        });
+        
+        it("should yield with itself as the 'this' value the first time", function() {
+          expect(doRejectTrue().callbacks[0][0].this).to(equal, array_);
+        });
+        
+        it('should yield the first element the first time', function() {
+          expect(doRejectTrue().callbacks[0][0].arguments).to(equal, ['foo']);
+        });
+        
+        it("should yield with itself as the 'this' value the second time", function() {
+          expect(doRejectTrue().callbacks[0][1].this).to(equal, array_);
+        });
+        
+        it('should yield the second element the second time', function() {
+          expect(doRejectTrue().callbacks[0][1].arguments).to(equal, ['bar']);
+        });
+        
+        it('should return an empty array', function() {
+          expect(doRejectTrue().returnValue).to(be_empty);
+        });
+        
+        it('should not mutate itself', function() {
+          doRejectTrue();
+          expect(array_).to(equal, ['foo', 'bar']);
+        });
+      });
+      
+      describe('when sent #reject with a block that returns false', function() {
+        function doRejectFalse() {
+          return doMethod('reject',
+                          {'on': array_,
+                           'with': function(s) { return false; }});
+        }
+        
+        it('should yield twice', function() {
+          expect(doRejectFalse().callbacks[0].length).to(equal, 2);
+        });
+        
+        it("should yield with itself as the 'this' value the first time", function() {
+          expect(doRejectFalse().callbacks[0][0].this).to(equal, array_);
+        });
+        
+        it('should yield the first element the first time', function() {
+          expect(doRejectFalse().callbacks[0][0].arguments).to(equal, ['foo']);
+        });
+        
+        it("should yield with itself as the 'this' value the second time", function() {
+          expect(doRejectFalse().callbacks[0][1].this).to(equal, array_);
+        });
+        
+        it('should yield the second element the second time', function() {
+          expect(doRejectFalse().callbacks[0][1].arguments).to(equal, ['bar']);
+        });
+        
+        it('should return the array', function() {
+          expect(doRejectFalse().returnValue).to(equal, ['foo', 'bar']);
+        });
+        
+        it('should not mutate itself', function() {
+          doRejectFalse();
+          expect(array_).to(equal, ['foo', 'bar']);
+        });
+      });
+      
+      describe('when sent #select with a block that returns true', function() {
+        function doSelectTrue() {
+          return doMethod('select',
+                          {'on': array_, 'with': function(s) { return true; }});
+        }
+        
+        it('should yield twice', function() {
+          expect(doSelectTrue().callbacks[0].length).to(equal, 2);
+        });
+        
+        it("should yield with itself as the 'this' value the first time", function() {
+          expect(doSelectTrue().callbacks[0][0].this).to(equal, array_);
+        });
+        
+        it('should yield the first element the first time', function() {
+          expect(doSelectTrue().callbacks[0][0].arguments).to(equal, ['foo']);
+        });
+        
+        it("should yield with itself as the 'this' value the second time", function() {
+          expect(doSelectTrue().callbacks[0][1].this).to(equal, array_);
+        });
+        
+        it('should yield the second element the second time', function() {
+          expect(doSelectTrue().callbacks[0][1].arguments).to(equal, ['bar']);
+        });
+        
+        it('should return the array', function() {
+          expect(doSelectTrue().returnValue).to(equal, ['foo', 'bar']);
+        });
+        
+        it('should not mutate itself', function() {
+          doSelectTrue();
+          expect(array_).to(equal, ['foo', 'bar']);
+        });
+      });
+      
+      describe('when sent #select with a block that returns false', function() {
+        function doSelectFalse() {
+          return doMethod('select',
+                          {'on': array_,
+                           'with': function(s) { return false; }});
+        }
+        
+        it('should yield twice', function() {
+          expect(doSelectFalse().callbacks[0].length).to(equal, 2);
+        });
+        
+        it("should yield with itself as the 'this' value the first time", function() {
+          expect(doSelectFalse().callbacks[0][0].this).to(equal, array_);
+        });
+        
+        it('should yield the first element the first time', function() {
+          expect(doSelectFalse().callbacks[0][0].arguments).to(equal, ['foo']);
+        });
+        
+        it("should yield with itself as the 'this' value the second time", function() {
+          expect(doSelectFalse().callbacks[0][1].this).to(equal, array_);
+        });
+        
+        it('should yield the second element the second time', function() {
+          expect(doSelectFalse().callbacks[0][1].arguments).to(equal, ['bar']);
+        });
+        
+        it('should return an empty array', function() {
+          expect(doSelectFalse().returnValue).to(be_empty);
+        });
+        
+        it('should not mutate itself', function() {
+          doSelectFalse();
+          expect(array_).to(equal, ['foo', 'bar']);
         });
       });
     });
