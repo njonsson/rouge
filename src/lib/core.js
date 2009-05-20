@@ -426,6 +426,52 @@ Array.prototype.findAll = function(block) {
 };
 
 /**
+ * Filters the array to elements matching <i>pattern</i>, passing each matching
+ * element in the array to <i>block</i>. If <i>block</i> is not given, Rouge
+ * adds an implicit block that will return the element. Invokes <i>block</i>
+ * once for each matching element in the array, passing that element as an
+ * argument.
+ * 
+ * <pre>
+ * var array = ['foo', 'bar', 'baz'];
+ * var result = array.grep(/r/);
+ * result // => ['bar']
+ * array  // => ['foo', 'bar', 'baz']
+ * </pre>
+ * 
+ * With the optional <i>block</i>:
+ * 
+ * <pre>
+ * var array = ['foo', 'bar', 'baz'];
+ * var result = array.grep(/r/, function(s) { return 'matched ' + s; });
+ * result // => ['matched bar']
+ * array  // => ['foo', 'bar', 'baz']
+ * </pre>
+ * 
+ * @param {Regexp} pattern The pattern to match
+ * @param {Function} block (optional) The function to execute. Should have one
+ *                         parameter
+ * @returns {Array} An array containing the return values of <i>block</i> for
+ *                  the matching elements
+ * 
+ * @see #select #select
+ */
+Array.prototype.grep = function(pattern, block) {
+  if (arguments.length === 1) {
+    block = function(item) {
+      return item;
+    };
+  }
+  var selected = [];
+  Array.helpers.iterate.apply(this, [function(item, i) {
+    if (pattern.test(item)) {
+      selected.push(block.apply(this, [item]));
+    }
+  }]);
+  return selected;
+};
+
+/**
  * Combines the elements of the array by applying <i>block</i> to an accumulator
  * value (<i>memo</i>) and each element in turn. Invokes <i>block</i> once for
  * each element in the array, passing <i>memo</i> and that element as arguments.
@@ -553,6 +599,7 @@ Array.prototype.reject = function(block) {
  *                  returns <tt>true</tt>
  * 
  * @see #findAll #findAll
+ * @see #grep    #grep
  * @see #reject  #reject
  */
 Array.prototype.select = function(block) {

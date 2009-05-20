@@ -357,6 +357,41 @@ Screw.Unit(function() {
         });
       });
       
+      describe('when sent #grep with a matching Regexp', function() {
+        function doGrepMatching() {
+          return doMethod('grep', {'on': array_, 'with': /./});
+        }
+        
+        it('should return an empty array', function() {
+          expect(doGrepMatching().returnValue).to(be_empty);
+        });
+        
+        it('should not mutate itself', function() {
+          doGrepMatching();
+          expect(array_).to(equal, []);
+        });
+      });
+      
+      describe('when sent #grep with a matching Regexp and a block', function() {
+        function doGrepMatchingPassingBlock() {
+          return doMethod('grep',
+                          {'on': array_, 'with': [/./, function(s) { }]});
+        }
+        
+        it('should not yield', function() {
+          expect(doGrepMatchingPassingBlock().callbacks[0]).to(be_empty);
+        });
+        
+        it('should return itself', function() {
+          expect(doGrepMatchingPassingBlock().returnValue).to(equal, array_);
+        });
+        
+        it('should not mutate itself', function() {
+          doGrepMatchingPassingBlock();
+          expect(array_).to(equal, []);
+        });
+      });
+      
       describe('when sent #inject with a block', function() {
         function doInject() {
           return doMethod('inject',
@@ -1169,6 +1204,91 @@ Screw.Unit(function() {
         
         it('should not mutate itself', function() {
           doFindAllFalse();
+          expect(array_).to(equal, ['foo']);
+        });
+      });
+      
+      describe('when sent #grep with a matching Regexp', function() {
+        function doGrepMatching() {
+          return doMethod('grep', {'on': array_, 'with': /./});
+        }
+        
+        it('should return an array containing the element', function() {
+          expect(doGrepMatching().returnValue).to(equal, ['foo']);
+        });
+        
+        it('should not mutate itself', function() {
+          doGrepMatching();
+          expect(array_).to(equal, ['foo']);
+        });
+      });
+      
+      describe('when sent #grep with a non-matching Regexp', function() {
+        function doGrepNonmatching() {
+          return doMethod('grep', {'on': array_, 'with': /not a match/});
+        }
+        
+        it('should return an empty array', function() {
+          expect(doGrepNonmatching().returnValue).to(be_empty);
+        });
+        
+        it('should not mutate itself', function() {
+          doGrepNonmatching();
+          expect(array_).to(equal, ['foo']);
+        });
+      });
+      
+      describe('when sent #grep with a matching Regexp and a block', function() {
+        function doGrepMatchingPassingBlock() {
+          return doMethod('grep',
+                          {'on': array_,
+                           'with': [/./,
+                                    function(s) { return 'item: ' + s; }]});
+        }
+        
+        it('should yield once', function() {
+          expect(doGrepMatchingPassingBlock().callbacks[0].length).to(equal, 1);
+        });
+        
+        it("should yield with itself as the 'this' value", function() {
+          expect(doGrepMatchingPassingBlock().callbacks[0][0].this).to(equal,
+                                                                       array_);
+        });
+        
+        it('should yield the element', function() {
+          expect(doGrepMatchingPassingBlock().callbacks[0][0].arguments).to(equal,
+                                                                            ['foo']);
+        });
+        
+        it('should return an array containing the value returned by the block', function() {
+          expect(doGrepMatchingPassingBlock().returnValue).to(equal,
+                                                              ['item: foo']);
+        });
+        
+        it('should not mutate itself', function() {
+          doGrepMatchingPassingBlock();
+          expect(array_).to(equal, ['foo']);
+        });
+      });
+      
+      describe('when sent #grep with a non-matching Regexp and a block', function() {
+        function doGrepNonmatchingPassingBlock() {
+          return doMethod('grep',
+                          {'on': array_,
+                           'with': [/\d/,
+                                    function(s) { return 'item: ' + s; }]});
+        }
+        
+        it('should not yield', function() {
+          expect(doGrepNonmatchingPassingBlock().callbacks[0]).to(be_empty);
+        });
+        
+        it('should return an empty array', function() {
+          expect(doGrepNonmatchingPassingBlock().returnValue).to(be_empty);
+        });
+        
+        it('should not mutate itself', function() {
+          doGrepNonmatchingPassingBlock();
           expect(array_).to(equal, ['foo']);
         });
       });
@@ -2336,6 +2456,102 @@ Screw.Unit(function() {
         
         it('should not mutate itself', function() {
           doFindAllFalse();
+          expect(array_).to(equal, ['foo', 'bar']);
+        });
+      });
+      
+      describe('when sent #grep with a matching Regexp', function() {
+        function doGrepMatching() {
+          return doMethod('grep', {'on': array_, 'with': /./});
+        }
+        
+        it('should return an array containing the elements', function() {
+          expect(doGrepMatching().returnValue).to(equal, ['foo', 'bar']);
+        });
+        
+        it('should not mutate itself', function() {
+          doGrepMatching();
+          expect(array_).to(equal, ['foo', 'bar']);
+        });
+      });
+      
+      describe('when sent #grep with a non-matching Regexp', function() {
+        function doGrepNonmatching() {
+          return doMethod('grep', {'on': array_, 'with': /not a match/});
+        }
+        
+        it('should return an empty array', function() {
+          expect(doGrepNonmatching().returnValue).to(be_empty);
+        });
+        
+        it('should not mutate itself', function() {
+          doGrepNonmatching();
+          expect(array_).to(equal, ['foo', 'bar']);
+        });
+      });
+      
+      describe('when sent #grep with a matching Regexp and a block', function() {
+        function doGrepMatchingPassingBlock() {
+          return doMethod('grep',
+                          {'on': array_,
+                           'with': [/./,
+                                    function(s) { return 'item: ' + s; }]});
+        }
+        
+        it('should yield twice', function() {
+          expect(doGrepMatchingPassingBlock().callbacks[0].length).to(equal, 2);
+        });
+        
+        it("should yield with itself as the 'this' value the first time", function() {
+          expect(doGrepMatchingPassingBlock().callbacks[0][0].this).to(equal,
+                                                                       array_);
+        });
+        
+        it('should yield the first element the first time', function() {
+          expect(doGrepMatchingPassingBlock().callbacks[0][0].arguments).to(equal,
+                                                                            ['foo']);
+        });
+        
+        it("should yield with itself as the 'this' value the second time", function() {
+          expect(doGrepMatchingPassingBlock().callbacks[0][1].this).to(equal,
+                                                                       array_);
+        });
+        
+        it('should yield the second element the second time', function() {
+          expect(doGrepMatchingPassingBlock().callbacks[0][1].arguments).to(equal,
+                                                                            ['bar']);
+        });
+        
+        it('should return an array containing the values returned by the block', function() {
+          expect(doGrepMatchingPassingBlock().returnValue).to(equal,
+                                                              ['item: foo',
+                                                               'item: bar']);
+        });
+        
+        it('should not mutate itself', function() {
+          doGrepMatchingPassingBlock();
+          expect(array_).to(equal, ['foo', 'bar']);
+        });
+      });
+      
+      describe('when sent #grep with a non-matching Regexp and a block', function() {
+        function doGrepNonmatchingPassingBlock() {
+          return doMethod('grep',
+                          {'on': array_,
+                           'with': [/\d/,
+                                    function(s) { return 'item: ' + s; }]});
+        }
+        
+        it('should not yield', function() {
+          expect(doGrepNonmatchingPassingBlock().callbacks[0]).to(be_empty);
+        });
+        
+        it('should return an empty array', function() {
+          expect(doGrepNonmatchingPassingBlock().returnValue).to(be_empty);
+        });
+        
+        it('should not mutate itself', function() {
+          doGrepNonmatchingPassingBlock();
           expect(array_).to(equal, ['foo', 'bar']);
         });
       });
