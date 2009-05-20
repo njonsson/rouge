@@ -344,7 +344,7 @@ Screw.Unit(function() {
         }
         
         it('should not yield', function() {
-          expect(doFindAll().callbacks[0]).to(equal, []);
+          expect(doFindAll().callbacks[0]).to(be_empty);
         });
         
         it('should return itself', function() {
@@ -387,7 +387,7 @@ Screw.Unit(function() {
         }
         
         it('should not yield', function() {
-          expect(doInjectPassingInitial().callbacks[0]).to(equal, []);
+          expect(doInjectPassingInitial().callbacks[0]).to(be_empty);
         });
         
         it('should return the "initial"', function() {
@@ -407,7 +407,7 @@ Screw.Unit(function() {
         }
         
         it('should not yield', function() {
-          expect(doMap().callbacks[0]).to(equal, []);
+          expect(doMap().callbacks[0]).to(be_empty);
         });
         
         it('should return itself', function() {
@@ -426,7 +426,7 @@ Screw.Unit(function() {
         }
         
         it('should not yield', function() {
-          expect(doMapThis().callbacks[0]).to(equal, []);
+          expect(doMapThis().callbacks[0]).to(be_empty);
         });
         
         it('should return itself', function() {
@@ -445,7 +445,7 @@ Screw.Unit(function() {
         }
         
         it('should not yield', function() {
-          expect(doReject().callbacks[0]).to(equal, []);
+          expect(doReject().callbacks[0]).to(be_empty);
         });
         
         it('should return itself', function() {
@@ -464,7 +464,7 @@ Screw.Unit(function() {
         }
         
         it('should not yield', function() {
-          expect(doSelect().callbacks[0]).to(equal, []);
+          expect(doSelect().callbacks[0]).to(be_empty);
         });
         
         it('should return itself', function() {
