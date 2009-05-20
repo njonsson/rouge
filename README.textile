@@ -1,8 +1,6 @@
 h1. Welcome to Rouge
 
-bq. His code not functional or elegant.
-What do Code Monkey think?
--- Jonathan Coulton, "“Code Monkey”":http://www.jonathancoulton.com/songdetails/Code%20Monkey
+bq. His code not functional or elegant.<br />What do Code Monkey think?<br />-- Jonathan Coulton, "“Code Monkey”":http://www.jonathancoulton.com/songdetails/Code%20Monkey
 
 Do Ruby's stylish core and standard libraries make your JavaScript green with envy? Tart up that dowdy JavaScript -- put on some *Rouge*.
 
@@ -36,5 +34,4 @@ Rouge has over 530 executable specifications authored using the "Screw.Unit":htt
 
 h1. Credits
 
-Rouge's author is "Nils Jonsson":mailto:nils@alumni.rice.edu?subject=Your%20Rouge%20library.
-Released under the "MIT License":../raw/master/MIT-LICENSE.
+Rouge's author is "Nils Jonsson":mailto:nils@alumni.rice.edu?subject=Your%20Rouge%20library. Released under the "MIT License":../raw/master/MIT-LICENSE.
