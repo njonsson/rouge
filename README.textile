@@ -31,6 +31,14 @@ array.each(function(s) {
   alert(s);
 });</code></pre>
 
+You should have a look at "the JSDoc documentation":http://njonsson.github.com/rouge.
+
+h1. Test coverage
+
+Rouge has over 530 executable specifications authored using the
+"Screw.Unit":http://github.com/nathansobo/screw-unit framework. Run the specs
+by opening _src/spec/suite.html_. (Firefox works best for this.)
+
 h1. Credits
 
 Rouge's author is "Nils Jonsson":mailto:nils@alumni.rice.edu?subject=Your%20Rouge%20library.
