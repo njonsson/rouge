@@ -218,6 +218,37 @@ Array.prototype.detect = function(ifNone, block) {
 };
 
 /**
+ * Returns <tt>true</tt> if <i>value</i> is an element of the array.
+ * 
+ * <pre>
+ * var array = ['foo', 'bar', 'baz'];
+ * var result = array.doesInclude('bar');
+ * result // => true
+ * array  // => ['foo', 'bar', 'baz']
+ * 
+ * var array = ['foo', 'bar', 'baz'];
+ * var result = array.doesInclude('bizzle');
+ * result // => false
+ * array  // => ['foo', 'bar', 'baz']
+ * </pre>
+ * 
+ * @param {Object} value A value to look for
+ * @returns {Boolean} <tt>true</tt> if <i>value</t> is an element
+ * 
+ * @see #hasMember #hasMember
+ */
+Array.prototype.doesInclude = function(value) {
+  var found = false;
+  Array.helpers.iterate.apply(this, [function(item, i) {
+    if (item === value) {
+      found = true;
+      return true; // break;
+    }
+  }]);
+  return found;
+};
+
+/**
  * Invokes <i>block</i> once for each element in the array, passing that element
  * as an argument.
  * 
@@ -469,6 +500,18 @@ Array.prototype.grep = function(pattern, block) {
     }
   }]);
   return selected;
+};
+
+/**
+ * An alias for <b>#doesInclude</b>.
+ * 
+ * @param {Object} value A value to look for
+ * @returns {Boolean} <tt>true</tt> if <i>value</t> is an element
+ * 
+ * @see #doesInclude #doesInclude
+ */
+Array.prototype.hasMember = function(value) {
+  return this.doesInclude.apply(this, arguments);
 };
 
 /**
