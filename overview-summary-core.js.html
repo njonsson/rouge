@@ -387,9 +387,9 @@ Array.<span class="reserved">prototype</span>.each = <span class="reserved">func
 Array.<span class="reserved">prototype</span>.eachCons = <span class="reserved">function</span>(n, block) {
   <span class="reserved">for</span> (var i = 0; i + n &lt;= <span class="reserved">this</span>.length; i += 1) {
     var slice = [];
-    Array.helpers.iterate({<span class="literal">'first'</span>: i, <span class="literal">'last'</span>: i + n - 1}, <span class="reserved">function</span>(item, j) {
-      slice.push(item);
-    });
+    <span class="reserved">for</span> (var j = 0; j &lt; n; j += 1) {
+      slice.push(<span class="reserved">this</span>[i + j]);
+    }
     block.apply(<span class="reserved">this</span>, [slice]);
   }
   <span class="reserved">return</span> <span class="reserved">this</span>;
@@ -439,18 +439,17 @@ Array.<span class="reserved">prototype</span>.eachSlice = <span class="reserved"
   var slice;
   <span class="reserved">for</span> (var i = 0; i + n &lt;= <span class="reserved">this</span>.length; i += n) {
     slice = [];
-    Array.helpers.iterate({<span class="literal">'first'</span>: i, <span class="literal">'last'</span>: i + n - 1}, <span class="reserved">function</span>(item, j) {
-      slice.push(item);
-    });
+    <span class="reserved">for</span> (var j = 0; j &lt; n; j += 1) {
+      slice.push(<span class="reserved">this</span>[i + j]);
+    }
     block.apply(<span class="reserved">this</span>, [slice]);
   }
   var remainder = <span class="reserved">this</span>.length % n;
   <span class="reserved">if</span> (remainder &gt; 0) {
     slice = [];
-    Array.helpers.iterate({<span class="literal">'first'</span>: <span class="reserved">this</span>.length - remainder,
-                           <span class="literal">'last'</span>:  <span class="reserved">this</span>.length - 1}, <span class="reserved">function</span>(item, j) {
-      slice.push(item);
-    });
+    <span class="reserved">for</span> (var j = 0; j &lt; remainder; j += 1) {
+      slice.push(<span class="reserved">this</span>[<span class="reserved">this</span>.length - remainder + j]);
+    }
     block.apply(<span class="reserved">this</span>, [slice]);
   }
   <span class="reserved">return</span> <span class="reserved">this</span>;
@@ -519,6 +518,52 @@ Array.<span class="reserved">prototype</span>.find = <span class="reserved">func
  */</span>
 Array.<span class="reserved">prototype</span>.findAll = <span class="reserved">function</span>(block) {
   <span class="reserved">return</span> <span class="reserved">this</span>.select.apply(<span class="reserved">this</span>, arguments);
+};
+
+<span class="comment">/**
+ * Filters the array to elements matching &lt;i&gt;pattern&lt;/i&gt;, passing each matching
+ * element in the array to &lt;i&gt;block&lt;/i&gt;. If &lt;i&gt;block&lt;/i&gt; is not given, Rouge
+ * adds an implicit block that will return the element. Invokes &lt;i&gt;block&lt;/i&gt;
+ * once for each matching element in the array, passing that element as an
+ * argument.
+ * 
+ * &lt;pre&gt;
+ * var array = ['foo', 'bar', 'baz'];
+ * var result = array.grep(/r/);
+ * result // =&gt; ['bar']
+ * array  // =&gt; ['foo', 'bar', 'baz']
+ * &lt;/pre&gt;
+ * 
+ * With the optional &lt;i&gt;block&lt;/i&gt;:
+ * 
+ * &lt;pre&gt;
+ * var array = ['foo', 'bar', 'baz'];
+ * var result = array.grep(/r/, function(s) { return 'matched ' + s; });
+ * result // =&gt; ['matched bar']
+ * array  // =&gt; ['foo', 'bar', 'baz']
+ * &lt;/pre&gt;
+ * 
+ * <span class="attrib">@param</span> {Regexp} pattern The pattern to match
+ * <span class="attrib">@param</span> {Function} block (optional) The function to execute. Should have one
+ *                         parameter
+ * <span class="attrib">@returns</span> {Array} An array containing the return values of &lt;i&gt;block&lt;/i&gt; for
+ *                  the matching elements
+ * 
+ * <span class="attrib">@see</span> #select #select
+ */</span>
+Array.<span class="reserved">prototype</span>.grep = <span class="reserved">function</span>(pattern, block) {
+  <span class="reserved">if</span> (arguments.length === 1) {
+    block = <span class="reserved">function</span>(item) {
+      <span class="reserved">return</span> item;
+    };
+  }
+  var selected = [];
+  Array.helpers.iterate.apply(<span class="reserved">this</span>, [<span class="reserved">function</span>(item, i) {
+    <span class="reserved">if</span> (pattern.test(item)) {
+      selected.push(block.apply(<span class="reserved">this</span>, [item]));
+    }
+  }]);
+  <span class="reserved">return</span> selected;
 };
 
 <span class="comment">/**
@@ -614,7 +659,7 @@ Array.<span class="reserved">prototype</span>.mapThis = <span class="reserved">f
  * 
  * <span class="attrib">@param</span> {Function} block The function to execute. Should have one parameter
  *                         and return either &lt;tt&gt;true&lt;/tt&gt; or &lt;tt&gt;false&lt;/tt&gt;
- * <span class="attrib">@returns</span> {Array} An array containing the values for which &lt;i&gt;block&lt;/i&gt;
+ * <span class="attrib">@returns</span> {Array} An array containing the elements for which &lt;i&gt;block&lt;/i&gt;
  *                  returns &lt;tt&gt;false&lt;/tt&gt;
  * 
  * <span class="attrib">@see</span> #select #select
@@ -645,10 +690,11 @@ Array.<span class="reserved">prototype</span>.reject = <span class="reserved">fu
  * 
  * <span class="attrib">@param</span> {Function} block The function to execute. Should have one parameter
  *                         and return either &lt;tt&gt;true&lt;/tt&gt; or &lt;tt&gt;false&lt;/tt&gt;
- * <span class="attrib">@returns</span> {Array} An array containing the values for which &lt;i&gt;block&lt;/i&gt;
+ * <span class="attrib">@returns</span> {Array} An array containing the elements for which &lt;i&gt;block&lt;/i&gt;
  *                  returns &lt;tt&gt;true&lt;/tt&gt;
  * 
  * <span class="attrib">@see</span> #findAll #findAll
+ * <span class="attrib">@see</span> #grep    #grep
  * <span class="attrib">@see</span> #reject  #reject
  */</span>
 Array.<span class="reserved">prototype</span>.select = <span class="reserved">function</span>(block) {
@@ -742,6 +788,6 @@ Array.helpers = {
 <font size="-1">
 
 </font>
-<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Sun May 17 23:05:20 2009</div>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Tue May 19 20:26:18 2009</div>
 </body>
 </html>
