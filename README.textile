@@ -1,21 +1,18 @@
 h1. Welcome to Rouge
 
-bq. His code not functional or elegant.<br />What do Code Monkey think?<br />--
-Jonathan Coulton,
-"“Code Monkey”":http://www.jonathancoulton.com/songdetails/Code%20Monkey
+bq. His code not functional or elegant.
+What do Code Monkey think?
+-- Jonathan Coulton, "“Code Monkey”":http://www.jonathancoulton.com/songdetails/Code%20Monkey
 
-Do Ruby's stylish core and standard libraries make your JavaScript green with
-envy? Tart up that dowdy JavaScript -- put on some *Rouge*.
+Do Ruby's stylish core and standard libraries make your JavaScript green with envy? Tart up that dowdy JavaScript -- put on some *Rouge*.
 
 !http://www.splendicity.com/ebeautydaily/files/2007/10/kyoto_japan_geisha200.jpg!
 
-Rouge is a JavaScript implementation of some of the Ruby base classes and
-modules.
+Rouge is a JavaScript implementation of some of the Ruby base classes and modules.
 
 h1. Usage
 
-Rouge makes your JavaScript look and feel more like Ruby while preserving sound
-JavaScript style.
+Rouge makes your JavaScript look and feel more like Ruby while preserving sound JavaScript style.
 
 Stop writing:
 
@@ -35,9 +32,7 @@ You should have a look at "the JSDoc documentation":http://njonsson.github.com/r
 
 h1. Test coverage
 
-Rouge has over 530 executable specifications authored using the
-"Screw.Unit":http://github.com/nathansobo/screw-unit framework. Run the specs
-by opening _src/spec/suite.html_. (Firefox works best for this.)
+Rouge has over 530 executable specifications authored using the "Screw.Unit":http://github.com/nathansobo/screw-unit framework. Run the specs by opening _src/spec/suite.html_. (Firefox works best for this.)
 
 h1. Credits
 
