@@ -321,12 +321,15 @@ Array.prototype.each = function(block) {
  * @see #eachSlice #eachSlice
  */
 Array.prototype.eachCons = function(n, block) {
+  var cons;
+  var grouper = function(item, j) {
+    cons.push(item);
+  };
   for (var i = 0; i + n <= this.length; i += 1) {
-    var slice = [];
-    for (var j = 0; j < n; j += 1) {
-      slice.push(this[i + j]);
-    }
-    block.apply(this, [slice]);
+    cons = [];
+    Array.helpers.iterate.apply(this,
+                                [{'first': i, 'last': i + n - 1}, grouper]);
+    block.apply(this, [cons]);
   }
   return this;
 };
@@ -373,19 +376,22 @@ Array.prototype.eachCons = function(n, block) {
  */
 Array.prototype.eachSlice = function(n, block) {
   var slice;
+  var grouper = function(item, j) {
+    slice.push(item);
+  };
   for (var i = 0; i + n <= this.length; i += n) {
     slice = [];
-    for (var j = 0; j < n; j += 1) {
-      slice.push(this[i + j]);
-    }
+    Array.helpers.iterate.apply(this,
+                                [{'first': i, 'last': i + n - 1}, grouper]);
     block.apply(this, [slice]);
   }
   var remainder = this.length % n;
   if (remainder > 0) {
     slice = [];
-    for (var j = 0; j < remainder; j += 1) {
-      slice.push(this[this.length - remainder + j]);
-    }
+    Array.helpers.iterate.apply(this,
+                                [{'first': this.length - remainder,
+                                  'last':  this.length - 1},
+                                 grouper]);
     block.apply(this, [slice]);
   }
   return this;
