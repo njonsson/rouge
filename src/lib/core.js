@@ -564,7 +564,7 @@ Array.prototype.mapThis = function(block) {
  * 
  * @param {Function} block The function to execute. Should have one parameter
  *                         and return either <tt>true</tt> or <tt>false</tt>
- * @returns {Array} An array containing the values for which <i>block</i>
+ * @returns {Array} An array containing the elements for which <i>block</i>
  *                  returns <tt>false</tt>
  * 
  * @see #select #select
@@ -595,7 +595,7 @@ Array.prototype.reject = function(block) {
  * 
  * @param {Function} block The function to execute. Should have one parameter
  *                         and return either <tt>true</tt> or <tt>false</tt>
- * @returns {Array} An array containing the values for which <i>block</i>
+ * @returns {Array} An array containing the elements for which <i>block</i>
  *                  returns <tt>true</tt>
  * 
  * @see #findAll #findAll
