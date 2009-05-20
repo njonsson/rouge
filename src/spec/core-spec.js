@@ -205,6 +205,21 @@ Screw.Unit(function() {
         });
       });
       
+      describe('when sent #doesInclude', function() {
+        function doDoesInclude() {
+          return doMethod('doesInclude', {'on': array_, 'with': 'foo'});
+        }
+        
+        it('should return false', function() {
+          expect(doDoesInclude().returnValue).to(equal, false);
+        });
+        
+        it('should not mutate itself', function() {
+          doDoesInclude();
+          expect(array_).to(equal, []);
+        });
+      });
+      
       describe('when sent #each with a block', function() {
         function doEach() {
           return doMethod('each', {'on': array_, 'with': function(s) { }});
@@ -388,6 +403,21 @@ Screw.Unit(function() {
         
         it('should not mutate itself', function() {
           doGrepMatchingPassingBlock();
+          expect(array_).to(equal, []);
+        });
+      });
+      
+      describe('when sent #hasMember', function() {
+        function doHasMember() {
+          return doMethod('hasMember', {'on': array_, 'with': 'foo'});
+        }
+        
+        it('should return false', function() {
+          expect(doHasMember().returnValue).to(equal, false);
+        });
+        
+        it('should not mutate itself', function() {
+          doHasMember();
           expect(array_).to(equal, []);
         });
       });
@@ -864,6 +894,37 @@ Screw.Unit(function() {
         });
       });
       
+      describe('when sent #doesInclude with a member', function() {
+        function doDoesIncludePassingMember() {
+          return doMethod('doesInclude', {'on': array_, 'with': 'foo'});
+        }
+        
+        it('should return true', function() {
+          expect(doDoesIncludePassingMember().returnValue).to(equal, true);
+        });
+        
+        it('should not mutate itself', function() {
+          doDoesIncludePassingMember();
+          expect(array_).to(equal, ['foo']);
+        });
+      });
+      
+      describe('when sent #doesInclude with a non-member', function() {
+        function doDoesIncludePassingNonmember() {
+          return doMethod('doesInclude',
+                          {'on': array_, 'with': 'something else'});
+        }
+        
+        it('should return false', function() {
+          expect(doDoesIncludePassingNonmember().returnValue).to(equal, false);
+        });
+        
+        it('should not mutate itself', function() {
+          doDoesIncludePassingNonmember();
+          expect(array_).to(equal, ['foo']);
+        });
+      });
+      
       describe('when sent #each with a block', function() {
         function doEach() {
           return doMethod('each',
@@ -1289,6 +1350,37 @@ Screw.Unit(function() {
         
         it('should not mutate itself', function() {
           doGrepNonmatchingPassingBlock();
+          expect(array_).to(equal, ['foo']);
+        });
+      });
+      
+      describe('when sent #hasMember with a member', function() {
+        function doHasMemberPassingMember() {
+          return doMethod('hasMember', {'on': array_, 'with': 'foo'});
+        }
+        
+        it('should return true', function() {
+          expect(doHasMemberPassingMember().returnValue).to(equal, true);
+        });
+        
+        it('should not mutate itself', function() {
+          doHasMemberPassingMember();
+          expect(array_).to(equal, ['foo']);
+        });
+      });
+      
+      describe('when sent #hasMember with a non-member', function() {
+        function doHasMemberPassingNonmember() {
+          return doMethod('hasMember',
+                          {'on': array_, 'with': 'something else'});
+        }
+        
+        it('should return false', function() {
+          expect(doHasMemberPassingNonmember().returnValue).to(equal, false);
+        });
+        
+        it('should not mutate itself', function() {
+          doHasMemberPassingNonmember();
           expect(array_).to(equal, ['foo']);
         });
       });
@@ -1998,6 +2090,37 @@ Screw.Unit(function() {
         });
       });
       
+      describe('when sent #doesInclude with a member', function() {
+        function doDoesIncludePassingMember() {
+          return doMethod('doesInclude', {'on': array_, 'with': 'foo'});
+        }
+        
+        it('should return true', function() {
+          expect(doDoesIncludePassingMember().returnValue).to(equal, true);
+        });
+        
+        it('should not mutate itself', function() {
+          doDoesIncludePassingMember();
+          expect(array_).to(equal, ['foo', 'bar']);
+        });
+      });
+      
+      describe('when sent #doesInclude with a non-member', function() {
+        function doDoesIncludePassingNonmember() {
+          return doMethod('doesInclude',
+                          {'on': array_, 'with': 'something else'});
+        }
+        
+        it('should return false', function() {
+          expect(doDoesIncludePassingNonmember().returnValue).to(equal, false);
+        });
+        
+        it('should not mutate itself', function() {
+          doDoesIncludePassingNonmember();
+          expect(array_).to(equal, ['foo', 'bar']);
+        });
+      });
+      
       describe('when sent #each with a block', function() {
         function doEach() {
           return doMethod('each',
@@ -2552,6 +2675,37 @@ Screw.Unit(function() {
         
         it('should not mutate itself', function() {
           doGrepNonmatchingPassingBlock();
+          expect(array_).to(equal, ['foo', 'bar']);
+        });
+      });
+      
+      describe('when sent #hasMember with a member', function() {
+        function doHasMemberPassingMember() {
+          return doMethod('hasMember', {'on': array_, 'with': 'foo'});
+        }
+        
+        it('should return true', function() {
+          expect(doHasMemberPassingMember().returnValue).to(equal, true);
+        });
+        
+        it('should not mutate itself', function() {
+          doHasMemberPassingMember();
+          expect(array_).to(equal, ['foo', 'bar']);
+        });
+      });
+      
+      describe('when sent #hasMember with a non-member', function() {
+        function doHasMemberPassingNonmember() {
+          return doMethod('hasMember',
+                          {'on': array_, 'with': 'something else'});
+        }
+        
+        it('should return false', function() {
+          expect(doHasMemberPassingNonmember().returnValue).to(equal, false);
+        });
+        
+        it('should not mutate itself', function() {
+          doHasMemberPassingNonmember();
           expect(array_).to(equal, ['foo', 'bar']);
         });
       });
