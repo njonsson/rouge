@@ -504,6 +504,33 @@ Screw.Unit(function() {
         });
       });
       
+      describe('when sent #partition with a block', function() {
+        function doPartition() {
+          return doMethod('partition', {'on': array_, 'with': function(s) { }});
+        }
+        
+        it('should not yield', function() {
+          expect(doPartition().callbacks[0]).to(be_empty);
+        });
+        
+        it('should return an array of two elements', function() {
+          expect(doPartition().returnValue.length).to(equal, 2);
+        });
+        
+        it('should return an array whose first element is an empty array', function() {
+          expect(doPartition().returnValue[0]).to(be_empty);
+        });
+        
+        it('should return an array whose second element is an empty array', function() {
+          expect(doPartition().returnValue[1]).to(be_empty);
+        });
+        
+        it('should not mutate itself', function() {
+          doPartition();
+          expect(array_).to(equal, []);
+        });
+      });
+      
       describe('when sent #reject with a block', function() {
         function doReject() {
           return doMethod('reject', {'on': array_, 'with': function(s) { }});
@@ -1495,6 +1522,78 @@ Screw.Unit(function() {
         it('should mutate itself as expected', function() {
           doMapThis();
           expect(array_).to(equal, ['item: foo']);
+        });
+      });
+      
+      describe('when sent #partition with a block that returns true', function() {
+        function doPartitionTrue() {
+          return doMethod('partition',
+                          {'on': array_, 'with': function(s) { return true; }});
+        }
+        
+        it('should yield once', function() {
+          expect(doPartitionTrue().callbacks[0].length).to(equal, 1);
+        });
+        
+        it("should yield with itself as the 'this' value", function() {
+          expect(doPartitionTrue().callbacks[0][0].this).to(equal, array_);
+        });
+        
+        it('should yield the element', function() {
+          expect(doPartitionTrue().callbacks[0][0].arguments).to(equal, ['foo']);
+        });
+        
+        it('should return an array of two elements', function() {
+          expect(doPartitionTrue().returnValue.length).to(equal, 2);
+        });
+        
+        it('should return an array whose first element is an array containing the element', function() {
+          expect(doPartitionTrue().returnValue[0]).to(equal, ['foo']);
+        });
+        
+        it('should return an array whose second element is an empty array', function() {
+          expect(doPartitionTrue().returnValue[1]).to(be_empty);
+        });
+        
+        it('should not mutate itself', function() {
+          doPartitionTrue();
+          expect(array_).to(equal, ['foo']);
+        });
+      });
+      
+      describe('when sent #partition with a block that returns false', function() {
+        function doPartitionFalse() {
+          return doMethod('partition',
+                          {'on': array_, 'with': function(s) { return false; }});
+        }
+        
+        it('should yield once', function() {
+          expect(doPartitionFalse().callbacks[0].length).to(equal, 1);
+        });
+        
+        it("should yield with itself as the 'this' value", function() {
+          expect(doPartitionFalse().callbacks[0][0].this).to(equal, array_);
+        });
+        
+        it('should yield the element', function() {
+          expect(doPartitionFalse().callbacks[0][0].arguments).to(equal, ['foo']);
+        });
+        
+        it('should return an array of two elements', function() {
+          expect(doPartitionFalse().returnValue.length).to(equal, 2);
+        });
+        
+        it('should return an array whose first element is an empty array', function() {
+          expect(doPartitionFalse().returnValue[0]).to(be_empty);
+        });
+        
+        it('should return an array whose second element is an array containing the element', function() {
+          expect(doPartitionFalse().returnValue[1]).to(equal, ['foo']);
+        });
+        
+        it('should not mutate itself', function() {
+          doPartitionFalse();
+          expect(array_).to(equal, ['foo']);
         });
       });
       
@@ -2855,6 +2954,96 @@ Screw.Unit(function() {
         it('should mutate itself as expected', function() {
           doMapThis();
           expect(array_).to(equal, ['item: foo', 'item: bar']);
+        });
+      });
+      
+      describe('when sent #partition with a block that returns true', function() {
+        function doPartitionTrue() {
+          return doMethod('partition',
+                          {'on': array_, 'with': function(s) { return true; }});
+        }
+        
+        it('should yield twice', function() {
+          expect(doPartitionTrue().callbacks[0].length).to(equal, 2);
+        });
+        
+        it("should yield with itself as the 'this' value the first time", function() {
+          expect(doPartitionTrue().callbacks[0][0].this).to(equal, array_);
+        });
+        
+        it('should yield the first element the first time', function() {
+          expect(doPartitionTrue().callbacks[0][0].arguments).to(equal, ['foo']);
+        });
+        
+        it("should yield with itself as the 'this' value the second time", function() {
+          expect(doPartitionTrue().callbacks[0][1].this).to(equal, array_);
+        });
+        
+        it('should yield the second element the second time', function() {
+          expect(doPartitionTrue().callbacks[0][1].arguments).to(equal, ['bar']);
+        });
+        
+        it('should return an array of two elements', function() {
+          expect(doPartitionTrue().returnValue.length).to(equal, 2);
+        });
+        
+        it('should return an array whose first element is an array containing the elements', function() {
+          expect(doPartitionTrue().returnValue[0]).to(equal, ['foo', 'bar']);
+        });
+        
+        it('should return an array whose second element is an empty array', function() {
+          expect(doPartitionTrue().returnValue[1]).to(be_empty);
+        });
+        
+        it('should not mutate itself', function() {
+          doPartitionTrue();
+          expect(array_).to(equal, ['foo', 'bar']);
+        });
+      });
+      
+      describe('when sent #partition with a block that returns false', function() {
+        function doPartitionFalse() {
+          return doMethod('partition',
+                          {'on': array_, 'with': function(s) { return false; }});
+        }
+        
+        it('should yield twice', function() {
+          expect(doPartitionFalse().callbacks[0].length).to(equal, 2);
+        });
+        
+        it("should yield with itself as the 'this' value the first time", function() {
+          expect(doPartitionFalse().callbacks[0][0].this).to(equal, array_);
+        });
+        
+        it('should yield the first element the first time', function() {
+          expect(doPartitionFalse().callbacks[0][0].arguments).to(equal,
+                                                                  ['foo']);
+        });
+        
+        it("should yield with itself as the 'this' value the second time", function() {
+          expect(doPartitionFalse().callbacks[0][1].this).to(equal, array_);
+        });
+        
+        it('should yield the second element the second time', function() {
+          expect(doPartitionFalse().callbacks[0][1].arguments).to(equal,
+                                                                  ['bar']);
+        });
+        
+        it('should return an array of two elements', function() {
+          expect(doPartitionFalse().returnValue.length).to(equal, 2);
+        });
+        
+        it('should return an array whose first element is an empty array', function() {
+          expect(doPartitionFalse().returnValue[0]).to(be_empty);
+        });
+        
+        it('should return an array whose second element is an array containing the elements', function() {
+          expect(doPartitionFalse().returnValue[1]).to(equal, ['foo', 'bar']);
+        });
+        
+        it('should not mutate itself', function() {
+          doPartitionFalse();
+          expect(array_).to(equal, ['foo', 'bar']);
         });
       });
       
