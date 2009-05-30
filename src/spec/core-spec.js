@@ -18,7 +18,11 @@ Screw.Unit(function() {
       };
       
       // For convenience
-      if (! (options.with instanceof Array)) options.with = [options.with];
+      if (options.with === undefined) {
+        options.with = [];
+      } else if (! (options.with instanceof Array)) {
+        options.with = [options.with];
+      }
       
       var result = {callbacks: []};
       for (var i = 0; i < options.with.length; i += 1) {
