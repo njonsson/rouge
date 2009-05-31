@@ -154,9 +154,8 @@ Array.prototype.collect = function(block) {
  * @see #mapThis #mapThis
  */
 Array.prototype.collectThis = function(block) {
-  var self = this;
   Array.helpers.iterate.apply(this, [function(item, i) {
-    self[i] = block.apply(this, [item]);
+    this[i] = block.apply(this, [item]);
   }]);
   return this;
 };
