@@ -6,6 +6,92 @@
  */
 
 /**
+ * Array::new
+ * 
+ * @member Array
+ * 
+ * Creates a new array. Several patterns of arguments are accepted.
+ * 
+ * No arguments:
+ * 
+ * <pre>
+ * var array = Array.new();
+ * array // => []
+ * </pre>
+ * 
+ * A non-negative integer:
+ * 
+ * <pre>
+ * var array = Array.new(3);
+ * array // => [undefined, undefined, undefined]
+ * </pre>
+ * 
+ * A non-negative integer and a non-Function object:
+ * 
+ * <pre>
+ * var array = Array.new(3, 'foo');
+ * array // => ['foo', 'foo', 'foo']
+ * </pre>
+ * 
+ * A non-negative integer and a block:
+ * 
+ * <pre>
+ * var array = Array.new(3, function(i) { return 'item ' + i; });
+ * array // => ['item 0', 'item 1', 'item 2']
+ * </pre>
+ * 
+ * An array:
+ * 
+ * <pre>
+ * var arg = ['foo', 'bar', 'baz'];
+ * var array = Array.new(arg);
+ * array         // => ['foo', 'bar', 'baz']
+ * array === arg // => false
+ * </pre>
+ * 
+ * @returns {Array} An array
+ */
+Array.new = function() {
+  var withNone = function() {
+    return withSize(0);
+  };
+  var withSize = function(size) {
+    return new Array(size);
+  };
+  var withSizeAndValue = function(size, value) {
+    return withSizeAndBlock(size, function(i) {
+      return value;
+    });
+  };
+  var withSizeAndBlock = function(size, block) {
+    var array = withSize(size);
+    Array.helpers.iterate.apply(array, [function(item, i) {
+      this[i] = block.apply(this, [i]);
+    }]);
+    return array;
+  };
+  var withArray = function(array) {
+    var newArray = new Array(array.length);
+    Array.helpers.iterate.apply(array, [function(item, i) {
+      newArray[i] = item;
+    }]);
+    return newArray;
+  };
+  
+  if (arguments.length === 0) return withNone();
+  if (arguments.length === 1) {
+    if (Array.helpers.isTypeOf(arguments[0], Array)) {
+      return withArray(arguments[0]);
+    }
+    return withSize(arguments[0]);
+  }
+  if (Array.helpers.isTypeOf(arguments[1], Function)) {
+    return withSizeAndBlock(arguments[0], arguments[1]);
+  }
+  return withSizeAndValue(arguments[0], arguments[1]);
+};
+
+/**
  * Passes each element in the array to <i>block</i>, returning <tt>true</tt> if
  * <i>block</i> never returns <tt>false</tt> or <tt>null</tt>. If <i>block</i>
  * is not given, Rouge adds an implicit block that will return <tt>true</tt>
@@ -702,6 +788,10 @@ Array.prototype.select = function(block) {
 Array.helpers = {
   'isNullOrFalse': function(expr) {
     return (expr === null) || (expr === false);
+  },
+  
+  'isTypeOf': function(object, type) {
+    return object.constructor.toString() === type.toString();
   },
   
   'iterate': function(options, block) {
