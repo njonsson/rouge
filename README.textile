@@ -71,7 +71,7 @@ You should have a look at "the JSDoc documentation":http://njonsson.github.com/r
 
 h1. Test coverage
 
-Rouge has around 600 executable specifications authored using the "Screw.Unit":http://github.com/nathansobo/screw-unit framework. Run the specs by opening _src/spec/suite.html_. (Firefox works best for this.)
+Rouge has around 400 executable specifications authored using the "Screw.Unit":http://github.com/nathansobo/screw-unit framework. Run the specs by opening _src/spec/suite.html_. (Firefox works best for this.)
 
 h1. Credits
 
