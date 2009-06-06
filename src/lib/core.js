@@ -51,7 +51,7 @@
  * 
  * @returns {Array} An array
  */
-Array.new = function() {
+Array['new'] = function() {
   var withNone = function() {
     return withSize(0);
   };
