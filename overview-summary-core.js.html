@@ -187,6 +187,36 @@ Array[<span class="literal">'new'</span>] = <span class="reserved">function</spa
 };
 
 <span class="comment">/**
+ * An alias for &lt;b&gt;#areAll&lt;/b&gt;.
+ * 
+ * <span class="attrib">@param</span> {Function} block (optional) The function to execute. Should have one
+ *                         parameter
+ * <span class="attrib">@returns</span> {Boolean} &lt;tt&gt;true&lt;/tt&gt; if &lt;i&gt;block&lt;/t&gt; does not return
+ *                    &lt;tt&gt;false&lt;/tt&gt; or &lt;tt&gt;null&lt;/tt&gt; for any element
+ * 
+ * <span class="attrib">@see</span> #areAll #areAll
+ * <span class="attrib">@see</span> #any?   #any?
+ */</span>
+Array.<span class="reserved">prototype</span>[<span class="literal">'all?'</span>] = <span class="reserved">function</span>(block) {
+  <span class="reserved">return</span> <span class="reserved">this</span>.areAll.apply(<span class="reserved">this</span>, arguments);
+};
+
+<span class="comment">/**
+ * An alias for &lt;b&gt;#areAny&lt;/b&gt;.
+ * 
+ * <span class="attrib">@param</span> {Function} block (optional) The function to execute. Should have one
+ *                         parameter
+ * <span class="attrib">@returns</span> {Boolean} &lt;tt&gt;true&lt;/tt&gt; if &lt;i&gt;block&lt;/t&gt; returns a value other than
+ *                    &lt;tt&gt;false&lt;/tt&gt; or &lt;tt&gt;null&lt;/tt&gt; for any element
+ * 
+ * <span class="attrib">@see</span> #areAny #areAny
+ * <span class="attrib">@see</span> #all?   #all?
+ */</span>
+Array.<span class="reserved">prototype</span>[<span class="literal">'any?'</span>] = <span class="reserved">function</span>(block) {
+  <span class="reserved">return</span> <span class="reserved">this</span>.areAny.apply(<span class="reserved">this</span>, arguments);
+};
+
+<span class="comment">/**
  * Passes each element in the array to &lt;i&gt;block&lt;/i&gt;, returning &lt;tt&gt;true&lt;/tt&gt; if
  * &lt;i&gt;block&lt;/i&gt; never returns &lt;tt&gt;false&lt;/tt&gt; or &lt;tt&gt;null&lt;/tt&gt;. If &lt;i&gt;block&lt;/i&gt;
  * is not given, Rouge adds an implicit block that will return &lt;tt&gt;true&lt;/tt&gt;
@@ -306,7 +336,8 @@ Array.<span class="reserved">prototype</span>.areAny = <span class="reserved">fu
  * <span class="attrib">@param</span> {Function} block The function to execute. Should have one parameter
  * <span class="attrib">@returns</span> {Array} An array containing the values returned by &lt;i&gt;block&lt;/i&gt;
  * 
- * <span class="attrib">@see</span> #map #map
+ * <span class="attrib">@see</span> #collectThis #collectThis
+ * <span class="attrib">@see</span> #map         #map
  */</span>
 Array.<span class="reserved">prototype</span>.collect = <span class="reserved">function</span>(block) {
   var result = [];
@@ -332,6 +363,7 @@ Array.<span class="reserved">prototype</span>.collect = <span class="reserved">f
  * <span class="attrib">@param</span> {Function} block The function to execute. Should have one parameter
  * <span class="attrib">@returns</span> {Array} The array
  * 
+ * <span class="attrib">@see</span> #collect #collect
  * <span class="attrib">@see</span> #mapThis #mapThis
  */</span>
 Array.<span class="reserved">prototype</span>.collectThis = <span class="reserved">function</span>(block) {
@@ -339,6 +371,19 @@ Array.<span class="reserved">prototype</span>.collectThis = <span class="reserve
     <span class="reserved">this</span>[i] = block.apply(<span class="reserved">this</span>, [item]);
   }]);
   <span class="reserved">return</span> <span class="reserved">this</span>;
+};
+
+<span class="comment">/**
+ * An alias for &lt;b&gt;#collectThis&lt;/b&gt;.
+ * 
+ * <span class="attrib">@param</span> {Function} block The function to execute. Should have one parameter
+ * <span class="attrib">@returns</span> {Array} The array
+ * 
+ * <span class="attrib">@see</span> #collectThis #collectThis
+ * <span class="attrib">@see</span> #collect     #collect
+ */</span>
+Array.<span class="reserved">prototype</span>[<span class="literal">'collect!'</span>] = <span class="reserved">function</span>(block) {
+  <span class="reserved">return</span> <span class="reserved">this</span>.collectThis.apply(<span class="reserved">this</span>, arguments);
 };
 
 <span class="comment">/**
@@ -376,7 +421,8 @@ Array.<span class="reserved">prototype</span>.collectThis = <span class="reserve
  *          If &lt;i&gt;block&lt;/i&gt; never returns &lt;tt&gt;true&lt;/tt&gt; and &lt;i&gt;ifNone&lt;/i&gt; is not
  *          specified, then &lt;tt&gt;null&lt;/tt&gt; is used
  * 
- * <span class="attrib">@see</span> #find #find
+ * <span class="attrib">@see</span> #find   #find
+ * <span class="attrib">@see</span> #select #select
  */</span>
 Array.<span class="reserved">prototype</span>.detect = <span class="reserved">function</span>(ifNone, block) {
   <span class="reserved">function</span> detectOrNone(ifNone, block) {
@@ -701,6 +747,19 @@ Array.<span class="reserved">prototype</span>.hasMember = <span class="reserved"
 };
 
 <span class="comment">/**
+ * An alias for &lt;b&gt;#doesInclude&lt;/b&gt;.
+ * 
+ * <span class="attrib">@param</span> {Object} value A value to look for
+ * <span class="attrib">@returns</span> {Boolean} &lt;tt&gt;true&lt;/tt&gt; if &lt;i&gt;value&lt;/t&gt; is an element
+ * 
+ * <span class="attrib">@see</span> #doesInclude #doesInclude
+ * <span class="attrib">@see</span> #member?     #member?
+ */</span>
+Array.<span class="reserved">prototype</span>[<span class="literal">'include?'</span>] = <span class="reserved">function</span>(block) {
+  <span class="reserved">return</span> <span class="reserved">this</span>.doesInclude.apply(<span class="reserved">this</span>, arguments);
+};
+
+<span class="comment">/**
  * Combines the elements of the array by applying &lt;i&gt;block&lt;/i&gt; to an accumulator
  * value (&lt;i&gt;memo&lt;/i&gt;) and each element in turn. Invokes &lt;i&gt;block&lt;/i&gt; once for
  * each element in the array, passing &lt;i&gt;memo&lt;/i&gt; and that element as arguments.
@@ -760,6 +819,7 @@ Array.<span class="reserved">prototype</span>.inject = <span class="reserved">fu
  * <span class="attrib">@returns</span> {Array} An array containing the values returned by &lt;i&gt;block&lt;/i&gt;
  * 
  * <span class="attrib">@see</span> #collect #collect
+ * <span class="attrib">@see</span> #mapThis #mapThis
  */</span>
 Array.<span class="reserved">prototype</span>.map = <span class="reserved">function</span>(block) {
   <span class="reserved">return</span> <span class="reserved">this</span>.collect.apply(<span class="reserved">this</span>, arguments);
@@ -772,9 +832,36 @@ Array.<span class="reserved">prototype</span>.map = <span class="reserved">funct
  * <span class="attrib">@returns</span> {Array} The array
  * 
  * <span class="attrib">@see</span> #collectThis #collectThis
+ * <span class="attrib">@see</span> #map         #map
  */</span>
 Array.<span class="reserved">prototype</span>.mapThis = <span class="reserved">function</span>(block) {
   <span class="reserved">return</span> <span class="reserved">this</span>.collectThis.apply(<span class="reserved">this</span>, arguments);
+};
+
+<span class="comment">/**
+ * An alias for &lt;b&gt;#mapThis&lt;/b&gt;.
+ * 
+ * <span class="attrib">@param</span> {Function} block The function to execute. Should have one parameter
+ * <span class="attrib">@returns</span> {Array} The array
+ * 
+ * <span class="attrib">@see</span> #mapThis #mapThis
+ * <span class="attrib">@see</span> #map     #map
+ */</span>
+Array.<span class="reserved">prototype</span>[<span class="literal">'map!'</span>] = <span class="reserved">function</span>(block) {
+  <span class="reserved">return</span> <span class="reserved">this</span>.mapThis.apply(<span class="reserved">this</span>, arguments);
+};
+
+<span class="comment">/**
+ * An alias for &lt;b&gt;#hasMember&lt;/b&gt;.
+ * 
+ * <span class="attrib">@param</span> {Object} value A value to look for
+ * <span class="attrib">@returns</span> {Boolean} &lt;tt&gt;true&lt;/tt&gt; if &lt;i&gt;value&lt;/t&gt; is an element
+ * 
+ * <span class="attrib">@see</span> #hasMember #hasMember
+ * <span class="attrib">@see</span> #include?  #include?
+ */</span>
+Array.<span class="reserved">prototype</span>[<span class="literal">'member?'</span>] = <span class="reserved">function</span>(block) {
+  <span class="reserved">return</span> <span class="reserved">this</span>.hasMember.apply(<span class="reserved">this</span>, arguments);
 };
 
 <span class="comment">/**
@@ -866,6 +953,7 @@ Array.<span class="reserved">prototype</span>.reject = <span class="reserved">fu
  * <span class="attrib">@see</span> #findAll #findAll
  * <span class="attrib">@see</span> #grep    #grep
  * <span class="attrib">@see</span> #reject  #reject
+ * <span class="attrib">@see</span> #detect  #detect
  */</span>
 Array.<span class="reserved">prototype</span>.select = <span class="reserved">function</span>(block) {
   var selected = [];
@@ -962,6 +1050,6 @@ Array.helpers = {
 <font size="-1">
 
 </font>
-<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Fri Jun  5 23:45:47 2009</div>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Sat Jun  6 22:47:16 2009</div>
 </body>
 </html>
