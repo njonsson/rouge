@@ -96,7 +96,7 @@ Array['new'] = function() {
  * 
  * @param {Function} block (optional) The function to execute. Should have one
  *                         parameter
- * @returns {Boolean} <tt>true</tt> if <i>block</t> does not return
+ * @returns {Boolean} <tt>true</tt> if <i>block</i> does not return
  *                    <tt>false</tt> or <tt>null</tt> for any element
  * 
  * @see #areAll #areAll
@@ -111,7 +111,7 @@ Array.prototype['all?'] = function(block) {
  * 
  * @param {Function} block (optional) The function to execute. Should have one
  *                         parameter
- * @returns {Boolean} <tt>true</tt> if <i>block</t> returns a value other than
+ * @returns {Boolean} <tt>true</tt> if <i>block</i> returns a value other than
  *                    <tt>false</tt> or <tt>null</tt> for any element
  * 
  * @see #isAny #isAny
@@ -154,7 +154,7 @@ Array.prototype['any?'] = function(block) {
  * 
  * @param {Function} block (optional) The function to execute. Should have one
  *                         parameter
- * @returns {Boolean} <tt>true</tt> if <i>block</t> does not return
+ * @returns {Boolean} <tt>true</tt> if <i>block</i> does not return
  *                    <tt>false</tt> or <tt>null</tt> for any element
  * 
  * @see #isAny #isAny
@@ -312,7 +312,7 @@ Array.prototype.detect = function(ifNone, block) {
  * </pre>
  * 
  * @param {Object} value A value to look for
- * @returns {Boolean} <tt>true</tt> if <i>value</t> is an element
+ * @returns {Boolean} <tt>true</tt> if <i>value</i> is an element
  * 
  * @see #hasMember #hasMember
  */
@@ -591,7 +591,7 @@ Array.prototype.grep = function(pattern, block) {
  * An alias for <b>#doesInclude</b>.
  * 
  * @param {Object} value A value to look for
- * @returns {Boolean} <tt>true</tt> if <i>value</t> is an element
+ * @returns {Boolean} <tt>true</tt> if <i>value</i> is an element
  * 
  * @see #doesInclude #doesInclude
  */
@@ -603,7 +603,7 @@ Array.prototype.hasMember = function(value) {
  * An alias for <b>#doesInclude</b>.
  * 
  * @param {Object} value A value to look for
- * @returns {Boolean} <tt>true</tt> if <i>value</t> is an element
+ * @returns {Boolean} <tt>true</tt> if <i>value</i> is an element
  * 
  * @see #doesInclude #doesInclude
  * @see #member?     #member?
@@ -698,7 +698,7 @@ Array.prototype.inject = function(initial, block) {
  * 
  * @param {Function} block (optional) The function to execute. Should have one
  *                         parameter
- * @returns {Boolean} <tt>true</tt> if <i>block</t> returns a value other than
+ * @returns {Boolean} <tt>true</tt> if <i>block</i> returns a value other than
  *                    <tt>false</tt> or <tt>null</tt> for any element
  * 
  * @see #areAll #areAll
@@ -760,7 +760,7 @@ Array.prototype['map!'] = function(block) {
  * An alias for <b>#hasMember</b>.
  * 
  * @param {Object} value A value to look for
- * @returns {Boolean} <tt>true</tt> if <i>value</t> is an element
+ * @returns {Boolean} <tt>true</tt> if <i>value</i> is an element
  * 
  * @see #hasMember #hasMember
  * @see #include?  #include?
