@@ -202,18 +202,18 @@ Array.<span class="reserved">prototype</span>[<span class="literal">'all?'</span
 };
 
 <span class="comment">/**
- * An alias for &lt;b&gt;#areAny&lt;/b&gt;.
+ * An alias for &lt;b&gt;#isAny&lt;/b&gt;.
  * 
  * <span class="attrib">@param</span> {Function} block (optional) The function to execute. Should have one
  *                         parameter
  * <span class="attrib">@returns</span> {Boolean} &lt;tt&gt;true&lt;/tt&gt; if &lt;i&gt;block&lt;/t&gt; returns a value other than
  *                    &lt;tt&gt;false&lt;/tt&gt; or &lt;tt&gt;null&lt;/tt&gt; for any element
  * 
- * <span class="attrib">@see</span> #areAny #areAny
- * <span class="attrib">@see</span> #all?   #all?
+ * <span class="attrib">@see</span> #isAny #isAny
+ * <span class="attrib">@see</span> #all?  #all?
  */</span>
 Array.<span class="reserved">prototype</span>[<span class="literal">'any?'</span>] = <span class="reserved">function</span>(block) {
-  <span class="reserved">return</span> <span class="reserved">this</span>.areAny.apply(<span class="reserved">this</span>, arguments);
+  <span class="reserved">return</span> <span class="reserved">this</span>.isAny.apply(<span class="reserved">this</span>, arguments);
 };
 
 <span class="comment">/**
@@ -252,7 +252,7 @@ Array.<span class="reserved">prototype</span>[<span class="literal">'any?'</span
  * <span class="attrib">@returns</span> {Boolean} &lt;tt&gt;true&lt;/tt&gt; if &lt;i&gt;block&lt;/t&gt; does not return
  *                    &lt;tt&gt;false&lt;/tt&gt; or &lt;tt&gt;null&lt;/tt&gt; for any element
  * 
- * <span class="attrib">@see</span> #areAny #areAny
+ * <span class="attrib">@see</span> #isAny #isAny
  */</span>
 Array.<span class="reserved">prototype</span>.areAll = <span class="reserved">function</span>(block) {
   <span class="reserved">if</span> (block === undefined) {
@@ -264,58 +264,6 @@ Array.<span class="reserved">prototype</span>.areAll = <span class="reserved">fu
   Array.helpers.iterate.apply(<span class="reserved">this</span>, [<span class="reserved">function</span>(item, i) {
     result = block(<span class="reserved">this</span>[i]);
     <span class="reserved">if</span> (Array.helpers.isNullOrFalse(result)) <span class="reserved">return</span> true; <span class="comment">// break</span>
-  }]);
-  <span class="reserved">return</span> ! Array.helpers.isNullOrFalse(result);
-};
-
-<span class="comment">/**
- * Passes each element in the array to &lt;i&gt;block&lt;/i&gt;, returning &lt;tt&gt;true&lt;/tt&gt; if
- * &lt;i&gt;block&lt;/i&gt; ever returns a value other than &lt;tt&gt;false&lt;/tt&gt; or &lt;tt&gt;null&lt;/tt&gt;.
- * If &lt;i&gt;block&lt;/i&gt; is not given, Rouge adds an implicit block that will return
- * &lt;tt&gt;true&lt;/tt&gt; if any of the elements is not &lt;tt&gt;false&lt;/tt&gt; or &lt;tt&gt;null&lt;/tt&gt;.
- * 
- * &lt;pre&gt;
- * var array = ['foo', 'bar', 'bizzle'];
- * var result = array.areAny(function(item) {
- *   return item.length &gt;= 3;
- * });
- * result // =&gt; true
- * array  // =&gt; ['foo', 'bar', 'bizzle']
- * 
- * var array = ['foo', 'bar', 'bizzle'];
- * var result = array.areAny(function(item) {
- *   return item.length &lt;= 2;
- * });
- * result // =&gt; false
- * array  // =&gt; ['foo', 'bar', 'bizzle']
- * &lt;/pre&gt;
- * 
- * Without the optional &lt;i&gt;block&lt;/i&gt;:
- * 
- * &lt;pre&gt;
- * var array = [null, true, 99];
- * var result = array.areAny();
- * result // =&gt; true
- * array  // =&gt; [null, true, 99]
- * &lt;/pre&gt;
- * 
- * <span class="attrib">@param</span> {Function} block (optional) The function to execute. Should have one
- *                         parameter
- * <span class="attrib">@returns</span> {Boolean} &lt;tt&gt;true&lt;/tt&gt; if &lt;i&gt;block&lt;/t&gt; returns a value other than
- *                    &lt;tt&gt;false&lt;/tt&gt; or &lt;tt&gt;null&lt;/tt&gt; for any element
- * 
- * <span class="attrib">@see</span> #areAll #areAll
- */</span>
-Array.<span class="reserved">prototype</span>.areAny = <span class="reserved">function</span>(block) {
-  <span class="reserved">if</span> (block === undefined) {
-    block = <span class="reserved">function</span>(item) {
-      <span class="reserved">return</span> ! Array.helpers.isNullOrFalse(item);
-    };
-  }
-  var result = false;
-  Array.helpers.iterate.apply(<span class="reserved">this</span>, [<span class="reserved">function</span>(item, i) {
-    result = block(<span class="reserved">this</span>[i]);
-    <span class="reserved">if</span> (! Array.helpers.isNullOrFalse(result)) <span class="reserved">return</span> true;
   }]);
   <span class="reserved">return</span> ! Array.helpers.isNullOrFalse(result);
 };
@@ -813,6 +761,58 @@ Array.<span class="reserved">prototype</span>.inject = <span class="reserved">fu
 };
 
 <span class="comment">/**
+ * Passes each element in the array to &lt;i&gt;block&lt;/i&gt;, returning &lt;tt&gt;true&lt;/tt&gt; if
+ * &lt;i&gt;block&lt;/i&gt; ever returns a value other than &lt;tt&gt;false&lt;/tt&gt; or &lt;tt&gt;null&lt;/tt&gt;.
+ * If &lt;i&gt;block&lt;/i&gt; is not given, Rouge adds an implicit block that will return
+ * &lt;tt&gt;true&lt;/tt&gt; if any of the elements is not &lt;tt&gt;false&lt;/tt&gt; or &lt;tt&gt;null&lt;/tt&gt;.
+ * 
+ * &lt;pre&gt;
+ * var array = ['foo', 'bar', 'bizzle'];
+ * var result = array.isAny(function(item) {
+ *   return item.length &gt;= 3;
+ * });
+ * result // =&gt; true
+ * array  // =&gt; ['foo', 'bar', 'bizzle']
+ * 
+ * var array = ['foo', 'bar', 'bizzle'];
+ * var result = array.isAny(function(item) {
+ *   return item.length &lt;= 2;
+ * });
+ * result // =&gt; false
+ * array  // =&gt; ['foo', 'bar', 'bizzle']
+ * &lt;/pre&gt;
+ * 
+ * Without the optional &lt;i&gt;block&lt;/i&gt;:
+ * 
+ * &lt;pre&gt;
+ * var array = [null, true, 99];
+ * var result = array.isAny();
+ * result // =&gt; true
+ * array  // =&gt; [null, true, 99]
+ * &lt;/pre&gt;
+ * 
+ * <span class="attrib">@param</span> {Function} block (optional) The function to execute. Should have one
+ *                         parameter
+ * <span class="attrib">@returns</span> {Boolean} &lt;tt&gt;true&lt;/tt&gt; if &lt;i&gt;block&lt;/t&gt; returns a value other than
+ *                    &lt;tt&gt;false&lt;/tt&gt; or &lt;tt&gt;null&lt;/tt&gt; for any element
+ * 
+ * <span class="attrib">@see</span> #areAll #areAll
+ */</span>
+Array.<span class="reserved">prototype</span>.isAny = <span class="reserved">function</span>(block) {
+  <span class="reserved">if</span> (block === undefined) {
+    block = <span class="reserved">function</span>(item) {
+      <span class="reserved">return</span> ! Array.helpers.isNullOrFalse(item);
+    };
+  }
+  var result = false;
+  Array.helpers.iterate.apply(<span class="reserved">this</span>, [<span class="reserved">function</span>(item, i) {
+    result = block(<span class="reserved">this</span>[i]);
+    <span class="reserved">if</span> (! Array.helpers.isNullOrFalse(result)) <span class="reserved">return</span> true;
+  }]);
+  <span class="reserved">return</span> ! Array.helpers.isNullOrFalse(result);
+};
+
+<span class="comment">/**
  * An alias for &lt;b&gt;#collect&lt;/b&gt;.
  * 
  * <span class="attrib">@param</span> {Function} block The function to execute. Should have one parameter
@@ -1050,6 +1050,6 @@ Array.helpers = {
 <font size="-1">
 
 </font>
-<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Sat Jun  6 22:47:16 2009</div>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Sat Jun  6 23:13:21 2009</div>
 </body>
 </html>

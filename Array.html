@@ -140,24 +140,6 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
 	 <FONT SIZE="-1">
-	    <CODE>&nbsp;Boolean</CODE>
-	 </FONT>
-      </TD>
-      <TD>
-	 <CODE>
-	    <B>
-	       <A HREF="#areAny">areAny</A></B>(&lt;Function&gt; block)
-	 </CODE>
-	 <BR>
-	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-	 Passes each element in the array to <i>block</i>, returning <tt>true</tt> if
- <i>block</i> ever returns a value other than <tt>false</tt> or <tt>null</tt>.
-      </TD>
-   </TR>
-
-   <TR BGCOLOR="white" CLASS="TableRowColor">
-      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
-	 <FONT SIZE="-1">
 	    <CODE>&nbsp;<a href="Array.html">Array</a></CODE>
 	 </FONT>
       </TD>
@@ -386,6 +368,24 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
    <TR BGCOLOR="white" CLASS="TableRowColor">
       <TD ALIGN="right" VALIGN="top" WIDTH="1%">
 	 <FONT SIZE="-1">
+	    <CODE>&nbsp;Boolean</CODE>
+	 </FONT>
+      </TD>
+      <TD>
+	 <CODE>
+	    <B>
+	       <A HREF="#isAny">isAny</A></B>(&lt;Function&gt; block)
+	 </CODE>
+	 <BR>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 Passes each element in the array to <i>block</i>, returning <tt>true</tt> if
+ <i>block</i> ever returns a value other than <tt>false</tt> or <tt>null</tt>.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+	 <FONT SIZE="-1">
 	    <CODE>&nbsp;<a href="Array.html">Array</a></CODE>
 	 </FONT>
       </TD>
@@ -570,72 +570,7 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
    <!-- ADDITIONAL ATTRIBUTES START -->
    
    <UL>   
-   <B>See:</B><UL>- <a href="#areAny">#areAny</a></UL>
-   </UL>
-   
-   <!-- ADDITIONAL ATTRIBUTES  END -->
-<HR>
-
-   <A NAME="areAny"><!-- --></A>
-   <H3>areAny</H3>
-   <PRE>Boolean <B>areAny</B>(&lt;Function&gt; block)</PRE>
-   
-      <UL>Passes each element in the array to <i>block</i>, returning <tt>true</tt> if
- <i>block</i> ever returns a value other than <tt>false</tt> or <tt>null</tt>.
- If <i>block</i> is not given, Rouge adds an implicit block that will return
- <tt>true</tt> if any of the elements is not <tt>false</tt> or <tt>null</tt>.
- 
- <pre>
- var array = ['foo', 'bar', 'bizzle'];
- var result = array.areAny(function(item) {
-   return item.length >= 3;
- });
- result // => true
- array  // => ['foo', 'bar', 'bizzle']
- 
- var array = ['foo', 'bar', 'bizzle'];
- var result = array.areAny(function(item) {
-   return item.length <= 2;
- });
- result // => false
- array  // => ['foo', 'bar', 'bizzle']
- </pre>
- 
- Without the optional <i>block</i>:
- 
- <pre>
- var array = [null, true, 99];
- var result = array.areAny();
- result // => true
- array  // => [null, true, 99]
- </pre></UL>
-   
-
-   <!-- METHOD PARAMETERS START -->
-   
-   <UL>
-   <B>Parameters:</B>
-   
-     <UL><CODE>block</CODE> -  (optional) The function to execute. Should have one                          parameter  
-      </UL> 
-   
-   </UL>
-   
-   <!-- METHOD PARAMETERS END -->
-
-   
-   <UL>
-   <B>Returns:</B>
-        <UL>
-         <tt>true</tt> if <i>block</t> returns a value other than                     <tt>false</tt> or <tt>null</tt> for any element     
-        </UL>
-   </UL>
-   
-
-   <!-- ADDITIONAL ATTRIBUTES START -->
-   
-   <UL>   
-   <B>See:</B><UL>- <a href="#areAll">#areAll</a></UL>
+   <B>See:</B><UL>- <a href="#isAny">#isAny</a></UL>
    </UL>
    
    <!-- ADDITIONAL ATTRIBUTES  END -->
@@ -1329,6 +1264,71 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
    <!-- ADDITIONAL ATTRIBUTES  END -->
 <HR>
 
+   <A NAME="isAny"><!-- --></A>
+   <H3>isAny</H3>
+   <PRE>Boolean <B>isAny</B>(&lt;Function&gt; block)</PRE>
+   
+      <UL>Passes each element in the array to <i>block</i>, returning <tt>true</tt> if
+ <i>block</i> ever returns a value other than <tt>false</tt> or <tt>null</tt>.
+ If <i>block</i> is not given, Rouge adds an implicit block that will return
+ <tt>true</tt> if any of the elements is not <tt>false</tt> or <tt>null</tt>.
+ 
+ <pre>
+ var array = ['foo', 'bar', 'bizzle'];
+ var result = array.isAny(function(item) {
+   return item.length >= 3;
+ });
+ result // => true
+ array  // => ['foo', 'bar', 'bizzle']
+ 
+ var array = ['foo', 'bar', 'bizzle'];
+ var result = array.isAny(function(item) {
+   return item.length <= 2;
+ });
+ result // => false
+ array  // => ['foo', 'bar', 'bizzle']
+ </pre>
+ 
+ Without the optional <i>block</i>:
+ 
+ <pre>
+ var array = [null, true, 99];
+ var result = array.isAny();
+ result // => true
+ array  // => [null, true, 99]
+ </pre></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>block</CODE> -  (optional) The function to execute. Should have one                          parameter  
+      </UL> 
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+         <tt>true</tt> if <i>block</t> returns a value other than                     <tt>false</tt> or <tt>null</tt> for any element     
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>   
+   <B>See:</B><UL>- <a href="#areAll">#areAll</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
    <A NAME="map"><!-- --></A>
    <H3>map</H3>
    <PRE><a href="Array.html">Array</a> <B>map</B>(&lt;Function&gt; block)</PRE>
@@ -1613,6 +1613,6 @@ DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor
 <FONT SIZE="-1">
 
 </FONT>
-<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Sat Jun  6 22:47:16 2009</div>
+<div class="jsdoc_ctime">Documentation generated by <a href="http://jsdoc.sourceforge.net/" target="_parent">JSDoc</a> on Sat Jun  6 23:13:21 2009</div>
 </BODY>
 </HTML>
