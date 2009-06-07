@@ -160,6 +160,74 @@ Screw.Unit(function() {
         array_ = [];
       });
       
+      describe('when sent #all? with a block', function() {
+        function doAllHUH() {
+          return doMethod('all?', {'on': array_, 'with': function(s) { }});
+        }
+        
+        it('should not yield', function() {
+          expect(doAllHUH().callbacks[0]).to(be_empty);
+        });
+        
+        it('should return true', function() {
+          expect(doAllHUH().returnValue).to(equal, true);
+        });
+        
+        it('should not mutate itself', function() {
+          doAllHUH();
+          expect(array_).to(equal, []);
+        });
+      });
+      
+      describe('when sent #all? without a block', function() {
+        function doAllHUHNoBlock() {
+          return doMethod('all?', {'on': array_});
+        }
+        
+        it('should return true', function() {
+          expect(doAllHUHNoBlock().returnValue).to(equal, true);
+        });
+        
+        it('should not mutate itself', function() {
+          doAllHUHNoBlock();
+          expect(array_).to(equal, []);
+        });
+      });
+      
+      describe('when sent #any? with a block', function() {
+        function doAnyHUH() {
+          return doMethod('any?', {'on': array_, 'with': function(s) { }});
+        }
+        
+        it('should not yield', function() {
+          expect(doAnyHUH().callbacks[0]).to(be_empty);
+        });
+        
+        it('should return false', function() {
+          expect(doAnyHUH().returnValue).to(equal, false);
+        });
+        
+        it('should not mutate itself', function() {
+          doAnyHUH();
+          expect(array_).to(equal, []);
+        });
+      });
+      
+      describe('when sent #any? without a block', function() {
+        function doAnyHUHNoBlock() {
+          return doMethod('any?', {'on': array_});
+        }
+        
+        it('should return false', function() {
+          expect(doAnyHUHNoBlock().returnValue).to(equal, false);
+        });
+        
+        it('should not mutate itself', function() {
+          doAnyHUHNoBlock();
+          expect(array_).to(equal, []);
+        });
+      });
+      
       describe('when sent #areAll with a block', function() {
         function doAreAll() {
           return doMethod('areAll', {'on': array_, 'with': function(s) { }});
@@ -264,6 +332,25 @@ Screw.Unit(function() {
         
         it('should not mutate itself', function() {
           doCollectThis();
+          expect(array_).to(equal, []);
+        });
+      });
+      
+      describe('when sent #collect! with a block', function() {
+        function doCollectBANG() {
+          return doMethod('collect!', {'on': array_, 'with': function(s) { }});
+        }
+        
+        it('should not yield', function() {
+          expect(doCollectBANG().callbacks[0]).to(be_empty);
+        });
+        
+        it('should return itself', function() {
+          expect(doCollectBANG().returnValue).to(equal, array_);
+        });
+        
+        it('should not mutate itself', function() {
+          doCollectBANG();
           expect(array_).to(equal, []);
         });
       });
@@ -538,6 +625,21 @@ Screw.Unit(function() {
         });
       });
       
+      describe('when sent #include?', function() {
+        function doIncludeHUH() {
+          return doMethod('include?', {'on': array_, 'with': 'foo'});
+        }
+        
+        it('should return false', function() {
+          expect(doIncludeHUH().returnValue).to(equal, false);
+        });
+        
+        it('should not mutate itself', function() {
+          doIncludeHUH();
+          expect(array_).to(equal, []);
+        });
+      });
+      
       describe('when sent #inject with a block', function() {
         function doInject() {
           return doMethod('inject',
@@ -616,6 +718,40 @@ Screw.Unit(function() {
         
         it('should not mutate itself', function() {
           doMapThis();
+          expect(array_).to(equal, []);
+        });
+      });
+      
+      describe('when sent #map! with a block', function() {
+        function doMapBANG() {
+          return doMethod('map!', {'on': array_, 'with': function(s) { }});
+        }
+        
+        it('should not yield', function() {
+          expect(doMapBANG().callbacks[0]).to(be_empty);
+        });
+        
+        it('should return itself', function() {
+          expect(doMapBANG().returnValue).to(equal, array_);
+        });
+        
+        it('should not mutate itself', function() {
+          doMapBANG();
+          expect(array_).to(equal, []);
+        });
+      });
+      
+      describe('when sent #member?', function() {
+        function doMemberHUH() {
+          return doMethod('member?', {'on': array_, 'with': 'foo'});
+        }
+        
+        it('should return false', function() {
+          expect(doMemberHUH().returnValue).to(equal, false);
+        });
+        
+        it('should not mutate itself', function() {
+          doMemberHUH();
           expect(array_).to(equal, []);
         });
       });
@@ -787,6 +923,168 @@ Screw.Unit(function() {
       
       before(function() {
         array_ = ['foo', 'bar'];
+      });
+      
+      describe('when sent #all? with a block that returns true', function() {
+        function doAllHUHTrue() {
+          return doMethod('all?',
+                          {'on':   array_,
+                           'with': function(s) { return true; }});
+        }
+        
+        it('should yield twice', function() {
+          expect(doAllHUHTrue().callbacks[0].length).to(equal, 2);
+        });
+        
+        it("should yield with itself as the 'this' value the first time", function() {
+          expect(doAllHUHTrue().callbacks[0][0].this).to(equal, array_);
+        });
+        
+        it("should yield with itself as the 'this' value the second time", function() {
+          expect(doAllHUHTrue().callbacks[0][1].this).to(equal, array_);
+        });
+        
+        it('should yield the first element the first time', function() {
+          expect(doAllHUHTrue().callbacks[0][0].arguments).to(equal, ['foo']);
+        });
+        
+        it('should yield the second element the second time', function() {
+          expect(doAllHUHTrue().callbacks[0][1].arguments).to(equal, ['bar']);
+        });
+        
+        it('should return true', function() {
+          expect(doAllHUHTrue().returnValue).to(be_true);
+        });
+        
+        it('should not mutate itself', function() {
+          doAllHUHTrue();
+          expect(array_).to(equal, ['foo', 'bar']);
+        });
+      });
+      
+      describe('when sent #all? with a block that returns false', function() {
+        function doAllHUHFalse() {
+          return doMethod('all?',
+                          {'on':   array_,
+                           'with': function(s) { return false; }});
+        }
+        
+        it('should yield once', function() {
+          expect(doAllHUHFalse().callbacks[0].length).to(equal, 1);
+        });
+        
+        it("should yield with itself as the 'this' value", function() {
+          expect(doAllHUHFalse().callbacks[0][0].this).to(equal, array_);
+        });
+        
+        it('should yield the first element', function() {
+          expect(doAllHUHFalse().callbacks[0][0].arguments).to(equal, ['foo']);
+        });
+        
+        it('should return false', function() {
+          expect(doAllHUHFalse().returnValue).to(be_false);
+        });
+        
+        it('should not mutate itself', function() {
+          doAllHUHFalse();
+          expect(array_).to(equal, ['foo', 'bar']);
+        });
+      });
+      
+      describe('when sent #all? without a block', function() {
+        function doAllHUHNoBlock() {
+          return doMethod('all?', {'on': array_});
+        }
+        
+        it('should return true', function() {
+          expect(doAllHUHNoBlock().returnValue).to(be_true);
+        });
+        
+        it('should not mutate itself', function() {
+          doAllHUHNoBlock();
+          expect(array_).to(equal, ['foo', 'bar']);
+        });
+      });
+      
+      describe('when sent #any? with a block that returns true', function() {
+        function doAnyHUHTrue() {
+          return doMethod('any?',
+                          {'on':   array_,
+                           'with': function(s) { return true; }});
+        }
+        
+        it('should yield once', function() {
+          expect(doAnyHUHTrue().callbacks[0].length).to(equal, 1);
+        });
+        
+        it("should yield with itself as the 'this' value", function() {
+          expect(doAnyHUHTrue().callbacks[0][0].this).to(equal, array_);
+        });
+        
+        it('should yield the first element', function() {
+          expect(doAnyHUHTrue().callbacks[0][0].arguments).to(equal, ['foo']);
+        });
+        
+        it('should return true', function() {
+          expect(doAnyHUHTrue().returnValue).to(be_true);
+        });
+        
+        it('should not mutate itself', function() {
+          doAnyHUHTrue();
+          expect(array_).to(equal, ['foo', 'bar']);
+        });
+      });
+      
+      describe('when sent #any? with a block that returns false', function() {
+        function doAnyHUHFalse() {
+          return doMethod('any?',
+                          {'on':   array_,
+                           'with': function(s) { return false; }});
+        }
+        
+        it('should yield twice', function() {
+          expect(doAnyHUHFalse().callbacks[0].length).to(equal, 2);
+        });
+        
+        it("should yield with itself as the 'this' value the first time", function() {
+          expect(doAnyHUHFalse().callbacks[0][0].this).to(equal, array_);
+        });
+        
+        it("should yield with itself as the 'this' value the second time", function() {
+          expect(doAnyHUHFalse().callbacks[0][1].this).to(equal, array_);
+        });
+        
+        it('should yield the first element the first time', function() {
+          expect(doAnyHUHFalse().callbacks[0][0].arguments).to(equal, ['foo']);
+        });
+        
+        it('should yield the second element the second time', function() {
+          expect(doAnyHUHFalse().callbacks[0][1].arguments).to(equal, ['bar']);
+        });
+        
+        it('should return false', function() {
+          expect(doAnyHUHFalse().returnValue).to(be_false);
+        });
+        
+        it('should not mutate itself', function() {
+          doAnyHUHFalse();
+          expect(array_).to(equal, ['foo', 'bar']);
+        });
+      });
+      
+      describe('when sent #any? without a block', function() {
+        function doAnyHUHNoBlock() {
+          return doMethod('any?', {'on': array_});
+        }
+        
+        it('should return true', function() {
+          expect(doAnyHUHNoBlock().returnValue).to(be_true);
+        });
+        
+        it('should not mutate itself', function() {
+          doAnyHUHNoBlock();
+          expect(array_).to(equal, ['foo', 'bar']);
+        });
       });
       
       describe('when sent #areAll with a block that returns true', function() {
@@ -1021,6 +1319,43 @@ Screw.Unit(function() {
         
         it('should mutate itself as expected', function() {
           doCollectThis();
+          expect(array_).to(equal, ['item: foo', 'item: bar']);
+        });
+      });
+      
+      describe('when sent #collect! with a block', function() {
+        function doCollectBANG() {
+          return doMethod('collect!',
+                          {'on':   array_,
+                           'with': function(s) { return 'item: ' + s; }});
+        }
+        
+        it('should yield twice', function() {
+          expect(doCollectBANG().callbacks[0].length).to(equal, 2);
+        });
+        
+        it("should yield with itself as the 'this' value the first time", function() {
+          expect(doCollectBANG().callbacks[0][0].this).to(equal, array_);
+        });
+        
+        it("should yield with itself as the 'this' value the second time", function() {
+          expect(doCollectBANG().callbacks[0][1].this).to(equal, array_);
+        });
+        
+        it('should yield the first element the first time', function() {
+          expect(doCollectBANG().callbacks[0][0].arguments).to(equal, ['foo']);
+        });
+        
+        it('should yield the second element the second time', function() {
+          expect(doCollectBANG().callbacks[0][1].arguments).to(equal, ['bar']);
+        });
+        
+        it('should return itself', function() {
+          expect(doCollectBANG().returnValue).to(equal, array_);
+        });
+        
+        it('should mutate itself as expected', function() {
+          doCollectBANG();
           expect(array_).to(equal, ['item: foo', 'item: bar']);
         });
       });
@@ -1803,6 +2138,36 @@ Screw.Unit(function() {
         });
       });
       
+      describe('when sent #include? with a member', function() {
+        function doIncludeHUHPassingMember() {
+          return doMethod('include?', {'on': array_, 'with': 'foo'});
+        }
+        
+        it('should return true', function() {
+          expect(doIncludeHUHPassingMember().returnValue).to(equal, true);
+        });
+        
+        it('should not mutate itself', function() {
+          doIncludeHUHPassingMember();
+          expect(array_).to(equal, ['foo', 'bar']);
+        });
+      });
+      
+      describe('when sent #include? with a non-member', function() {
+        function doIncludeHUHPassingNonmember() {
+          return doMethod('include?', {'on': array_, 'with': 'something else'});
+        }
+        
+        it('should return false', function() {
+          expect(doIncludeHUHPassingNonmember().returnValue).to(equal, false);
+        });
+        
+        it('should not mutate itself', function() {
+          doIncludeHUHPassingNonmember();
+          expect(array_).to(equal, ['foo', 'bar']);
+        });
+      });
+      
       describe('when sent #inject with a block', function() {
         function doInject() {
           return doMethod('inject',
@@ -1948,6 +2313,73 @@ Screw.Unit(function() {
         it('should mutate itself as expected', function() {
           doMapThis();
           expect(array_).to(equal, ['item: foo', 'item: bar']);
+        });
+      });
+      
+      describe('when sent #map! with a block', function() {
+        function doMapBANG() {
+          return doMethod('map!',
+                          {'on':   array_,
+                           'with': function(s) { return 'item: ' + s; }});
+        }
+        
+        it('should yield twice', function() {
+          expect(doMapBANG().callbacks[0].length).to(equal, 2);
+        });
+        
+        it("should yield with itself as the 'this' value the first time", function() {
+          expect(doMapBANG().callbacks[0][0].this).to(equal, array_);
+        });
+        
+        it("should yield with itself as the 'this' value the second time", function() {
+          expect(doMapBANG().callbacks[0][1].this).to(equal, array_);
+        });
+        
+        it('should yield the first element the first time', function() {
+          expect(doMapBANG().callbacks[0][0].arguments).to(equal, ['foo']);
+        });
+        
+        it('should yield the second element the second time', function() {
+          expect(doMapBANG().callbacks[0][1].arguments).to(equal, ['bar']);
+        });
+        
+        it('should return itself', function() {
+          expect(doMapBANG().returnValue).to(equal, array_);
+        });
+        
+        it('should mutate itself as expected', function() {
+          doMapBANG();
+          expect(array_).to(equal, ['item: foo', 'item: bar']);
+        });
+      });
+      
+      describe('when sent #member? with a member', function() {
+        function doMemberHUHPassingMember() {
+          return doMethod('member?', {'on': array_, 'with': 'foo'});
+        }
+        
+        it('should return true', function() {
+          expect(doMemberHUHPassingMember().returnValue).to(equal, true);
+        });
+        
+        it('should not mutate itself', function() {
+          doMemberHUHPassingMember();
+          expect(array_).to(equal, ['foo', 'bar']);
+        });
+      });
+      
+      describe('when sent #member? with a non-member', function() {
+        function doMemberHUHPassingNonmember() {
+          return doMethod('member?', {'on': array_, 'with': 'something else'});
+        }
+        
+        it('should return false', function() {
+          expect(doMemberHUHPassingNonmember().returnValue).to(equal, false);
+        });
+        
+        it('should not mutate itself', function() {
+          doMemberHUHPassingNonmember();
+          expect(array_).to(equal, ['foo', 'bar']);
         });
       });
       
@@ -2195,6 +2627,36 @@ Screw.Unit(function() {
         array_ = ['foo', null];
       });
       
+      describe('when sent #all? without a block', function() {
+        function doAllHUHNoBlock() {
+          return doMethod('all?', {'on': array_});
+        }
+        
+        it('should return false', function() {
+          expect(doAllHUHNoBlock().returnValue).to(be_false);
+        });
+        
+        it('should not mutate itself', function() {
+          doAllHUHNoBlock();
+          expect(array_).to(equal, ['foo', null]);
+        });
+      });
+      
+      describe('when sent #any? without a block', function() {
+        function doAnyHUHNoBlock() {
+          return doMethod('any?', {'on': array_});
+        }
+        
+        it('should return true', function() {
+          expect(doAnyHUHNoBlock().returnValue).to(be_true);
+        });
+        
+        it('should not mutate itself', function() {
+          doAnyHUHNoBlock();
+          expect(array_).to(equal, ['foo', null]);
+        });
+      });
+      
       describe('when sent #areAll without a block', function() {
         function doAreAllNoBlock() {
           return doMethod('areAll', {'on': array_});
@@ -2231,6 +2693,36 @@ Screw.Unit(function() {
       
       before(function() {
         array_ = [true, false];
+      });
+      
+      describe('when sent #all? without a block', function() {
+        function doAllHUHNoBlock() {
+          return doMethod('all?', {'on': array_});
+        }
+        
+        it('should return false', function() {
+          expect(doAllHUHNoBlock().returnValue).to(be_false);
+        });
+        
+        it('should not mutate itself', function() {
+          doAllHUHNoBlock();
+          expect(array_).to(equal, [true, false]);
+        });
+      });
+      
+      describe('when sent #any? without a block', function() {
+        function doAnyHUHNoBlock() {
+          return doMethod('any?', {'on': array_});
+        }
+        
+        it('should return true', function() {
+          expect(doAnyHUHNoBlock().returnValue).to(be_true);
+        });
+        
+        it('should not mutate itself', function() {
+          doAnyHUHNoBlock();
+          expect(array_).to(equal, [true, false]);
+        });
       });
       
       describe('when sent #areAll without a block', function() {
