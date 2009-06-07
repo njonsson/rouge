@@ -92,6 +92,36 @@ Array['new'] = function() {
 };
 
 /**
+ * An alias for <b>#areAll</b>.
+ * 
+ * @param {Function} block (optional) The function to execute. Should have one
+ *                         parameter
+ * @returns {Boolean} <tt>true</tt> if <i>block</t> does not return
+ *                    <tt>false</tt> or <tt>null</tt> for any element
+ * 
+ * @see #areAll #areAll
+ * @see #any?   #any?
+ */
+Array.prototype['all?'] = function(block) {
+  return this.areAll.apply(this, arguments);
+};
+
+/**
+ * An alias for <b>#areAny</b>.
+ * 
+ * @param {Function} block (optional) The function to execute. Should have one
+ *                         parameter
+ * @returns {Boolean} <tt>true</tt> if <i>block</t> returns a value other than
+ *                    <tt>false</tt> or <tt>null</tt> for any element
+ * 
+ * @see #areAny #areAny
+ * @see #all?   #all?
+ */
+Array.prototype['any?'] = function(block) {
+  return this.areAny.apply(this, arguments);
+};
+
+/**
  * Passes each element in the array to <i>block</i>, returning <tt>true</tt> if
  * <i>block</i> never returns <tt>false</tt> or <tt>null</tt>. If <i>block</i>
  * is not given, Rouge adds an implicit block that will return <tt>true</tt>
@@ -211,7 +241,8 @@ Array.prototype.areAny = function(block) {
  * @param {Function} block The function to execute. Should have one parameter
  * @returns {Array} An array containing the values returned by <i>block</i>
  * 
- * @see #map #map
+ * @see #collectThis #collectThis
+ * @see #map         #map
  */
 Array.prototype.collect = function(block) {
   var result = [];
@@ -237,6 +268,7 @@ Array.prototype.collect = function(block) {
  * @param {Function} block The function to execute. Should have one parameter
  * @returns {Array} The array
  * 
+ * @see #collect #collect
  * @see #mapThis #mapThis
  */
 Array.prototype.collectThis = function(block) {
@@ -244,6 +276,19 @@ Array.prototype.collectThis = function(block) {
     this[i] = block.apply(this, [item]);
   }]);
   return this;
+};
+
+/**
+ * An alias for <b>#collectThis</b>.
+ * 
+ * @param {Function} block The function to execute. Should have one parameter
+ * @returns {Array} The array
+ * 
+ * @see #collectThis #collectThis
+ * @see #collect     #collect
+ */
+Array.prototype['collect!'] = function(block) {
+  return this.collectThis.apply(this, arguments);
 };
 
 /**
@@ -281,7 +326,8 @@ Array.prototype.collectThis = function(block) {
  *          If <i>block</i> never returns <tt>true</tt> and <i>ifNone</i> is not
  *          specified, then <tt>null</tt> is used
  * 
- * @see #find #find
+ * @see #find   #find
+ * @see #select #select
  */
 Array.prototype.detect = function(ifNone, block) {
   function detectOrNone(ifNone, block) {
@@ -606,6 +652,19 @@ Array.prototype.hasMember = function(value) {
 };
 
 /**
+ * An alias for <b>#doesInclude</b>.
+ * 
+ * @param {Object} value A value to look for
+ * @returns {Boolean} <tt>true</tt> if <i>value</t> is an element
+ * 
+ * @see #doesInclude #doesInclude
+ * @see #member?     #member?
+ */
+Array.prototype['include?'] = function(block) {
+  return this.doesInclude.apply(this, arguments);
+};
+
+/**
  * Combines the elements of the array by applying <i>block</i> to an accumulator
  * value (<i>memo</i>) and each element in turn. Invokes <i>block</i> once for
  * each element in the array, passing <i>memo</i> and that element as arguments.
@@ -665,6 +724,7 @@ Array.prototype.inject = function(initial, block) {
  * @returns {Array} An array containing the values returned by <i>block</i>
  * 
  * @see #collect #collect
+ * @see #mapThis #mapThis
  */
 Array.prototype.map = function(block) {
   return this.collect.apply(this, arguments);
@@ -677,9 +737,36 @@ Array.prototype.map = function(block) {
  * @returns {Array} The array
  * 
  * @see #collectThis #collectThis
+ * @see #map         #map
  */
 Array.prototype.mapThis = function(block) {
   return this.collectThis.apply(this, arguments);
+};
+
+/**
+ * An alias for <b>#mapThis</b>.
+ * 
+ * @param {Function} block The function to execute. Should have one parameter
+ * @returns {Array} The array
+ * 
+ * @see #mapThis #mapThis
+ * @see #map     #map
+ */
+Array.prototype['map!'] = function(block) {
+  return this.mapThis.apply(this, arguments);
+};
+
+/**
+ * An alias for <b>#hasMember</b>.
+ * 
+ * @param {Object} value A value to look for
+ * @returns {Boolean} <tt>true</tt> if <i>value</t> is an element
+ * 
+ * @see #hasMember #hasMember
+ * @see #include?  #include?
+ */
+Array.prototype['member?'] = function(block) {
+  return this.hasMember.apply(this, arguments);
 };
 
 /**
@@ -771,6 +858,7 @@ Array.prototype.reject = function(block) {
  * @see #findAll #findAll
  * @see #grep    #grep
  * @see #reject  #reject
+ * @see #detect  #detect
  */
 Array.prototype.select = function(block) {
   var selected = [];
