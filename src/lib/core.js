@@ -107,18 +107,18 @@ Array.prototype['all?'] = function(block) {
 };
 
 /**
- * An alias for <b>#areAny</b>.
+ * An alias for <b>#isAny</b>.
  * 
  * @param {Function} block (optional) The function to execute. Should have one
  *                         parameter
  * @returns {Boolean} <tt>true</tt> if <i>block</t> returns a value other than
  *                    <tt>false</tt> or <tt>null</tt> for any element
  * 
- * @see #areAny #areAny
- * @see #all?   #all?
+ * @see #isAny #isAny
+ * @see #all?  #all?
  */
 Array.prototype['any?'] = function(block) {
-  return this.areAny.apply(this, arguments);
+  return this.isAny.apply(this, arguments);
 };
 
 /**
@@ -157,7 +157,7 @@ Array.prototype['any?'] = function(block) {
  * @returns {Boolean} <tt>true</tt> if <i>block</t> does not return
  *                    <tt>false</tt> or <tt>null</tt> for any element
  * 
- * @see #areAny #areAny
+ * @see #isAny #isAny
  */
 Array.prototype.areAll = function(block) {
   if (block === undefined) {
@@ -169,58 +169,6 @@ Array.prototype.areAll = function(block) {
   Array.helpers.iterate.apply(this, [function(item, i) {
     result = block(this[i]);
     if (Array.helpers.isNullOrFalse(result)) return true; // break
-  }]);
-  return ! Array.helpers.isNullOrFalse(result);
-};
-
-/**
- * Passes each element in the array to <i>block</i>, returning <tt>true</tt> if
- * <i>block</i> ever returns a value other than <tt>false</tt> or <tt>null</tt>.
- * If <i>block</i> is not given, Rouge adds an implicit block that will return
- * <tt>true</tt> if any of the elements is not <tt>false</tt> or <tt>null</tt>.
- * 
- * <pre>
- * var array = ['foo', 'bar', 'bizzle'];
- * var result = array.areAny(function(item) {
- *   return item.length >= 3;
- * });
- * result // => true
- * array  // => ['foo', 'bar', 'bizzle']
- * 
- * var array = ['foo', 'bar', 'bizzle'];
- * var result = array.areAny(function(item) {
- *   return item.length <= 2;
- * });
- * result // => false
- * array  // => ['foo', 'bar', 'bizzle']
- * </pre>
- * 
- * Without the optional <i>block</i>:
- * 
- * <pre>
- * var array = [null, true, 99];
- * var result = array.areAny();
- * result // => true
- * array  // => [null, true, 99]
- * </pre>
- * 
- * @param {Function} block (optional) The function to execute. Should have one
- *                         parameter
- * @returns {Boolean} <tt>true</tt> if <i>block</t> returns a value other than
- *                    <tt>false</tt> or <tt>null</tt> for any element
- * 
- * @see #areAll #areAll
- */
-Array.prototype.areAny = function(block) {
-  if (block === undefined) {
-    block = function(item) {
-      return ! Array.helpers.isNullOrFalse(item);
-    };
-  }
-  var result = false;
-  Array.helpers.iterate.apply(this, [function(item, i) {
-    result = block(this[i]);
-    if (! Array.helpers.isNullOrFalse(result)) return true;
   }]);
   return ! Array.helpers.isNullOrFalse(result);
 };
@@ -715,6 +663,58 @@ Array.prototype.inject = function(initial, block) {
     memo = block.apply(this, [memo, item]);
   }]);
   return memo;
+};
+
+/**
+ * Passes each element in the array to <i>block</i>, returning <tt>true</tt> if
+ * <i>block</i> ever returns a value other than <tt>false</tt> or <tt>null</tt>.
+ * If <i>block</i> is not given, Rouge adds an implicit block that will return
+ * <tt>true</tt> if any of the elements is not <tt>false</tt> or <tt>null</tt>.
+ * 
+ * <pre>
+ * var array = ['foo', 'bar', 'bizzle'];
+ * var result = array.isAny(function(item) {
+ *   return item.length >= 3;
+ * });
+ * result // => true
+ * array  // => ['foo', 'bar', 'bizzle']
+ * 
+ * var array = ['foo', 'bar', 'bizzle'];
+ * var result = array.isAny(function(item) {
+ *   return item.length <= 2;
+ * });
+ * result // => false
+ * array  // => ['foo', 'bar', 'bizzle']
+ * </pre>
+ * 
+ * Without the optional <i>block</i>:
+ * 
+ * <pre>
+ * var array = [null, true, 99];
+ * var result = array.isAny();
+ * result // => true
+ * array  // => [null, true, 99]
+ * </pre>
+ * 
+ * @param {Function} block (optional) The function to execute. Should have one
+ *                         parameter
+ * @returns {Boolean} <tt>true</tt> if <i>block</t> returns a value other than
+ *                    <tt>false</tt> or <tt>null</tt> for any element
+ * 
+ * @see #areAll #areAll
+ */
+Array.prototype.isAny = function(block) {
+  if (block === undefined) {
+    block = function(item) {
+      return ! Array.helpers.isNullOrFalse(item);
+    };
+  }
+  var result = false;
+  Array.helpers.iterate.apply(this, [function(item, i) {
+    result = block(this[i]);
+    if (! Array.helpers.isNullOrFalse(result)) return true;
+  }]);
+  return ! Array.helpers.isNullOrFalse(result);
 };
 
 /**
