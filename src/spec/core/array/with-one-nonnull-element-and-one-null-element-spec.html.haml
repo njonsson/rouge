@@ -1,0 +1,42 @@
+!!! XML
+!!! Strict
+
+%html{html_attrs}
+  %head
+    %title<
+      Rouge Core Array Class Spec
+    
+    / Screw.Unit styles
+    %link(href='../../screw-unit/lib/screw.css'
+          rel='stylesheet')
+  
+  %body
+    #dom_test(style='position: absolute; left: -9999px;')
+    
+    / Screw.Unit library
+    %script(src='../../screw-unit/lib/jquery-1.2.3.js'
+            type='text/javascript')
+    %script(src='../../screw-unit/lib/jquery.fn.js'
+            type='text/javascript')
+    %script(src='../../screw-unit/lib/jquery.print.js'
+            type='text/javascript')
+    %script(src='../../screw-unit/lib/screw.builder.js'
+            type='text/javascript')
+    %script(src='../../screw-unit/lib/screw.matchers.js'
+            type='text/javascript')
+    %script(src='../../screw-unit/lib/screw.events.js'
+            type='text/javascript')
+    %script(src='../../screw-unit/lib/screw.behaviors.js'
+            type='text/javascript')
+    
+    / Spec helper
+    %script(src='../../spec-helper.js'
+            type='text/javascript')
+    
+    / Code under test
+    %script(src='../../../lib/core.js'
+            type='text/javascript')
+    
+    / Specs
+    %script(src='with-one-nonnull-element-and-one-null-element-spec.js'
+            type='text/javascript')
