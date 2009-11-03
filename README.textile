@@ -22,8 +22,9 @@ Rouge makes your JavaScript look and feel more like Ruby while preserving sound 
 </thead>
 <tbody>
 <tr>
-<td><pre><code>var array = [];
-for (var i = 0; i < 10; i++) {
+<td><pre><code>var array = [],
+    i = 0;
+for (; i < 10; i++) {
   array[i] = 'foo';
 }
 console.debug(array);</code></pre></td>
@@ -33,12 +34,13 @@ console.debug(array);</code></pre></td>
 puts array.inspect</code></pre></td>
 </tr>
 <tr>
-<td><pre><code>var array = ['foo', 'bar'];
-for (var i = 0; i < array.length; i++) {
+<td><pre><code>var array = ['foo', 'bar'],
+    i = 0;
+for (; i < array.length; i++) {
   console.debug(array[i]);
 }</code></pre></td>
 <td><pre><code>var array = ['foo', 'bar'];
-array.each(function(s) {
+array.each(function (s) {
   console.debug(s);
 });</code></pre></td>
 <td><pre><code>array = %w(foo bar)
@@ -47,16 +49,17 @@ array.each do
 end</code></pre></td>
 </tr>
 <tr>
-<td><pre><code>var array = ['foo', 'bar'];
-var collected = [];
-for (var i = 0; i < array.length; i++) {
+<td><pre><code>var array     = ['foo', 'bar'],
+    collected = [],
+    i = 0;
+for (; i < array.length; i++) {
   collected[collected.length] = array[i];
 }
 console.debug(collected);</code></pre></td>
-<td><pre><code>var array = ['foo', 'bar'];
-var collected = array.collect(function(s) {
-  return 'item: ' + s;
-});
+<td><pre><code>var array     = ['foo', 'bar'],
+    collected = array.collect(function (s) {
+      return 'item: ' + s;
+    });
 console.debug(collected);</code></pre></td>
 <td><pre><code>array = %w(foo bar)
 collected = array.collect do
